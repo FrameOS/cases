@@ -1,53 +1,153 @@
-// We are printing a case around an e-ink panel and a raspberry, in two parts. There will be 4 layers from the top
+/*****************************************************************************/
+/*                          Global Parameters                                */
+/*****************************************************************************/
 
-// 1. The panel cover (contains a big hole: panel_bezel_(left/right) + panel_border_(left/right) etc from the border)
-// 2. The panel (contains a bigger hole: panel_border_(left/right) only)
-//     -- split into two parts -- 
-// 3. The electronics compartment (same border)
-// 4. The back shell
+// Gap between STL parts for visual debugging
+debug_gap = 40;
 
-
-// Leyer 2: The panel
-
-// The pysical dimensions of the eInk panel
-panel_width = 170.3;
+// Physical dimensions of the eInk panel
+panel_width  = 170.3;
 panel_height = 111.3;
-panel_depth = 1.2;
 
-// Dimensions of the control circuitry on the panel (will be covered by the panel covber)
-panel_bezel_left = 5.0;
-panel_bezel_right = 5.0;
-panel_bezel_top = 4.9;
+// Dimensions of the bezel on the eInk panel
+panel_bezel_left   = 5.0;
+panel_bezel_right  = 5.0;
+panel_bezel_top    = 4.9;
 panel_bezel_bottom = 10.4;
 
-// Dimensions from the panel to the edge of the case (will be covered by the panel cover)
-panel_border_left = 3.0;
-panel_border_right = 3.0;
-panel_border_top = 3.0;
-panel_border_bottom = 3.0;
+// How much case to add around the panel
+case_border_left   = 3.0;
+case_border_right  = 3.0;
+case_border_top    = 5.0;
+case_border_bottom = 5.0;
 
-// Layer 1: The panel cover
+// Extra space inside the case to hold up the panel
+case_inner_padding_left = 2.0;
+case_inner_padding_right = 2.0;
+case_inner_padding_top = 2.0;
+case_inner_padding_bottom = 2.0;
+
+// Panel cover thickness (layer 1.1: border + bezel)
 panel_cover_depth = 2.0;
 
-// Calculate the full dimensions of the frame
-frame_full_width = panel_width + panel_bezel_left + panel_bezel_right + panel_cover_border_left + panel_cover_border_right;
-frame_full_height = panel_height + panel_bezel_top + panel_bezel_bottom + panel_cover_border_top + panel_cover_border_bottom;
+// Panel border thickness (layer 1.2: border)
+panel_depth  = 1.2;
 
-// Layer 3: The electronics compartment
+// Total “electronics compartment” thickness (layer 2.1)
+case_depth = 7.0; 
 
-electornics_depth = 7.0;
+// Back shell thickness (layer 2.2)
+back_depth = 2.0;
 
-// Layer 4: The back shell
-back_depth = 1.8;
+// Center of each screw hole from the corner
+screw_offset_left = 2.5;
+screw_offset_right = 2.5;
+screw_offset_top = 2.5;
+screw_offset_bottom = 2.5;
 
-frame_full_depth = panel_depth + panel_cover_depth + electornics_depth + back_depth;
+// Hole made into layer layer 1.2
+panel_screw_hole_diameter = 2.0;
 
-// Part 1: The panel cover
+// Cylindrical hole inserted into layers 2.1 and 2.2
+case_screw_hole_outer_diameter = 3.2;
+case_screw_hole_inner_diameter = 2.0;
+case_screw_hole_floor_depth = 1.0;
+case_screw_hole_bottom_gap_depth = 1.0;
 
-// Part 2: The panel
+/*****************************************************************************/
+/*                Derived Dimensions (overall frame size)                    */
+/*****************************************************************************/
 
-// Part 3: The electronics compartment
+// Width and height of the entire frame
+frame_full_width  = panel_width
+                  + case_border_left + case_border_right;
 
-// Part 4: The back shell
+frame_full_height = panel_height
+                  + case_border_top + case_border_bottom;
 
-// Render the parts
+// Total depth across all 4 layers
+frame_full_depth = panel_depth
+                 + panel_cover_depth
+                 + case_depth
+                 + back_depth;
+
+/*****************************************************************************/
+/*                              Modules                                      */
+/*****************************************************************************/
+
+module panel_cover() {
+    difference() {
+        // Outer block
+        cube([frame_full_width, frame_full_height, panel_cover_depth]);
+        
+        // Hole (moved slightly deeper so the difference cuts fully through)
+        translate(
+          [
+            panel_bezel_left + case_border_left, 
+            panel_bezel_top + case_border_top,
+            -0.1
+          ]
+        )
+        cube([
+            panel_width - panel_bezel_left - panel_bezel_right, 
+            panel_height - panel_bezel_top - panel_bezel_bottom, 
+            panel_cover_depth + 0.2
+        ]);
+    }
+}
+
+module panel_shell() {
+    difference() {
+        cube([frame_full_width, frame_full_height, panel_depth]);
+        
+        // Hole
+        translate(
+          [
+            case_border_left,
+            case_border_top,
+            -0.1
+          ]
+        )
+        cube([panel_width, panel_height, panel_depth + 0.2]);
+    }
+}
+
+module electronics_compartment() {
+    difference() {
+        cube([frame_full_width, frame_full_height, case_depth]);
+        
+        // Hole
+        translate(
+          [
+            case_border_left + case_inner_padding_left,
+            case_border_top + case_inner_padding_top,
+            -0.1
+          ]
+        )
+        cube([
+            panel_width - case_inner_padding_left - case_inner_padding_right,
+            panel_height - case_inner_padding_top - case_inner_padding_bottom,
+            case_depth + 0.2
+        ]);
+    } 
+}
+
+module back_shell() {
+    cube([frame_full_width, frame_full_height, back_depth]);
+}
+
+/*****************************************************************************/
+/*                              Rendering                                    */
+/*****************************************************************************/
+
+// Panel Cover
+translate([0, 0, 0]) panel_cover();
+
+// Panel layer
+translate([0, 0, panel_cover_depth]) panel_shell();
+
+// Electronics compartment
+translate([0, 0, panel_cover_depth + panel_depth + debug_gap]) electronics_compartment();
+
+// // Back shell
+translate([0, 0, panel_cover_depth + panel_depth + case_depth + debug_gap]) back_shell();
