@@ -133,49 +133,6 @@ corners = [
 /*                              Modules                                      */
 /*****************************************************************************/
 
-
-module filletBox(x, y, z, r = fillet_radius) {
-    // Optional sanity check (warn if the fillet is too large):
-    if (x < 2*r || y < 2*r || z < 2*r) {
-        echo("WARNING: fillet radius is too large for box dimensions!");
-    }
-    
-    // Minkowski sum of a smaller cube + sphere(r)
-    // => yields a final shape with filleted edges/corners.
-    translate([r, r, r])  // Move the sphere to the corner of the cube
-    minkowski() {
-        // Create the “inner” cube, shrunk by 2*r in each dimension
-        // so that after Minkowski we end up with full x, y, z overall.
-        cube([x - 2*r, y - 2*r, z - 2*r], center = false);
-
-        // Add the sphere that “rounds” the corners/edges
-        sphere(r = r, $fn = 64);  // $fn=64 for smoother arcs
-    }
-}
-
-module filletBoxTop(x, y, z, r = fillet_radius) {
-    intersection() {
-        cube([x, y, z]);
-        filletBox(x, y, z * 2, r);
-    }
-}
-
-module filletBoxMiddle(x, y, z, r = fillet_radius) {
-    intersection() {
-        cube([x, y, z]);
-        translate([0, 0, -z])
-        filletBox(x, y, z * 3, r);
-    }
-}
-
-module filletBoxBottom(x, y, z, r = fillet_radius) {
-    intersection() {
-        cube([x, y, z]);
-        translate([0, 0, -z])
-        filletBox(x, y, z * 2, r);
-    }
-}
-
 //
 // 1. Panel Cover (layer 1.1)
 //    This layer covers the border of the case, and the bezel around the eInk panel
@@ -219,21 +176,21 @@ module panel_cover() {
             panel_depth + 0.02
         ]);
         if (panel_cable_gap_bottom > 0) {
-            panel_gap_bottom(panel_depth);
+            render_panel_cable_gap_bottom(panel_depth);
         }
         if (panel_cable_gap_top > 0) {
-            panel_gap_top(panel_depth);
+            render_panel_cable_gap_top(panel_depth);
         }
         if (panel_cable_gap_left > 0) {
-            panel_gap_left(panel_depth);
+            render_panel_cable_gap_left(panel_depth);
         }
         if (panel_cable_gap_right > 0) {
-            panel_gap_right(panel_depth);
+            render_panel_cable_gap_right(panel_depth);
         }
     }
 }
 
-module panel_gap_bottom(depth) {
+module render_panel_cable_gap_bottom(depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
@@ -248,7 +205,7 @@ module panel_gap_bottom(depth) {
   ]); 
 }
 
-module panel_gap_top(depth) {
+module render_panel_cable_gap_top(depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
@@ -263,7 +220,7 @@ module panel_gap_top(depth) {
   ]); 
 }
 
-module panel_gap_left(depth) {
+module render_panel_cable_gap_left(depth) {
   translate(
     [
       panel_border_left - panel_cable_gap_size,
@@ -278,7 +235,7 @@ module panel_gap_left(depth) {
   ]); 
 }
 
-module panel_gap_right(depth) {
+module render_panel_cable_gap_right(depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.01,
@@ -322,16 +279,16 @@ module caseBody () {
             case_depth + 0.01
         ]);
         if (panel_cable_gap_bottom > 0) {
-            panel_gap_bottom(case_cable_gap_depth);
+            render_panel_cable_gap_bottom(case_cable_gap_depth);
         }
         if (panel_cable_gap_top > 0) {
-            panel_gap_top(case_cable_gap_depth);
+            render_panel_cable_gap_top(case_cable_gap_depth);
         }
         if (panel_cable_gap_left > 0) {
-            panel_gap_left(case_cable_gap_depth);
+            render_panel_cable_gap_left(case_cable_gap_depth);
         }
         if (panel_cable_gap_right > 0) {
-            panel_gap_right(case_cable_gap_depth);
+            render_panel_cable_gap_right(case_cable_gap_depth);
         }
         if (case_hole_left_top > 0) {
             translate([-0.01, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.01, -0.01 + case_hole_top_depth])
@@ -456,13 +413,63 @@ module case() {
     }
 }
 
+/*****************************************************************************/
+/*                              Utility                                      */
+/*****************************************************************************/
+
+
+module filletBox(x, y, z, r = fillet_radius) {
+    // Optional sanity check (warn if the fillet is too large):
+    if (x < 2*r || y < 2*r || z < 2*r) {
+        echo("WARNING: fillet radius is too large for box dimensions!");
+    }
+    
+    // Minkowski sum of a smaller cube + sphere(r)
+    // => yields a final shape with filleted edges/corners.
+    translate([r, r, r])  // Move the sphere to the corner of the cube
+    minkowski() {
+        // Create the “inner” cube, shrunk by 2*r in each dimension
+        // so that after Minkowski we end up with full x, y, z overall.
+        cube([x - 2*r, y - 2*r, z - 2*r], center = false);
+
+        // Add the sphere that “rounds” the corners/edges
+        sphere(r = r, $fn = 64);  // $fn=64 for smoother arcs
+    }
+}
+
+module filletBoxTop(x, y, z, r = fillet_radius) {
+    intersection() {
+        cube([x, y, z]);
+        filletBox(x, y, z * 2, r);
+    }
+}
+
+module filletBoxMiddle(x, y, z, r = fillet_radius) {
+    intersection() {
+        cube([x, y, z]);
+        translate([0, 0, -z])
+        filletBox(x, y, z * 3, r);
+    }
+}
+
+module filletBoxBottom(x, y, z, r = fillet_radius) {
+    intersection() {
+        cube([x, y, z]);
+        translate([0, 0, -z])
+        filletBox(x, y, z * 2, r);
+    }
+}
+
+
 
 /*****************************************************************************/
 /*                              Rendering                                    */
 /*****************************************************************************/
 
-translate([-frame_full_width/2, -frame_full_height/2, 0]) 
+rotate([0, 180, 0])
+translate([-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
     panel_cover();
 
-translate([-frame_full_width/2, -frame_full_height/2, panel_cover_depth + panel_depth + debug_gap]) 
+rotate([0, 180, 0])
+translate([-frame_full_width/2, -frame_full_height/2, 0]) 
     case();
