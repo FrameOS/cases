@@ -46,7 +46,7 @@ case_center_support_vertical = false;
 case_center_support_horizontal = true;
 case_center_support_width = 4.0;
 
-fillet_radius = 0.99;
+fillet_radius = 2;
 
 // Panel cover thickness (layer 1.1: border + bezel above eInk panel)
 panel_cover_depth = 2.0;
@@ -66,11 +66,11 @@ screw_offset_bottom = 3.2;
 
 // Hole made into layer 1.2
 panel_screw_insert_diameter = 3.45;
+panel_screw_insert_depth = 2.0;
 
 // Cylindrical hole inserted into layers 2.1 and 2.2
 case_screw_hole_diameter        = 4.5;
 case_screw_hole_thread_diameter = 2.0; // Hole for the screw thread that goes all the way through
-case_screw_hole_solid_border    = 0.3; // Solid border around the screw hole
 case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
 case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the heat set insert
 
@@ -182,8 +182,8 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
 //
 module panel_cover() {
     difference() {
-        // Outer block
-        filletBoxTop(frame_full_width, frame_full_height, panel_cover_depth);
+        // Top block
+        filletBoxTop(frame_full_width, frame_full_height, panel_cover_depth + panel_depth);
         
         // Window for the eInk panel’s visible area
         translate(
@@ -198,30 +198,19 @@ module panel_cover() {
             panel_height_with_clearance - panel_bezel_top  - panel_bezel_bottom, 
             panel_cover_depth + 0.02
         ]);
-        // Four corner screw insert holes
-        for (c = corners) {
-            translate([c[0], c[1], -0.01 + panel_screw_insert_diameter / 2])
-                cylinder(d = panel_screw_insert_diameter, 
-                         h = (panel_cover_depth / 2) + 0.02);
-        }
-    }
-}
 
-//
-// 2. Panel Shell (layer 1.2)
-//    This layer covers the border of the case, has holes for heat set inserts for the screws and the panel's cables.
-//
-module panel_shell() {
-    difference() {
-        // Overall solid
-        filletBoxMiddle(frame_full_width, frame_full_height, panel_depth);
-        
+        for (c = corners) {
+            translate([c[0], c[1],  panel_cover_depth + panel_depth - panel_screw_insert_depth])
+                cylinder(d = panel_screw_insert_diameter, 
+                         h = panel_screw_insert_depth + 0.01);
+        }
+
         // Internal rectangular cutout matching the panel
         translate(
           [
             panel_border_left,
             panel_border_top,
-            -0.01
+            panel_cover_depth
           ]
         )
         cube([
@@ -229,13 +218,6 @@ module panel_shell() {
             panel_height_with_clearance,
             panel_depth + 0.02
         ]);
-        
-        // Four corner screw insert holes
-        for (c = corners) {
-            translate([c[0], c[1], -0.01])
-                cylinder(d = panel_screw_insert_diameter, 
-                         h = panel_depth + 0.02);
-        }
         if (panel_cable_gap_bottom > 0) {
             panel_gap_bottom(panel_depth);
         }
@@ -256,13 +238,13 @@ module panel_gap_bottom(depth) {
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
       panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.01,
-      -0.01
+      panel_cover_depth
     ]
   )
   cube([
       panel_cable_gap_bottom,
       panel_cable_gap_size + case_inner_padding_bottom + 0.01,
-      depth + 0.02
+      depth + 0.01
   ]); 
 }
 
@@ -271,13 +253,13 @@ module panel_gap_top(depth) {
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
       panel_border_top - panel_cable_gap_size,
-      -0.01
+      panel_cover_depth
     ]
   )
   cube([
       panel_cable_gap_top,
       panel_cable_gap_size + case_inner_padding_top + 0.01,
-      depth + 0.02
+      depth + 0.01
   ]); 
 }
 
@@ -286,13 +268,13 @@ module panel_gap_left(depth) {
     [
       panel_border_left - panel_cable_gap_size,
       panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_left / 2,
-      -0.01
+      panel_cover_depth
     ]
   )
   cube([
       panel_cable_gap_size + case_inner_padding_left + 0.01,
       panel_cable_gap_left,
-      depth + 0.02
+      depth + 0.01
   ]); 
 }
 
@@ -301,13 +283,13 @@ module panel_gap_right(depth) {
     [
       panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.01,
       panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2,
-      -0.01
+      panel_cover_depth
     ]
   )
   cube([
       panel_cable_gap_size + case_inner_padding_right + 0.01,
       panel_cable_gap_right,
-      depth + 0.02
+      depth + 0.01
   ]); 
 }
 
@@ -450,13 +432,6 @@ module case() {
                 }
             };
 
-            // Corner screw cylinders (solid parts)
-            for (c = corners) {
-                translate([c[0], c[1], case_screw_hole_insert_depth]) // Solid border around the screw hole
-                cylinder(d = case_screw_hole_diameter + case_screw_hole_solid_border,
-                          h = case_depth + back_depth - case_screw_hole_insert_depth); // Hole for the screw thread
-            };
-
             // Cut out a piece of the cube
             caseBody();
         };
@@ -486,14 +461,8 @@ module case() {
 /*                              Rendering                                    */
 /*****************************************************************************/
 
-// 1. Panel Cover
 translate([-frame_full_width/2, -frame_full_height/2, 0]) 
     panel_cover();
 
-// 2. Panel shell
-translate([-frame_full_width/2, -frame_full_height/2, panel_cover_depth]) 
-    panel_shell();
-
-// 3. Case
 translate([-frame_full_width/2, -frame_full_height/2, panel_cover_depth + panel_depth + debug_gap]) 
     case();
