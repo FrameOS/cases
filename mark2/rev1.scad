@@ -14,7 +14,6 @@ panel_height = 111.3;
 // Thickness of the eInk panel (layer 1.2: border)
 panel_depth  = 1.2;
 
-
 // Dimensions of the bezel on the eInk panel
 panel_bezel_left   = 5.0;
 panel_bezel_right  = 5.0;
@@ -22,10 +21,18 @@ panel_bezel_top    = 4.9;
 panel_bezel_bottom = 10.4;
 
 // How much case to add around the panel
-panel_border_left   = 3.0;
-panel_border_right  = 3.0;
-panel_border_top    = 5.0;
-panel_border_bottom = 5.0;
+panel_border_left   = 1.0;
+panel_border_right  = 1.0;
+panel_border_top    = 4.0;
+panel_border_bottom = 4.0;
+
+// Gap in the border for the eInk panel's cables, mm, centered
+panel_cable_gap_left = 0;
+panel_cable_gap_right = 0;
+panel_cable_gap_top = 0;
+panel_cable_gap_bottom = 40;
+panel_cable_gap_size = 2.0; // How into the border to cut
+case_cable_gap_depth = 3.0; // How deep into the case to cut
 
 // Extra space inside the case to hold up the panel
 case_inner_padding_left = 2.0;
@@ -33,11 +40,14 @@ case_inner_padding_right = 2.0;
 case_inner_padding_top = 2.0;
 case_inner_padding_bottom = 2.0;
 
+case_center_support = true;
+
 // Panel cover thickness (layer 1.1: border + bezel above eInk panel)
 panel_cover_depth = 2.0;
 
 // Total “electronics compartment” thickness (layer 2.1)
-case_depth = 7.0; 
+case_depth = 12.0; 
+//case_depth = 7.0; 
 
 // Back shell thickness (layer 2.2)
 back_depth = 2.0;
@@ -57,6 +67,24 @@ case_screw_hole_thread_diameter = 2.0; // Hole for the screw thread that goes al
 case_screw_hole_solid_border    = 1.0; // Solid border around the screw hole
 case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
 case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the heat set insert
+
+case_hole_left_top = 0;
+case_hole_left_bottom = 14;
+case_hole_right_top = 0;
+case_hole_right_bottom = 0;
+case_hole_top_left = 0;
+case_hole_top_right = 0;
+case_hole_bottom_left = 0;
+case_hole_bottom_right = 0;
+
+case_hole_left_top_offset = 5;
+case_hole_left_bottom_offset = 5;
+case_hole_right_top_offset = 5;
+case_hole_right_bottom_offset = 5;
+case_hole_top_left_offset = 5;
+case_hole_top_right_offset = 5;
+case_hole_bottom_left_offset = 5;
+case_hole_bottom_right_offset = 5;
 
 /*****************************************************************************/
 /*                Derived Dimensions (overall frame size)                    */
@@ -118,7 +146,7 @@ module panel_cover() {
 
 //
 // 2. Panel Shell (layer 1.2)
-//    This layer covers the border of the case, and has holes for heat set inserts for the screws.
+//    This layer covers the border of the case, has holes for heat set inserts for the screws and the panel's cables.
 //
 module panel_shell() {
     difference() {
@@ -145,47 +173,214 @@ module panel_shell() {
                 cylinder(d = panel_screw_insert_diameter, 
                          h = panel_depth + 0.02);
         }
+        if (panel_cable_gap_bottom > 0) {
+            panel_gap_bottom(panel_depth);
+        }
+        if (panel_cable_gap_top > 0) {
+            panel_gap_top(panel_depth);
+        }
+        if (panel_cable_gap_left > 0) {
+            panel_gap_left(panel_depth);
+        }
+        if (panel_cable_gap_right > 0) {
+            panel_gap_right(panel_depth);
+        }
     }
+}
+
+module panel_gap_bottom(depth) {
+  translate(
+    [
+      panel_border_left + panel_width / 2 - panel_cable_gap_bottom / 2,
+      panel_border_top + panel_height - case_inner_padding_bottom - 0.01,
+      -0.01
+    ]
+  )
+  cube([
+      panel_cable_gap_bottom,
+      panel_cable_gap_size + case_inner_padding_bottom + 0.01,
+      depth + 0.02
+  ]); 
+}
+
+module panel_gap_top(depth) {
+  translate(
+    [
+      panel_border_left + panel_width / 2 - panel_cable_gap_top / 2,
+      panel_border_top - panel_cable_gap_size,
+      -0.01
+    ]
+  )
+  cube([
+      panel_cable_gap_top,
+      panel_cable_gap_size + case_inner_padding_top + 0.01,
+      depth + 0.02
+  ]); 
+}
+
+module panel_gap_left(depth) {
+  translate(
+    [
+      panel_border_left - panel_cable_gap_size,
+      panel_border_top + panel_height / 2 - panel_cable_gap_left / 2,
+      -0.01
+    ]
+  )
+  cube([
+      panel_cable_gap_size + case_inner_padding_left + 0.01,
+      panel_cable_gap_left,
+      depth + 0.02
+  ]); 
+}
+
+module panel_gap_right(depth) {
+  translate(
+    [
+      panel_border_left + panel_width - case_inner_padding_right - 0.01,
+      panel_border_top + panel_height / 2 - panel_cable_gap_right / 2,
+      -0.01
+    ]
+  )
+  cube([
+      panel_cable_gap_size + case_inner_padding_right + 0.01,
+      panel_cable_gap_right,
+      depth + 0.02
+  ]); 
 }
 
 //
 // 3. The main case compartment (layers 2.1 + 2.2)
 //
+module caseBody () {
+    difference() {
+        // Overall block
+        cube([frame_full_width, frame_full_height, case_depth + back_depth]);
+        
+        // Internal rectangular cutout for electronics
+        translate(
+          [
+            panel_border_left + case_inner_padding_left,
+            panel_border_top  + case_inner_padding_top,
+            -0.01
+          ]
+        )
+        cube([
+            panel_width 
+              - case_inner_padding_left 
+              - case_inner_padding_right,
+            panel_height 
+              - case_inner_padding_top 
+              - case_inner_padding_bottom,
+            case_depth + 0.01
+        ]);
+        if (panel_cable_gap_bottom > 0) {
+            panel_gap_bottom(case_cable_gap_depth);
+        }
+        if (panel_cable_gap_top > 0) {
+            panel_gap_top(case_cable_gap_depth);
+        }
+        if (panel_cable_gap_left > 0) {
+            panel_gap_left(case_cable_gap_depth);
+        }
+        if (panel_cable_gap_right > 0) {
+            panel_gap_right(case_cable_gap_depth);
+        }
+        if (case_hole_left_top > 0) {
+            translate([-0.01, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.01, -0.01])
+            cube([
+                panel_border_left + case_inner_padding_left + 0.02,
+                case_hole_left_top + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_left_bottom > 0) {
+            translate([-0.01, - case_hole_left_bottom_offset + panel_border_top + panel_height - case_inner_padding_bottom - case_hole_left_bottom - 0.01, -0.01])
+            cube([
+                panel_border_left + case_inner_padding_left + 0.02,
+                case_hole_left_bottom + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_right_top > 0) {
+            translate([panel_width + panel_border_left - case_inner_padding_right - 0.01, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.01, -0.01])
+            cube([
+                panel_border_left + case_inner_padding_left + 0.02,
+                case_hole_right_top + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_right_bottom > 0) {
+            translate([panel_width + panel_border_left - case_inner_padding_right - 0.01, - case_hole_left_bottom_offset + panel_border_top + panel_height - case_inner_padding_bottom - case_hole_right_bottom - 0.01, -0.01])
+            cube([
+                panel_border_left + case_inner_padding_left + 0.02,
+                case_hole_right_bottom + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_top_left > 0) {
+            translate([case_hole_top_left_offset + panel_border_left + case_inner_padding_left - 0.01, -0.01, -0.01])
+            cube([
+                case_hole_top_left + 0.02,
+                panel_border_top + case_inner_padding_top + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_top_right > 0) {
+            translate([- case_hole_top_right_offset + panel_border_left + panel_width - case_inner_padding_right - case_hole_top_right - 0.01, -0.01, -0.01])
+            cube([
+                case_hole_top_right + 0.02,
+                panel_border_top + case_inner_padding_top + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_bottom_left > 0) {
+            translate([case_hole_bottom_left_offset + panel_border_left + case_inner_padding_left - 0.01, panel_border_top + panel_height - case_inner_padding_bottom - 0.01, -0.01])
+            cube([
+                case_hole_bottom_left + 0.02,
+                panel_border_top + case_inner_padding_top + 0.02,
+                case_depth + 0.02
+            ]);
+        }
+        if (case_hole_bottom_right > 0) {
+            translate([-case_hole_bottom_right_offset + panel_border_left + panel_width - case_inner_padding_right - case_hole_bottom_right - 0.01, panel_border_top + panel_height - case_inner_padding_bottom - 0.01, -0.01])
+            cube([
+                case_hole_bottom_right + 0.02,
+                panel_border_top + case_inner_padding_top + 0.02,
+                case_depth + 0.02
+            ]);
+        }   
+    }
+}
+
 module case() {
     // Cut out inner cylinders for scres
     difference() {
         // Merce scres cutouts with rest of the case
         union() {
-            // Cut out a piece of the cube
-            difference() {
-                // Overall block
-                cube([frame_full_width, frame_full_height, case_depth + back_depth]);
-                
-                // Internal rectangular cutout for electronics
-                translate(
-                  [
-                    panel_border_left + case_inner_padding_left,
-                    panel_border_top  + case_inner_padding_top,
-                    -0.01
-                  ]
-                )
-                cube([
-                    panel_width 
-                      - case_inner_padding_left 
-                      - case_inner_padding_right,
-                    panel_height 
-                      - case_inner_padding_top 
-                      - case_inner_padding_bottom,
-                    case_depth + 0.01
-                ]);
-            }
+            if (case_center_support) {
+                difference() {
+                    union() {
+                        // Center support
+                        translate([panel_border_left + panel_width / 4, panel_border_top + panel_height / 2 - 2, 0])
+                        cube([panel_width / 2, 4, case_depth]);
+
+                        translate([panel_border_left + panel_width / 2 - 2, panel_border_top + panel_height / 4, 0])
+                        cube([4, panel_height / 2, case_depth]);
+                    };
+                    translate([panel_border_left + panel_width / 2 - panel_width / 16, panel_border_top + panel_height / 2 - panel_height / 16, -0.01])
+                    cube([panel_width / 8, panel_height / 8, case_depth + 0.02]);
+                }
+            };
 
             // Corner screw cylinders (solid parts)
             for (c = corners) {
                 translate([c[0], c[1], case_screw_hole_insert_depth]) // Solid border around the screw hole
                 cylinder(d = case_screw_hole_diameter + case_screw_hole_solid_border,
                           h = case_depth + back_depth - case_screw_hole_insert_depth); // Hole for the screw thread
-            }
+            };
+
+            // Cut out a piece of the cube
+            caseBody();
         };
         
         // Cut holes to the back
@@ -214,13 +409,13 @@ module case() {
 /*****************************************************************************/
 
 // 1. Panel Cover
-translate([0, 0, 0]) 
+translate([-frame_full_width/2, -frame_full_height/2, 0]) 
     panel_cover();
 
 // 2. Panel shell
-translate([0, 0, panel_cover_depth]) 
+translate([-frame_full_width/2, -frame_full_height/2, panel_cover_depth]) 
     panel_shell();
 
 // 3. Case
-translate([0, 0, panel_cover_depth + panel_depth + debug_gap]) 
+translate([-frame_full_width/2, -frame_full_height/2, panel_cover_depth + panel_depth + debug_gap]) 
     case();
