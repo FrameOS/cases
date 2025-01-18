@@ -64,6 +64,12 @@ screw_offset_right  = 3.2;
 screw_offset_top    = 3.2;
 screw_offset_bottom = 3.2;
 
+// Extra screws to add to the frame in all sides
+extra_screws_top = [];
+extra_screws_bottom = [];
+extra_screws_left = [];
+extra_screws_right = [];
+
 // Hole made into layer 1.2
 panel_screw_insert_diameter = 3.45;
 panel_screw_insert_depth = 2.0;
@@ -122,12 +128,29 @@ frame_full_depth = panel_depth
 /*****************************************************************************/
 
 // Coordinates for the four corners, offset in from each edge
-corners = [
+screw_positions = [
     [ screw_offset_left,                     screw_offset_bottom                  ],
     [ frame_full_width - screw_offset_right, screw_offset_bottom                  ],
     [ screw_offset_left,                     frame_full_height - screw_offset_top ],
-    [ frame_full_width - screw_offset_right, frame_full_height - screw_offset_top ]
+    [ frame_full_width - screw_offset_right, frame_full_height - screw_offset_top ],
+
+    for (s = extra_screws_bottom)
+        [ screw_offset_left + s * (frame_full_width - screw_offset_left - screw_offset_right), 
+          frame_full_height - screw_offset_top ],
+
+    for (s = extra_screws_top)
+        [ screw_offset_left + s * (frame_full_width - screw_offset_left - screw_offset_right), 
+          screw_offset_bottom ],
+
+    for (s = extra_screws_left)
+        [ screw_offset_left, 
+          screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ],
+
+    for (s = extra_screws_right)
+        [ frame_full_width - screw_offset_right, 
+          screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ]
 ];
+
 
 /*****************************************************************************/
 /*                              Modules                                      */
@@ -156,7 +179,7 @@ module panel_cover() {
             panel_cover_depth + 0.02
         ]);
 
-        for (c = corners) {
+        for (c = screw_positions) {
             translate([c[0], c[1],  panel_cover_depth + panel_depth - panel_screw_insert_depth])
                 cylinder(d = panel_screw_insert_diameter, 
                          h = panel_screw_insert_depth + 0.01);
@@ -176,26 +199,26 @@ module panel_cover() {
             panel_depth + 0.02
         ]);
         if (panel_cable_gap_bottom > 0) {
-            render_panel_cable_gap_bottom(panel_depth);
+            render_panel_cable_gap_bottom(panel_depth, panel_cover_depth);
         }
         if (panel_cable_gap_top > 0) {
-            render_panel_cable_gap_top(panel_depth);
+            render_panel_cable_gap_top(panel_depth, panel_cover_depth);
         }
         if (panel_cable_gap_left > 0) {
-            render_panel_cable_gap_left(panel_depth);
+            render_panel_cable_gap_left(panel_depth, panel_cover_depth);
         }
         if (panel_cable_gap_right > 0) {
-            render_panel_cable_gap_right(panel_depth);
+            render_panel_cable_gap_right(panel_depth, panel_cover_depth);
         }
     }
 }
 
-module render_panel_cable_gap_bottom(depth) {
+module render_panel_cable_gap_bottom(depth, translate_depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
       panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.01,
-      panel_cover_depth
+      translate_depth
     ]
   )
   cube([
@@ -205,12 +228,12 @@ module render_panel_cable_gap_bottom(depth) {
   ]); 
 }
 
-module render_panel_cable_gap_top(depth) {
+module render_panel_cable_gap_top(depth, translate_depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
       panel_border_top - panel_cable_gap_size,
-      panel_cover_depth
+      translate_depth
     ]
   )
   cube([
@@ -220,12 +243,12 @@ module render_panel_cable_gap_top(depth) {
   ]); 
 }
 
-module render_panel_cable_gap_left(depth) {
+module render_panel_cable_gap_left(depth, translate_depth) {
   translate(
     [
       panel_border_left - panel_cable_gap_size,
       panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_left / 2,
-      panel_cover_depth
+      translate_depth
     ]
   )
   cube([
@@ -235,12 +258,12 @@ module render_panel_cable_gap_left(depth) {
   ]); 
 }
 
-module render_panel_cable_gap_right(depth) {
+module render_panel_cable_gap_right(depth, translate_depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.01,
       panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2,
-      panel_cover_depth
+      translate_depth
     ]
   )
   cube([
@@ -279,16 +302,16 @@ module caseBody () {
             case_depth + 0.01
         ]);
         if (panel_cable_gap_bottom > 0) {
-            render_panel_cable_gap_bottom(case_cable_gap_depth);
+            render_panel_cable_gap_bottom(case_cable_gap_depth, -0.01);
         }
         if (panel_cable_gap_top > 0) {
-            render_panel_cable_gap_top(case_cable_gap_depth);
+            render_panel_cable_gap_top(case_cable_gap_depth, -0.01);
         }
         if (panel_cable_gap_left > 0) {
-            render_panel_cable_gap_left(case_cable_gap_depth);
+            render_panel_cable_gap_left(case_cable_gap_depth, -0.01);
         }
         if (panel_cable_gap_right > 0) {
-            render_panel_cable_gap_right(case_cable_gap_depth);
+            render_panel_cable_gap_right(case_cable_gap_depth, -0.01);
         }
         if (case_hole_left_top > 0) {
             translate([-0.01, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.01, -0.01 + case_hole_top_depth])
@@ -394,7 +417,7 @@ module case() {
         };
         
         // Cut holes to the back
-        for (c = corners) {
+        for (c = screw_positions) {
             // Screw thread hole that goes all the way
             translate([c[0], c[1], - 0.01])
             cylinder(d = case_screw_hole_thread_diameter,
