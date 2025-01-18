@@ -44,6 +44,8 @@ case_center_support_vertical = false;
 case_center_support_horizontal = true;
 case_center_support_width = 4.0;
 
+fillet_radius = 0.99;
+
 // Panel cover thickness (layer 1.1: border + bezel above eInk panel)
 panel_cover_depth = 2.0;
 
@@ -55,10 +57,10 @@ case_depth = 12.0;
 back_depth = 2.0;
 
 // Center of each screw hole from the corner
-screw_offset_left   = 3.0;
-screw_offset_right  = 3.0;
-screw_offset_top    = 3.0;
-screw_offset_bottom = 3.0;
+screw_offset_left   = 3.2;
+screw_offset_right  = 3.2;
+screw_offset_top    = 3.2;
+screw_offset_bottom = 3.2;
 
 // Hole made into layer 1.2
 panel_screw_insert_diameter = 3.45;
@@ -66,7 +68,7 @@ panel_screw_insert_diameter = 3.45;
 // Cylindrical hole inserted into layers 2.1 and 2.2
 case_screw_hole_diameter        = 4.5;
 case_screw_hole_thread_diameter = 2.0; // Hole for the screw thread that goes all the way through
-case_screw_hole_solid_border    = 1.0; // Solid border around the screw hole
+case_screw_hole_solid_border    = 0.3; // Solid border around the screw hole
 case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
 case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the heat set insert
 
@@ -121,6 +123,49 @@ corners = [
 /*                              Modules                                      */
 /*****************************************************************************/
 
+
+module filletBox(x, y, z, r = fillet_radius) {
+    // Optional sanity check (warn if the fillet is too large):
+    if (x < 2*r || y < 2*r || z < 2*r) {
+        echo("WARNING: fillet radius is too large for box dimensions!");
+    }
+    
+    // Minkowski sum of a smaller cube + sphere(r)
+    // => yields a final shape with filleted edges/corners.
+    translate([r, r, r])  // Move the sphere to the corner of the cube
+    minkowski() {
+        // Create the “inner” cube, shrunk by 2*r in each dimension
+        // so that after Minkowski we end up with full x, y, z overall.
+        cube([x - 2*r, y - 2*r, z - 2*r], center = false);
+
+        // Add the sphere that “rounds” the corners/edges
+        sphere(r = r, $fn = 64);  // $fn=64 for smoother arcs
+    }
+}
+
+module filletBoxTop(x, y, z, r = fillet_radius) {
+    intersection() {
+        cube([x, y, z]);
+        filletBox(x, y, z * 2, r);
+    }
+}
+
+module filletBoxMiddle(x, y, z, r = fillet_radius) {
+    intersection() {
+        cube([x, y, z]);
+        translate([0, 0, -z])
+        filletBox(x, y, z * 3, r);
+    }
+}
+
+module filletBoxBottom(x, y, z, r = fillet_radius) {
+    intersection() {
+        cube([x, y, z]);
+        translate([0, 0, -z])
+        filletBox(x, y, z * 2, r);
+    }
+}
+
 //
 // 1. Panel Cover (layer 1.1)
 //    This layer covers the border of the case, and the bezel around the eInk panel
@@ -128,7 +173,7 @@ corners = [
 module panel_cover() {
     difference() {
         // Outer block
-        cube([frame_full_width, frame_full_height, panel_cover_depth]);
+        filletBoxTop(frame_full_width, frame_full_height, panel_cover_depth);
         
         // Window for the eInk panel’s visible area
         translate(
@@ -159,7 +204,7 @@ module panel_cover() {
 module panel_shell() {
     difference() {
         // Overall solid
-        cube([frame_full_width, frame_full_height, panel_depth]);
+        filletBoxMiddle(frame_full_width, frame_full_height, panel_depth);
         
         // Internal rectangular cutout matching the panel
         translate(
@@ -261,8 +306,11 @@ module panel_gap_right(depth) {
 //
 module caseBody () {
     difference() {
-        // Overall block
-        cube([frame_full_width, frame_full_height, case_depth + back_depth]);
+        filletBoxBottom(
+            frame_full_width, 
+            frame_full_height, 
+            case_depth + back_depth
+        );
         
         // Internal rectangular cutout for electronics
         translate(
