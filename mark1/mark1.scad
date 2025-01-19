@@ -6,7 +6,7 @@ $fn = $preview ? 32 : 100;
 
 /* [View settings] */
 
-view_mode="stacked"; // [ready_to_print, stacked]
+view_mode="ready_to_print"; // [ready_to_print, stacked]
 
 
 /* [Panel dimensions] */
