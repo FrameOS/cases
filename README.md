@@ -2,7 +2,6 @@
 
 ## Mark 1
 
-Features:
 - Parametric design - change any dimension and regenerate
 - Two part design where the lid screws to the body with heat set inserts
 - Custom number of screws on any edge
@@ -11,17 +10,20 @@ Features:
 
 ### Waveshare 7.3" E Spectra 6 color
 
-![7in3e](./mark1/images/7in3e-model.png)
+Features a kickstand
 
--  [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.stl), [3mf](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.3mf)
+- [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.stl), [3mf](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.3mf)
+
+![7in3e](./mark1/images/7in3e-model.png)
 
 ### Waveshare 13.3" E Spectra 6 color
 
-![13in3e](./mark1/images/13in3e-model.png)
+**Note:** beware of shrinkage when printing vertically! Scale your model up by 1mm before printing to combat this!
 
-**note:** beware of shrinkage! scale your model up by 1mm before printing!
+- [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/13in3e-upright.stl)
 
-- [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/13in3e-upright.stl) - 
+![13in3e](./mark1/images/13in3e-upright.png)
+
 
 ### Inspiration
 
