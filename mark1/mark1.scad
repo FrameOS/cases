@@ -8,6 +8,8 @@ $fn = $preview ? 32 : 100;
 
 view_mode="ready_to_print"; // [ready_to_print, stacked]
 
+print_mode="vertical"; // [vertical, horizontal]
+
 
 /* [Panel dimensions] */
 
@@ -49,7 +51,7 @@ panel_border_top    = 11.8;
 panel_border_bottom = 11.8;
 
 // Gap in the border for the eInk panel's cables, mm, centered
-panel_cable_gap_left = 140;
+panel_cable_gap_left = 142;
 panel_cable_gap_right = 0;
 panel_cable_gap_top = 0;
 panel_cable_gap_bottom = 0;
@@ -114,15 +116,22 @@ back_depth = 2.0;
 /* [Screws and placement] */
 
 // Center of each screw hole from the corner
-screw_offset_left   = 3.2;
-screw_offset_right  = 3.2;
-screw_offset_top    = 3.2;
-screw_offset_bottom = 3.2;
+screw_offset_left   = 5.0;
+screw_offset_right  = 5.0;
+screw_offset_top    = 5.0;
+screw_offset_bottom = 5.0;
+
+// 7.3"E eInk panel
+// // Center of each screw hole from the corner
+// screw_offset_left   = 3.2;
+// screw_offset_right  = 3.2;
+// screw_offset_top    = 3.2;
+// screw_offset_bottom = 3.2;
 
 // Extra screws on the top side (0.0 to 1.0)
 extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the bottom side (0.0 to 1.0)
-extra_screws_bottom = [0.42, 0.58, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the left side (0.0 to 1.0)
 extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the right side (0.0 to 1.0)
@@ -167,8 +176,8 @@ case_hole_bottom_right = 0;
 
 case_hole_left_top_offset = 5;
 case_hole_left_bottom_offset = 5;
-case_hole_right_top_offset = 5;
-case_hole_right_bottom_offset = 5;
+case_hole_right_top_offset = 10;
+case_hole_right_bottom_offset = 10;
 case_hole_top_left_offset = 5;
 case_hole_top_right_offset = 5;
 case_hole_bottom_left_offset = 5;
@@ -316,13 +325,13 @@ module render_panel_cable_gap_bottom(depth, translate_depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
-      panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11,
+      panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_depth - 0.11,
       translate_depth
     ]
   )
   cube([
       panel_cable_gap_bottom,
-      panel_cable_gap_size + case_inner_padding_bottom + 0.11,
+      panel_cable_gap_size + case_inner_padding_bottom + 0.11 + case_depth,
       depth + 0.11
   ]); 
 }
@@ -337,9 +346,21 @@ module render_panel_cable_gap_top(depth, translate_depth) {
   )
   cube([
       panel_cable_gap_top,
-      panel_cable_gap_size + case_inner_padding_top + 0.11,
+      panel_cable_gap_size * 2 + case_inner_padding_top + 0.11, // 2x to cut into the chamfer
       depth + 0.11
   ]); 
+  if (print_mode == "vertical") {
+    let (l = panel_cable_gap_top, w = depth, h = depth)
+    translate([
+    panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
+    panel_border_top - panel_cable_gap_size - depth + 0.11,
+    translate_depth
+    ])
+    polyhedron(//pt 0        1        2        3        4        5
+        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+    );
+  }
 }
 
 module render_panel_cable_gap_left(depth, translate_depth) {
@@ -355,6 +376,18 @@ module render_panel_cable_gap_left(depth, translate_depth) {
       panel_cable_gap_left,
       depth + 0.11
   ]); 
+  if (print_mode == "vertical") {
+    let (l = panel_cable_gap_size + case_inner_padding_left + 0.11, w = depth, h = depth)
+    translate([
+      panel_border_left - panel_cable_gap_size,
+      panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_left / 2 - depth + 0.11,
+      translate_depth
+    ])
+    polyhedron(//pt 0        1        2        3        4        5
+        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+    );
+  }
 }
 
 module render_panel_cable_gap_right(depth, translate_depth) {
@@ -370,6 +403,18 @@ module render_panel_cable_gap_right(depth, translate_depth) {
       panel_cable_gap_right,
       depth + 0.11
   ]); 
+  if (print_mode == "vertical") {
+    let (l = panel_cable_gap_size + case_inner_padding_right + 0.11, w = depth, h = depth)
+    translate([
+      panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.11,
+      panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2 - depth + 0.11,
+      translate_depth
+    ])
+    polyhedron(//pt 0        1        2        3        4        5
+        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+    );
+  }
 }
 
 
@@ -402,89 +447,140 @@ module caseBody () {
               - case_inner_padding_bottom,
             case_depth + 0.11
         ]);
-        if (panel_cable_gap_bottom > 0) {
-            render_panel_cable_gap_bottom(case_cable_gap_depth, -0.11);
-        }
-        if (panel_cable_gap_top > 0) {
-            render_panel_cable_gap_top(case_cable_gap_depth, -0.11);
-        }
-        if (panel_cable_gap_left > 0) {
-            render_panel_cable_gap_left(case_cable_gap_depth, -0.11);
-        }
-        if (panel_cable_gap_right > 0) {
-            render_panel_cable_gap_right(case_cable_gap_depth, -0.11);
-        }
-        if (case_hole_left_top > 0) {
-            translate([-0.11, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
-            cube([
-                panel_border_left + case_inner_padding_left + 0.22,
-                case_hole_left_top + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_left_bottom > 0) {
-            translate([-0.11, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_left_bottom - 0.11, -0.11 + case_hole_top_depth])
-            cube([
-                panel_border_left + case_inner_padding_left + 0.22,
-                case_hole_left_bottom + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_right_top > 0) {
-            translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
-            cube([
-                panel_border_right + case_inner_padding_right + 0.22,
-                case_hole_right_top + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_right_bottom > 0) {
-            translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_right_bottom - 0.11, -0.11 + case_hole_top_depth])
-            cube([
-                panel_border_right + case_inner_padding_right + 0.22,
-                case_hole_right_bottom + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_top_left > 0) {
-            translate([case_hole_top_left_offset + panel_border_left + case_inner_padding_left - 0.11, -0.11, -0.11 + case_hole_top_depth])
-            cube([
-                case_hole_top_left + 0.22,
-                panel_border_top + case_inner_padding_top + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_top_right > 0) {
-            translate([- case_hole_top_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_top_right - 0.11, -0.11, -0.11 + case_hole_top_depth])
-            cube([
-                case_hole_top_right + 0.22,
-                panel_border_top + case_inner_padding_top + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_bottom_left > 0) {
-            translate([case_hole_bottom_left_offset + panel_border_left + case_inner_padding_left - 0.11, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11, -0.11 + case_hole_top_depth])
-            cube([
-                case_hole_bottom_left + 0.22,
-                panel_border_top + case_inner_padding_top + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }
-        if (case_hole_bottom_right > 0) {
-            translate([-case_hole_bottom_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_bottom_right - 0.11, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11, -0.11 + case_hole_top_depth])
-            cube([
-                case_hole_bottom_right + 0.22,
-                panel_border_top + case_inner_padding_top + 0.22,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
-            ]);
-        }   
+        case_cable_gaps();
+        case_holes();
     }
+     // chamfer the edges
+    if (print_mode == "vertical") {
+        difference() {
+            // top chamfer
+            let (
+                l = panel_width_with_clearance - case_inner_padding_left - case_inner_padding_right, 
+                w = -case_depth, 
+                h = -case_depth
+            )
+            translate([
+                panel_border_left + case_inner_padding_left,
+                panel_border_top  + case_inner_padding_top + case_depth,
+                case_depth
+            ])
+            polyhedron(//pt 0        1        2        3        4        5
+                points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+            );
+            if (panel_cable_gap_top > 0) {
+                render_panel_cable_gap_top(case_cable_gap_depth, -0.11);
+            }
+        }
+
+        difference() {
+            // bottom chamfer
+            let (
+                l = panel_width_with_clearance - case_inner_padding_left - case_inner_padding_right, 
+                w = case_depth, 
+                h = -case_depth
+            )
+            translate([
+                panel_border_left + case_inner_padding_left,
+                panel_border_top  + panel_height_with_clearance - case_inner_padding_bottom - case_depth,
+                case_depth
+            ])
+            polyhedron(//pt 0        1        2        3        4        5
+                points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+            );
+            if (panel_cable_gap_bottom > 0) {
+                render_panel_cable_gap_bottom(case_cable_gap_depth, -0.11);
+            }
+        }
+    }
+}
+
+module case_cable_gaps() {
+    if (panel_cable_gap_bottom > 0) {
+        render_panel_cable_gap_bottom(case_cable_gap_depth, -0.11);
+    }
+    if (panel_cable_gap_top > 0) {
+        render_panel_cable_gap_top(case_cable_gap_depth, -0.11);
+    }
+    if (panel_cable_gap_left > 0) {
+        render_panel_cable_gap_left(case_cable_gap_depth, -0.11);
+    }
+    if (panel_cable_gap_right > 0) {
+        render_panel_cable_gap_right(case_cable_gap_depth, -0.11);
+    }
+}
+
+module case_holes() {
+    if (case_hole_left_top > 0) {
+        translate([-0.11, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
+        cube([
+            panel_border_left + case_inner_padding_left + 0.22,
+            case_hole_left_top + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_left_bottom > 0) {
+        translate([-0.11, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_left_bottom - 0.11, -0.11 + case_hole_top_depth])
+        cube([
+            panel_border_left + case_inner_padding_left + 0.22,
+            case_hole_left_bottom + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_right_top > 0) {
+        translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, case_hole_right_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
+        cube([
+            panel_border_right + case_inner_padding_right + 0.22,
+            case_hole_right_top + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_right_bottom > 0) {
+        translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, - case_hole_right_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_right_bottom - 0.11, -0.11 + case_hole_top_depth])
+        cube([
+            panel_border_right + case_inner_padding_right + 0.22,
+            case_hole_right_bottom + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_top_left > 0) {
+        translate([case_hole_top_left_offset + panel_border_left + case_inner_padding_left - 0.11, -0.11, -0.11 + case_hole_top_depth])
+        cube([
+            case_hole_top_left + 0.22,
+            panel_border_top + case_inner_padding_top + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_top_right > 0) {
+        translate([- case_hole_top_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_top_right - 0.11, -0.11, -0.11 + case_hole_top_depth])
+        cube([
+            case_hole_top_right + 0.22,
+            panel_border_top + case_inner_padding_top + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_bottom_left > 0) {
+        translate([case_hole_bottom_left_offset + panel_border_left + case_inner_padding_left - 0.11, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11, -0.11 + case_hole_top_depth])
+        cube([
+            case_hole_bottom_left + 0.22,
+            panel_border_top + case_inner_padding_top + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }
+    if (case_hole_bottom_right > 0) {
+        translate([-case_hole_bottom_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_bottom_right - 0.11, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11, -0.11 + case_hole_top_depth])
+        cube([
+            case_hole_bottom_right + 0.22,
+            panel_border_top + case_inner_padding_top + 0.22,
+            case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
+        ]);
+    }   
 }
 
 module case() {
     // Cut out inner cylinders for screws
     difference() {
-        // Merce scres cutouts with rest of the case
         union() {
             if (case_center_support_vertical || case_center_support_horizontal) {
                 difference() {
@@ -492,24 +588,59 @@ module case() {
                         // Center support
                         if (case_center_support_horizontal) {
                             translate([frame_full_width / 4, frame_full_height / 2 - (case_center_support_width / 2), 0])
-                            cube([panel_width_with_clearance / 2, case_center_support_width, case_depth]);
+                            cube([frame_full_width / 6, case_center_support_width, case_depth]);
+
+                            translate([frame_full_width / 4 + frame_full_width / 3, frame_full_height / 2 - (case_center_support_width / 2), 0])
+                            cube([frame_full_width / 6, case_center_support_width, case_depth]);
+
+                            if (print_mode == "vertical") {
+                                let (l = frame_full_width / 6, w = -case_depth, h = -case_depth)
+                                translate([frame_full_width / 4, frame_full_height / 2 + (case_center_support_width / 2) + case_depth, case_depth])
+                                polyhedron(//pt 0        1        2        3        4        5
+                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                                );
+                                let (l = frame_full_width / 6, w = -case_depth, h = -case_depth)
+                                translate([frame_full_width / 4 + frame_full_width / 3, frame_full_height / 2 + (case_center_support_width / 2) + case_depth, case_depth])
+                                polyhedron(//pt 0        1        2        3        4        5
+                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                                );
+                            }
                         }
 
                         if (case_center_support_vertical) {
                             translate([frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4, 0])
-                            cube([case_center_support_width, panel_height_with_clearance / 2, case_depth]);
+                            cube([case_center_support_width, frame_full_height / 6, case_depth]);
+
+                            translate([frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4 + frame_full_height / 3, 0])
+                            cube([case_center_support_width, frame_full_height / 6, case_depth]);
+
+                            if (print_mode == "vertical") {
+                                let (l = case_center_support_width, w = -case_depth, h = -case_depth)
+                                translate([
+                                    frame_full_width / 2 - (case_center_support_width / 2), 
+                                    frame_full_height / 4 + frame_full_height / 6 + case_depth,
+                                    case_depth
+                                ])
+                                polyhedron(//pt 0        1        2        3        4        5
+                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                                );
+
+                                let (l = case_center_support_width, w = -case_depth, h = -case_depth)
+                                translate([
+                                    frame_full_width / 2 - (case_center_support_width / 2), 
+                                    frame_full_height / 4 + frame_full_height / 2 + case_depth,
+                                    case_depth
+                                ])
+                                polyhedron(//pt 0        1        2        3        4        5
+                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                                );
+                            }
                         }
                     };
-                    translate([
-                        frame_full_width / 2 - panel_width_with_clearance / 6 / 2, 
-                        frame_full_height / 2 - panel_height_with_clearance / 6 / 2, 
-                        -0.11
-                    ])
-                    cube([
-                        panel_width_with_clearance / 6, 
-                        panel_height_with_clearance / 6, 
-                        case_depth + 0.22
-                    ]);
                 }
             };
 
@@ -718,12 +849,28 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
 
 print_gap = 20;
 
-rotate(view_mode == "ready_to_print" ? [0, 0, 0] : [0, 180, 0])
-translate(view_mode == "ready_to_print" ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
-    panel_cover();
+rotate(
+    view_mode == "ready_to_print" 
+    ? [0, 0, 180] 
+    : [0, 180, 0])
+translate(
+    view_mode == "ready_to_print" 
+    ? print_mode == "vertical" 
+      ? [-frame_full_width/2, -frame_full_height - print_gap - debug_gap, 0]
+      : [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
+    : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
+panel_cover();
 
-rotate([0, 180, 0])
-translate([-frame_full_width/2, -frame_full_height/2, 0]) 
+rotate(
+    view_mode == "ready_to_print" && print_mode == "vertical" 
+    ? [90, 180, 0] 
+    : [0, 180, 0]
+)
+translate(
+    view_mode == "ready_to_print" && print_mode == "vertical" 
+    ? [-frame_full_width/2, -frame_full_height, 0] 
+    : [-frame_full_width/2, -frame_full_height/2, 0]
+) 
     if (kickstand) {
         caseWithKickstand();
     } else {
