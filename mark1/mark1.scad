@@ -209,19 +209,19 @@ module panel_cover() {
           [
             panel_bezel_left + panel_border_left, 
             panel_bezel_top  + panel_border_top,
-            -0.01
+            -0.11
           ]
         )
         cube([
             panel_width_with_clearance  - panel_bezel_left - panel_bezel_right, 
             panel_height_with_clearance - panel_bezel_top  - panel_bezel_bottom, 
-            panel_cover_depth + 0.02
+            panel_cover_depth + 0.22
         ]);
 
         for (c = screw_positions) {
             translate([c[0], c[1],  panel_cover_depth + panel_depth - panel_screw_insert_depth])
                 cylinder(d = panel_screw_insert_diameter, 
-                         h = panel_screw_insert_depth + 0.01);
+                         h = panel_screw_insert_depth + 0.11);
         }
 
         // Internal rectangular cutout matching the panel
@@ -235,7 +235,7 @@ module panel_cover() {
         cube([
             panel_width_with_clearance,
             panel_height_with_clearance,
-            panel_depth + 0.02
+            panel_depth + 0.22
         ]);
         if (panel_cable_gap_bottom > 0) {
             render_panel_cable_gap_bottom(panel_depth, panel_cover_depth);
@@ -256,14 +256,14 @@ module render_panel_cable_gap_bottom(depth, translate_depth) {
   translate(
     [
       panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
-      panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.01,
+      panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11,
       translate_depth
     ]
   )
   cube([
       panel_cable_gap_bottom,
-      panel_cable_gap_size + case_inner_padding_bottom + 0.01,
-      depth + 0.01
+      panel_cable_gap_size + case_inner_padding_bottom + 0.11,
+      depth + 0.11
   ]); 
 }
 
@@ -277,8 +277,8 @@ module render_panel_cable_gap_top(depth, translate_depth) {
   )
   cube([
       panel_cable_gap_top,
-      panel_cable_gap_size + case_inner_padding_top + 0.01,
-      depth + 0.01
+      panel_cable_gap_size + case_inner_padding_top + 0.11,
+      depth + 0.11
   ]); 
 }
 
@@ -291,24 +291,24 @@ module render_panel_cable_gap_left(depth, translate_depth) {
     ]
   )
   cube([
-      panel_cable_gap_size + case_inner_padding_left + 0.01,
+      panel_cable_gap_size + case_inner_padding_left + 0.11,
       panel_cable_gap_left,
-      depth + 0.01
+      depth + 0.11
   ]); 
 }
 
 module render_panel_cable_gap_right(depth, translate_depth) {
   translate(
     [
-      panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.01,
+      panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.11,
       panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2,
       translate_depth
     ]
   )
   cube([
-      panel_cable_gap_size + case_inner_padding_right + 0.01,
+      panel_cable_gap_size + case_inner_padding_right + 0.11,
       panel_cable_gap_right,
-      depth + 0.01
+      depth + 0.11
   ]); 
 }
 
@@ -330,7 +330,7 @@ module caseBody () {
           [
             panel_border_left + case_inner_padding_left,
             panel_border_top  + case_inner_padding_top,
-            -0.01
+            -0.11
           ]
         )
         cube([
@@ -340,82 +340,82 @@ module caseBody () {
             panel_height_with_clearance 
               - case_inner_padding_top 
               - case_inner_padding_bottom,
-            case_depth + 0.01
+            case_depth + 0.11
         ]);
         if (panel_cable_gap_bottom > 0) {
-            render_panel_cable_gap_bottom(case_cable_gap_depth, -0.01);
+            render_panel_cable_gap_bottom(case_cable_gap_depth, -0.11);
         }
         if (panel_cable_gap_top > 0) {
-            render_panel_cable_gap_top(case_cable_gap_depth, -0.01);
+            render_panel_cable_gap_top(case_cable_gap_depth, -0.11);
         }
         if (panel_cable_gap_left > 0) {
-            render_panel_cable_gap_left(case_cable_gap_depth, -0.01);
+            render_panel_cable_gap_left(case_cable_gap_depth, -0.11);
         }
         if (panel_cable_gap_right > 0) {
-            render_panel_cable_gap_right(case_cable_gap_depth, -0.01);
+            render_panel_cable_gap_right(case_cable_gap_depth, -0.11);
         }
         if (case_hole_left_top > 0) {
-            translate([-0.01, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.01, -0.01 + case_hole_top_depth])
+            translate([-0.11, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                panel_border_left + case_inner_padding_left + 0.02,
-                case_hole_left_top + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                panel_border_left + case_inner_padding_left + 0.22,
+                case_hole_left_top + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_left_bottom > 0) {
-            translate([-0.01, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_left_bottom - 0.01, -0.01 + case_hole_top_depth])
+            translate([-0.11, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_left_bottom - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                panel_border_left + case_inner_padding_left + 0.02,
-                case_hole_left_bottom + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                panel_border_left + case_inner_padding_left + 0.22,
+                case_hole_left_bottom + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_right_top > 0) {
-            translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.01, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.01, -0.01 + case_hole_top_depth])
+            translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                panel_border_left + case_inner_padding_left + 0.02,
-                case_hole_right_top + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                panel_border_left + case_inner_padding_left + 0.22,
+                case_hole_right_top + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_right_bottom > 0) {
-            translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.01, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_right_bottom - 0.01, -0.01 + case_hole_top_depth])
+            translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_right_bottom - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                panel_border_left + case_inner_padding_left + 0.02,
-                case_hole_right_bottom + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                panel_border_left + case_inner_padding_left + 0.22,
+                case_hole_right_bottom + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_top_left > 0) {
-            translate([case_hole_top_left_offset + panel_border_left + case_inner_padding_left - 0.01, -0.01, -0.01 + case_hole_top_depth])
+            translate([case_hole_top_left_offset + panel_border_left + case_inner_padding_left - 0.11, -0.11, -0.11 + case_hole_top_depth])
             cube([
-                case_hole_top_left + 0.02,
-                panel_border_top + case_inner_padding_top + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                case_hole_top_left + 0.22,
+                panel_border_top + case_inner_padding_top + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_top_right > 0) {
-            translate([- case_hole_top_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_top_right - 0.01, -0.01, -0.01 + case_hole_top_depth])
+            translate([- case_hole_top_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_top_right - 0.11, -0.11, -0.11 + case_hole_top_depth])
             cube([
-                case_hole_top_right + 0.02,
-                panel_border_top + case_inner_padding_top + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                case_hole_top_right + 0.22,
+                panel_border_top + case_inner_padding_top + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_bottom_left > 0) {
-            translate([case_hole_bottom_left_offset + panel_border_left + case_inner_padding_left - 0.01, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.01, -0.01 + case_hole_top_depth])
+            translate([case_hole_bottom_left_offset + panel_border_left + case_inner_padding_left - 0.11, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                case_hole_bottom_left + 0.02,
-                panel_border_top + case_inner_padding_top + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                case_hole_bottom_left + 0.22,
+                panel_border_top + case_inner_padding_top + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }
         if (case_hole_bottom_right > 0) {
-            translate([-case_hole_bottom_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_bottom_right - 0.01, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.01, -0.01 + case_hole_top_depth])
+            translate([-case_hole_bottom_right_offset + panel_border_left + panel_width_with_clearance - case_inner_padding_right - case_hole_bottom_right - 0.11, panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                case_hole_bottom_right + 0.02,
-                panel_border_top + case_inner_padding_top + 0.02,
-                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.02
+                case_hole_bottom_right + 0.22,
+                panel_border_top + case_inner_padding_top + 0.22,
+                case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
         }   
     }
@@ -443,12 +443,12 @@ module case() {
                     translate([
                         panel_border_left + panel_width_with_clearance / 2 - max(panel_width_with_clearance / 8, panel_cable_gap_bottom, panel_cable_gap_top) / 2, 
                         panel_border_top + panel_height_with_clearance / 2 - max(panel_height_with_clearance / 8, panel_cable_gap_left, panel_cable_gap_right) / 2, 
-                        -0.01
+                        -0.11
                     ])
                     cube([
                         max(panel_width_with_clearance / 8, panel_cable_gap_bottom, panel_cable_gap_top), 
                         max(panel_height_with_clearance / 8, panel_cable_gap_left, panel_cable_gap_right), 
-                        case_depth + 0.02
+                        case_depth + 0.22
                     ]);
                 }
             };
@@ -460,19 +460,19 @@ module case() {
         // Cut holes to the back
         for (c = screw_positions) {
             // Screw thread hole that goes all the way
-            translate([c[0], c[1], - 0.01])
+            translate([c[0], c[1], - 0.11])
             cylinder(d = case_screw_hole_thread_diameter,
-                      h = case_depth + back_depth + 0.01);
+                      h = case_depth + back_depth + 0.11);
             
             // Cylinder hole from back to insert
             translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
             cylinder(d = case_screw_hole_diameter,
-                      h = case_depth + back_depth - case_screw_hole_insert_depth - case_screw_hole_floor_depth + 0.01); // Hole for the screw thread
+                      h = case_depth + back_depth - case_screw_hole_insert_depth - case_screw_hole_floor_depth + 0.11); // Hole for the screw thread
             
             // Cylinder hole from front to insert
-            translate([c[0], c[1], - 0.01]) // Solid border around the screw hole
+            translate([c[0], c[1], - 0.11]) // Solid border around the screw hole
             cylinder(d = case_screw_hole_diameter,
-                      h = case_screw_hole_insert_depth + 0.01); // Hole for the screw thread
+                      h = case_screw_hole_insert_depth + 0.11); // Hole for the screw thread
         }
     }
 }
@@ -500,7 +500,7 @@ module caseWithKickstand() {
         translate([
             (frame_full_width - kickstand_width + 2 * kickstand_wall_thickness) / 2, 
             frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness, 
-            case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.01
+            case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
         ])
         cube([
             kickstand_width - 2 * kickstand_wall_thickness, 
@@ -511,7 +511,7 @@ module caseWithKickstand() {
     
     hinge_real_depth = kickstand_depth - kickstand_wall_thickness - hinge_wall_padding - kickstand_hinge_diameter / 2;
     hinge_start = [
-        frame_full_width / 2 - kickstand_width / 2 + 0.01, 
+        frame_full_width / 2 - kickstand_width / 2 + 0.11, 
         frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness + kickstand_depth / 2 + hinge_top_extra_leverage,  // no kickstand_gap_thickness here, 
         case_depth + back_depth - hinge_real_depth / 2
     ];
@@ -537,33 +537,33 @@ module caseWithKickstand() {
         }
 
         // Render an empty cylinder inside the top cylinder
-        translate([frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness - kickstand_gap_thickness - 0.01, hinge_start[1], hinge_start[2]])
+        translate([frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness - kickstand_gap_thickness - 0.11, hinge_start[1], hinge_start[2]])
         rotate([90, 00, 90])
-        cylinder(d = kickstand_hinge_diameter + hinge_cylinder_gap * 2, h = kickstand_width + 0.02);
+        cylinder(d = kickstand_hinge_diameter + hinge_cylinder_gap * 2, h = kickstand_width + 0.22);
 
         // Render gap to access the hinge
-        gap_radius = (hinge_real_depth)/4 - 0.01;
+        gap_radius = (hinge_real_depth)/4 - 0.11;
         translate([
             frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness, 
-            frame_full_height - kickstand_bottom_start - kickstand_height / 3 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01,
-            case_depth + back_depth - hinge_real_depth / 2 - 0.01
+            frame_full_height - kickstand_bottom_start - kickstand_height / 3 - kickstand_gap_thickness - kickstand_wall_thickness + 0.11,
+            case_depth + back_depth - hinge_real_depth / 2 - 0.11
         ])
         filletBox(
             kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness, 
             kickstand_height / 3 + gap_radius * 2,
-            hinge_real_depth / 2 + 0.02,
+            hinge_real_depth / 2 + 0.22,
             gap_radius
         );
 
     }
 
     // Render gap to access the hinge
-    gap_radius = (hinge_real_depth)/4 - 0.01;
+    gap_radius = (hinge_real_depth)/4 - 0.11;
     // Base connecting it to the body
     translate([
         frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness + gap_radius * 2, 
-        frame_full_height - kickstand_bottom_start - kickstand_height / 12 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01 + gap_radius,
-        case_depth + back_depth - kickstand_depth + 0.01
+        frame_full_height - kickstand_bottom_start - kickstand_height / 12 - kickstand_gap_thickness - kickstand_wall_thickness + 0.11 + gap_radius,
+        case_depth + back_depth - kickstand_depth + 0.11
     ])
     cube([
         kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness - gap_radius * 4, 
@@ -573,12 +573,12 @@ module caseWithKickstand() {
 
     // Stop behind the clamp in the bottom
     translate([
-        frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness - 0.01, 
+        frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness - 0.11, 
         frame_full_height - kickstand_bottom_start - kickstand_height / 12,
-        case_depth + back_depth - kickstand_depth + 0.01
+        case_depth + back_depth - kickstand_depth + 0.11
     ])
     cube([
-        kickstand_width - 2 * kickstand_wall_thickness + 0.02, 
+        kickstand_width - 2 * kickstand_wall_thickness + 0.22, 
         kickstand_height / 12,
         kickstand_depth - hinge_real_depth / 2 - kickstand_gap_thickness,
     ]);
@@ -586,8 +586,8 @@ module caseWithKickstand() {
     // The clamp itself
     translate([
         frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness + gap_radius / 2, 
-        frame_full_height - kickstand_bottom_start - kickstand_height / 12 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01,
-        case_depth + back_depth - hinge_real_depth / 2 + 0.01
+        frame_full_height - kickstand_bottom_start - kickstand_height / 12 - kickstand_gap_thickness - kickstand_wall_thickness + 0.11,
+        case_depth + back_depth - hinge_real_depth / 2 + 0.11
     ])
     filletBox(
         kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness - gap_radius, 
@@ -599,7 +599,7 @@ module caseWithKickstand() {
     // Render a cylinder as a hinge
     translate(hinge_start)
     rotate([90, 00, 90])
-    cylinder(d = kickstand_hinge_diameter, h = kickstand_width - 0.02);
+    cylinder(d = kickstand_hinge_diameter, h = kickstand_width - 0.22);
 
 }
 
