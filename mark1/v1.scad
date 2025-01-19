@@ -17,10 +17,10 @@ panel_depth  = 1.2;
 clearance = 0.3;
 
 // Dimensions of the bezel on the eInk panel
-panel_bezel_left   = 5.0;
-panel_bezel_right  = 5.0;
+panel_bezel_left   = 5.2;
+panel_bezel_right  = 5.2;
 panel_bezel_top    = 4.9;
-panel_bezel_bottom = 10.4;
+panel_bezel_bottom = 10.8;
 
 // How much case to add around the panel
 panel_border_left   = 2.0;
@@ -43,7 +43,7 @@ case_inner_padding_top = 2.0;
 case_inner_padding_bottom = 2.0;
 
 case_center_support_vertical = false;
-case_center_support_horizontal = true;
+case_center_support_horizontal = false;
 case_center_support_width = 4.0;
 
 fillet_radius = 2;
@@ -65,6 +65,7 @@ screw_offset_top    = 3.2;
 screw_offset_bottom = 3.2;
 
 // Extra screws to add to the frame in all sides
+// TODO: make configurable in makerworld
 extra_screws_top = [];
 extra_screws_bottom = [];
 extra_screws_left = [];
@@ -100,6 +101,18 @@ case_hole_bottom_right_offset = 5;
 
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
+
+
+kickstand = true;
+kickstand_width = 40;
+kickstand_height = 80;
+kickstand_depth = 7;
+kickstand_bottom_start = 3;
+kickstand_wall_thickness = 1;
+kickstand_gap_thickness = 1;
+kickstand_hinge_diameter = 2.2;
+kickstand_leg_hole_diameter = 5;
+
 
 /*****************************************************************************/
 /*                Derived Dimensions (overall frame size)                    */
@@ -381,7 +394,7 @@ module caseBody () {
 }
 
 module case() {
-    // Cut out inner cylinders for scres
+    // Cut out inner cylinders for screws
     difference() {
         // Merce scres cutouts with rest of the case
         union() {
@@ -434,6 +447,90 @@ module case() {
                       h = case_screw_hole_insert_depth + 0.01); // Hole for the screw thread
         }
     }
+}
+
+module renderKickstand() {
+    cube([kickstand_width, kickstand_height, kickstand_depth]);
+}
+
+module caseWithKickstand() {
+    // Make a hole in the case
+    difference() {
+        union() {
+            case();
+            translate([
+                (frame_full_width - kickstand_width) / 2, 
+                frame_full_height - kickstand_bottom_start - kickstand_height, 
+                case_depth + back_depth - kickstand_depth
+            ])
+            cube([kickstand_width, kickstand_height, kickstand_depth]);
+        }
+        translate([
+            (frame_full_width - kickstand_width + 2 * kickstand_wall_thickness) / 2, 
+            frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness, 
+            case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.01
+        ])
+        cube([
+            kickstand_width - 2 * kickstand_wall_thickness, 
+            kickstand_height - 2 * kickstand_wall_thickness, 
+            kickstand_depth  - kickstand_wall_thickness
+        ]);
+    }
+    
+    hinge_top_extra_leverage = 3; // overrides kickstand_gap_thickness on the top
+    hinge_wall_padding = 0.2; // distance from the back wall
+    hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
+    hinge_real_depth = kickstand_depth - kickstand_wall_thickness - hinge_wall_padding - kickstand_hinge_diameter / 2;
+    hinge_start = [
+        frame_full_width / 2 - kickstand_width / 2 + 0.01, 
+        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness + kickstand_depth / 2 + hinge_top_extra_leverage,  // no kickstand_gap_thickness here, 
+        case_depth + back_depth - hinge_real_depth / 2
+    ];
+
+    difference() {
+        union() {
+            // Render the hinge's top cylinder
+            translate([frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness + kickstand_gap_thickness , hinge_start[1], hinge_start[2]])
+            rotate([90, 0, 90])
+            cylinder(d = hinge_real_depth, h = kickstand_width - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness);
+
+            // Render the hinge's large plate
+            translate([
+                frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness + kickstand_gap_thickness, 
+                frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_gap_thickness + kickstand_wall_thickness,  // no kickstand_gap_thickness here, 
+                case_depth + back_depth - hinge_real_depth / 2
+            ])
+            cube([
+                kickstand_width - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness, 
+                kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness ,
+                hinge_real_depth / 2
+            ]);
+        }
+
+        // Render an empty cylinder inside the top cylinder
+        translate([frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness - kickstand_gap_thickness - 0.01, hinge_start[1], hinge_start[2]])
+        rotate([90, 00, 90])
+        cylinder(d = kickstand_hinge_diameter + hinge_cylinder_gap * 2, h = kickstand_width + 0.02);
+
+        // Render gap to access the hinge
+        translate([
+            frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness, 
+            frame_full_height - kickstand_bottom_start - kickstand_height / 3 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01,
+            case_depth + back_depth - hinge_real_depth / 2 + 0.01
+        ])
+        cube([
+            kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness, 
+            kickstand_height / 3,
+            hinge_real_depth / 2
+        ]);
+
+    }
+
+    // Render a cylinder as a hinge
+    translate(hinge_start)
+    rotate([90, 00, 90])
+    cylinder(d = kickstand_hinge_diameter, h = kickstand_width - 0.02);
+
 }
 
 /*****************************************************************************/
@@ -495,4 +592,8 @@ translate([-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + pan
 
 rotate([0, 180, 0])
 translate([-frame_full_width/2, -frame_full_height/2, 0]) 
-    case();
+    if (kickstand) {
+        caseWithKickstand();
+    } else {
+        case();
+    };
