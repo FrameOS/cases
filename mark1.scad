@@ -119,15 +119,18 @@ case_hole_bottom_depth = 2;
 
 /* [Kickstand (experimental)] */
 
-kickstand = false;
+kickstand = true;
 kickstand_width = 40;
 kickstand_height = 80;
 kickstand_depth = 7;
 kickstand_bottom_start = 3;
 kickstand_wall_thickness = 1;
-kickstand_gap_thickness = 1;
+kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2;
 kickstand_leg_hole_diameter = 5;
+hinge_top_extra_leverage = 3; // overrides kickstand_gap_thickness on the top
+hinge_wall_padding = 0.2; // distance from the back wall
+hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
 
 /* [Debug] */
 
@@ -193,13 +196,9 @@ screw_positions = [
 
 
 /*****************************************************************************/
-/*                              Modules                                      */
+/*                            Panel cover                                    */
 /*****************************************************************************/
 
-//
-// 1. Panel Cover (layer 1.1)
-//    This layer covers the border of the case, and the bezel around the eInk panel
-//
 module panel_cover() {
     difference() {
         // Top block
@@ -313,9 +312,11 @@ module render_panel_cable_gap_right(depth, translate_depth) {
   ]); 
 }
 
-//
-// 3. The main case compartment (layers 2.1 + 2.2)
-//
+
+/*****************************************************************************/
+/*                             Case body                                     */
+/*****************************************************************************/
+
 module caseBody () {
     difference() {
         filletBoxBottom(
@@ -476,6 +477,10 @@ module case() {
     }
 }
 
+/*****************************************************************************/
+/*                             Kickstand                                     */
+/*****************************************************************************/
+
 module renderKickstand() {
     cube([kickstand_width, kickstand_height, kickstand_depth]);
 }
@@ -504,9 +509,6 @@ module caseWithKickstand() {
         ]);
     }
     
-    hinge_top_extra_leverage = 3; // overrides kickstand_gap_thickness on the top
-    hinge_wall_padding = 0.2; // distance from the back wall
-    hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
     hinge_real_depth = kickstand_depth - kickstand_wall_thickness - hinge_wall_padding - kickstand_hinge_diameter / 2;
     hinge_start = [
         frame_full_width / 2 - kickstand_width / 2 + 0.01, 
@@ -540,18 +542,59 @@ module caseWithKickstand() {
         cylinder(d = kickstand_hinge_diameter + hinge_cylinder_gap * 2, h = kickstand_width + 0.02);
 
         // Render gap to access the hinge
+        gap_radius = (hinge_real_depth)/4 - 0.01;
         translate([
             frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness, 
             frame_full_height - kickstand_bottom_start - kickstand_height / 3 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01,
-            case_depth + back_depth - hinge_real_depth / 2 + 0.01
+            case_depth + back_depth - hinge_real_depth / 2 - 0.01
         ])
-        cube([
+        filletBox(
             kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness, 
-            kickstand_height / 3,
-            hinge_real_depth / 2
-        ]);
+            kickstand_height / 3 + gap_radius * 2,
+            hinge_real_depth / 2 + 0.02,
+            gap_radius
+        );
 
     }
+
+    // Render gap to access the hinge
+    gap_radius = (hinge_real_depth)/4 - 0.01;
+    // Base connecting it to the body
+    translate([
+        frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness + gap_radius * 2, 
+        frame_full_height - kickstand_bottom_start - kickstand_height / 12 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01 + gap_radius,
+        case_depth + back_depth - kickstand_depth + 0.01
+    ])
+    cube([
+        kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness - gap_radius * 4, 
+        kickstand_height / 12 - gap_radius * 2,
+        kickstand_depth,
+    ]);
+
+    // Stop behind the clamp in the bottom
+    translate([
+        frame_full_width / 2 - kickstand_width / 2 + kickstand_wall_thickness - 0.01, 
+        frame_full_height - kickstand_bottom_start - kickstand_height / 12,
+        case_depth + back_depth - kickstand_depth + 0.01
+    ])
+    cube([
+        kickstand_width - 2 * kickstand_wall_thickness + 0.02, 
+        kickstand_height / 12,
+        kickstand_depth - hinge_real_depth / 2 - kickstand_gap_thickness,
+    ]);
+
+    // The clamp itself
+    translate([
+        frame_full_width / 2 - kickstand_width / 4 + kickstand_wall_thickness + kickstand_gap_thickness + gap_radius / 2, 
+        frame_full_height - kickstand_bottom_start - kickstand_height / 12 - kickstand_gap_thickness - kickstand_wall_thickness + 0.01,
+        case_depth + back_depth - hinge_real_depth / 2 + 0.01
+    ])
+    filletBox(
+        kickstand_width / 2 - 2 * kickstand_wall_thickness - 2 * kickstand_gap_thickness - gap_radius, 
+        kickstand_height / 12 + gap_radius * 2,
+        hinge_real_depth / 2,
+        gap_radius
+    );
 
     // Render a cylinder as a hinge
     translate(hinge_start)
