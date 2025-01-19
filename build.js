@@ -125,11 +125,7 @@ build();
 if (watchMode) {
   // Watch for changes in mark1 and any model .scad files
   const watcher = chokidar.watch(
-    [
-      MARK1_FILE,
-      path.join(ROOT, "models", "*.scad"),
-      path.join(ROOT, "build.js"),
-    ],
+    [MARK1_FILE, path.join(ROOT, "models", "*.scad")],
     {
       ignoreInitial: true,
     }

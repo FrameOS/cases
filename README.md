@@ -8,7 +8,11 @@
 - Kickstand for tabletop usage
 - Large 13" frames optimized for vertical printing without supports
 
+## Running locally:
 
+Run `npm start [model]`. Where `model` can be `7in3e`, `13in3e`, or anything else from the `models/` folder. PRs welcome!
+
+Open the generated `dist/out.scad` in [OpenSCAD](https://openscad.org/), or in [MakerWorld's MarkerLab's Parametric Model Marker](https://makerworld.com/en/makerlab/parametricModelMaker) (say that 3 times), and print the STL.
 
 ### Waveshare 7.3" E Spectra 6 color
 
