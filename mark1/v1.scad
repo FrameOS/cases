@@ -4,8 +4,7 @@
 
 $fn = $preview ? 32 : 100;
 
-// Gap between STL parts for visual debugging
-debug_gap = 40;
+/* [Panel dimensions] */
 
 // Physical width of the eInk panel (mm)
 panel_width  = 170.3;
@@ -21,6 +20,8 @@ panel_bezel_left   = 5.2;
 panel_bezel_right  = 5.2;
 panel_bezel_top    = 4.9;
 panel_bezel_bottom = 10.8;
+
+/* [Border around and below panel] */
 
 // How much case to add around the panel
 panel_border_left   = 2.0;
@@ -42,21 +43,26 @@ case_inner_padding_right = 2.0;
 case_inner_padding_top = 2.0;
 case_inner_padding_bottom = 2.0;
 
+/* [Panel supports] */
+
 case_center_support_vertical = false;
 case_center_support_horizontal = false;
 case_center_support_width = 4.0;
 
+/* [Case dimensions] */
+
 fillet_radius = 2;
 
-// Panel cover thickness (layer 1.1: border + bezel above eInk panel)
+// Panel cover thickness (together with panel_depth makes up the top part)
 panel_cover_depth = 2.0;
 
-// Total “electronics compartment” thickness (layer 2.1)
+// Total inside compartment thickness (layer 2.1)
 case_depth = 12.0; 
-//case_depth = 7.0; 
 
 // Back shell thickness (layer 2.2)
 back_depth = 2.0;
+
+/* [Screws and placement] */
 
 // Center of each screw hole from the corner
 screw_offset_left   = 3.2;
@@ -81,6 +87,8 @@ case_screw_hole_thread_diameter = 2.0; // Hole for the screw thread that goes al
 case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
 case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the heat set insert
 
+/* [Case side holes] */
+
 case_hole_left_top = 0;
 case_hole_left_bottom = 16;
 case_hole_right_top = 0;
@@ -102,6 +110,7 @@ case_hole_bottom_right_offset = 5;
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
+/* [Kickstand] */
 
 kickstand = true;
 kickstand_width = 40;
@@ -112,6 +121,13 @@ kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 1;
 kickstand_hinge_diameter = 2.2;
 kickstand_leg_hole_diameter = 5;
+
+/* [Debug] */
+
+print_view = true;
+
+// Gap between STL parts for visual debugging
+debug_gap = 40;
 
 
 /*****************************************************************************/
@@ -586,8 +602,10 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
 /*                              Rendering                                    */
 /*****************************************************************************/
 
-rotate([0, 180, 0])
-translate([-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
+print_gap = 20;
+
+rotate(print_view ? [0, 0, 0] : [0, 180, 0])
+translate(print_view ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
     panel_cover();
 
 rotate([0, 180, 0])
