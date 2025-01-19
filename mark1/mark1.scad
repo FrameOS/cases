@@ -12,47 +12,87 @@ view_mode="ready_to_print"; // [ready_to_print, stacked]
 /* [Panel dimensions] */
 
 // Physical width of the eInk panel (mm)
-panel_width  = 170.3;
+panel_width  = 284.49;
 // Physical height of the eInk panel (mm)
-panel_height = 111.3;
+panel_height = 208.81;
+
+// 7.3"E eInk panel
+// // Physical width of the eInk panel (mm)
+// panel_width  = 170.3;
+// // Physical height of the eInk panel (mm)
+// panel_height = 111.3;
+
 // Thickness of the eInk panel (layer 1.2: border)
 panel_depth  = 1.2;
 // Clearance around the eInk panel (mm)
 clearance = 0.3;
 
 // Dimensions of the bezel on the eInk panel
-panel_bezel_left   = 5.2;
-panel_bezel_right  = 5.2;
-panel_bezel_top    = 4.9;
-panel_bezel_bottom = 10.8;
+panel_bezel_left   = 11.7;
+panel_bezel_right  = 3.3;
+panel_bezel_top    = 3.1;
+panel_bezel_bottom = 3.1;
+
+// 7.3"E eInk panel
+// // Dimensions of the bezel on the eInk panel
+// panel_bezel_left   = 5.2;
+// panel_bezel_right  = 5.2;
+// panel_bezel_top    = 4.9;
+// panel_bezel_bottom = 10.8;
 
 /* [Border around and below panel] */
 
 // How much case to add around the panel
-panel_border_left   = 2.0;
-panel_border_right  = 2.0;
-panel_border_top    = 6.0;
-panel_border_bottom = 6.0;
+panel_border_left   = 3.2;
+panel_border_right  = 11.6;
+panel_border_top    = 11.8;
+panel_border_bottom = 11.8;
 
 // Gap in the border for the eInk panel's cables, mm, centered
-panel_cable_gap_left = 0;
+panel_cable_gap_left = 140;
 panel_cable_gap_right = 0;
 panel_cable_gap_top = 0;
-panel_cable_gap_bottom = 40;
+panel_cable_gap_bottom = 0;
 panel_cable_gap_size = 2.0; // How into the border to cut
 case_cable_gap_depth = 3.0; // How deep into the case to cut
 
 // Extra space inside the case to hold up the panel
-case_inner_padding_left = 2.0;
-case_inner_padding_right = 2.0;
-case_inner_padding_top = 2.0;
-case_inner_padding_bottom = 2.0;
+case_inner_padding_left = 6;
+case_inner_padding_right = 4;
+case_inner_padding_top = 4;
+case_inner_padding_bottom = 4;
+
+// 7.3"E eInk panel
+// // How much case to add around the panel
+// panel_border_left   = 2.0;
+// panel_border_right  = 2.0;
+// panel_border_top    = 6.0;
+// panel_border_bottom = 6.0;
+
+// // Gap in the border for the eInk panel's cables, mm, centered
+// panel_cable_gap_left = 0;
+// panel_cable_gap_right = 0;
+// panel_cable_gap_top = 0;
+// panel_cable_gap_bottom = 40;
+// panel_cable_gap_size = 2.0; // How into the border to cut
+// case_cable_gap_depth = 3.0; // How deep into the case to cut
+
+// // Extra space inside the case to hold up the panel
+// case_inner_padding_left = 2.0;
+// case_inner_padding_right = 2.0;
+// case_inner_padding_top = 2.0;
+// case_inner_padding_bottom = 2.0;
 
 /* [Panel supports] */
 
-case_center_support_vertical = false;
-case_center_support_horizontal = false;
+case_center_support_vertical = true;
+case_center_support_horizontal = true;
 case_center_support_width = 4.0;
+
+// // 7.3"E eInk panel
+// case_center_support_vertical = false;
+// case_center_support_horizontal = false;
+// case_center_support_width = 4.0;
 
 /* [Case dimensions] */
 
@@ -62,7 +102,11 @@ fillet_radius = 2;
 panel_cover_depth = 2.0;
 
 // Total inside compartment thickness (layer 2.1)
-case_depth = 12.0; 
+case_depth = 10.0; 
+
+// 7.3"E eInk panel
+// case_depth = 12.0; 
+
 
 // Back shell thickness (layer 2.2)
 back_depth = 2.0;
@@ -76,13 +120,23 @@ screw_offset_top    = 3.2;
 screw_offset_bottom = 3.2;
 
 // Extra screws on the top side (0.0 to 1.0)
-extra_screws_top = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the bottom side (0.0 to 1.0)
-extra_screws_bottom = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_bottom = [0.42, 0.58, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the left side (0.0 to 1.0)
 extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the right side (0.0 to 1.0)
-extra_screws_right = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_right = [0.5, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+
+// 7.3"E eInk panel
+// // Extra screws on the top side (0.0 to 1.0)
+// extra_screws_top = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+// // Extra screws on the bottom side (0.0 to 1.0)
+// extra_screws_bottom = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+// // Extra screws on the left side (0.0 to 1.0)
+// extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+// // Extra screws on the right side (0.0 to 1.0)
+// extra_screws_right = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 
 // Hole made into layer 1.2
 panel_screw_insert_diameter = 3.45;
@@ -97,13 +151,19 @@ case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the
 /* [Case side holes] */
 
 case_hole_left_top = 0;
-case_hole_left_bottom = 16;
-case_hole_right_top = 0;
-case_hole_right_bottom = 0;
+case_hole_left_bottom = 0;
+case_hole_right_top = 16;
+case_hole_right_bottom = 16;
 case_hole_top_left = 0;
 case_hole_top_right = 0;
 case_hole_bottom_left = 0;
 case_hole_bottom_right = 0;
+
+// 7.3"E eInk panel
+// case_hole_left_top = 0;
+// case_hole_left_bottom = 16;
+// case_hole_right_top = 0;
+// case_hole_right_bottom = 0;
 
 case_hole_left_top_offset = 5;
 case_hole_left_bottom_offset = 5;
@@ -119,7 +179,7 @@ case_hole_bottom_depth = 2;
 
 /* [Kickstand (experimental)] */
 
-kickstand = true;
+kickstand = false;
 kickstand_width = 40;
 kickstand_height = 80;
 kickstand_depth = 7;
@@ -373,7 +433,7 @@ module caseBody () {
         if (case_hole_right_top > 0) {
             translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, case_hole_left_top_offset + panel_border_top + case_inner_padding_top - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                panel_border_left + case_inner_padding_left + 0.22,
+                panel_border_right + case_inner_padding_right + 0.22,
                 case_hole_right_top + 0.22,
                 case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
@@ -381,7 +441,7 @@ module caseBody () {
         if (case_hole_right_bottom > 0) {
             translate([panel_width_with_clearance + panel_border_left - case_inner_padding_right - 0.11, - case_hole_left_bottom_offset + panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_hole_right_bottom - 0.11, -0.11 + case_hole_top_depth])
             cube([
-                panel_border_left + case_inner_padding_left + 0.22,
+                panel_border_right + case_inner_padding_right + 0.22,
                 case_hole_right_bottom + 0.22,
                 case_depth - case_hole_top_depth - case_hole_bottom_depth + 0.22
             ]);
@@ -431,23 +491,23 @@ module case() {
                     union() {
                         // Center support
                         if (case_center_support_horizontal) {
-                            translate([panel_border_left + panel_width_with_clearance / 4, panel_border_top + panel_height_with_clearance / 2 - (case_center_support_width / 2), 0])
+                            translate([frame_full_width / 4, frame_full_height / 2 - (case_center_support_width / 2), 0])
                             cube([panel_width_with_clearance / 2, case_center_support_width, case_depth]);
                         }
 
                         if (case_center_support_vertical) {
-                            translate([panel_border_left + panel_width_with_clearance / 2 - (case_center_support_width / 2), panel_border_top + panel_height_with_clearance / 4, 0])
+                            translate([frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4, 0])
                             cube([case_center_support_width, panel_height_with_clearance / 2, case_depth]);
                         }
                     };
                     translate([
-                        panel_border_left + panel_width_with_clearance / 2 - max(panel_width_with_clearance / 8, panel_cable_gap_bottom, panel_cable_gap_top) / 2, 
-                        panel_border_top + panel_height_with_clearance / 2 - max(panel_height_with_clearance / 8, panel_cable_gap_left, panel_cable_gap_right) / 2, 
+                        frame_full_width / 2 - panel_width_with_clearance / 6 / 2, 
+                        frame_full_height / 2 - panel_height_with_clearance / 6 / 2, 
                         -0.11
                     ])
                     cube([
-                        max(panel_width_with_clearance / 8, panel_cable_gap_bottom, panel_cable_gap_top), 
-                        max(panel_height_with_clearance / 8, panel_cable_gap_left, panel_cable_gap_right), 
+                        panel_width_with_clearance / 6, 
+                        panel_height_with_clearance / 6, 
                         case_depth + 0.22
                     ]);
                 }
