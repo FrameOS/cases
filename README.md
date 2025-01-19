@@ -11,3 +11,7 @@ Features:
 - Two part design where the lid screws to the body with heat set inserts
 - Custom number of screws on any edge
 - Kickstand for tabletop usage
+
+Exported models:
+
+- Waveshare 7.3" E - [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.stl), [3mf](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.3mf)
