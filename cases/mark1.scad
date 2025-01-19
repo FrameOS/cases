@@ -2,7 +2,7 @@
 /*                          FrameOS Mark1 Case                               */
 /*****************************************************************************/
 
-$fn = $preview ? 32 : 100;
+$fn = 32; //$preview ? 32 : 100;
 
 /* [View settings] */
 
@@ -13,44 +13,31 @@ print_mode="vertical"; // [vertical, horizontal]
 
 /* [Panel dimensions] */
 
-// Physical width of the eInk panel (mm)
+// Physical width of the eInk panel (mm) @shared
 panel_width  = 284.49;
-// Physical height of the eInk panel (mm)
+// Physical height of the eInk panel (mm) @shared
 panel_height = 208.81;
-
-// 7.3"E eInk panel
-// // Physical width of the eInk panel (mm)
-// panel_width  = 170.3;
-// // Physical height of the eInk panel (mm)
-// panel_height = 111.3;
 
 // Thickness of the eInk panel (layer 1.2: border)
 panel_depth  = 1.2;
 // Clearance around the eInk panel (mm)
 clearance = 0.3;
 
-// Dimensions of the bezel on the eInk panel
+// Dimensions of the bezel on the eInk panel @shared
 panel_bezel_left   = 11.7;
 panel_bezel_right  = 3.3;
 panel_bezel_top    = 3.1;
 panel_bezel_bottom = 3.1;
 
-// 7.3"E eInk panel
-// // Dimensions of the bezel on the eInk panel
-// panel_bezel_left   = 5.2;
-// panel_bezel_right  = 5.2;
-// panel_bezel_top    = 4.9;
-// panel_bezel_bottom = 10.8;
-
 /* [Border around and below panel] */
 
-// How much case to add around the panel
+// How much case to add around the panel @shared
 panel_border_left   = 3.2;
 panel_border_right  = 11.6;
 panel_border_top    = 11.8;
 panel_border_bottom = 11.8;
 
-// Gap in the border for the eInk panel's cables, mm, centered
+// Gap in the border for the eInk panel's cables, mm, centered @shared
 panel_cable_gap_left = 142;
 panel_cable_gap_right = 0;
 panel_cable_gap_top = 0;
@@ -58,43 +45,19 @@ panel_cable_gap_bottom = 0;
 panel_cable_gap_size = 2.0; // How into the border to cut
 case_cable_gap_depth = 3.0; // How deep into the case to cut
 
-// Extra space inside the case to hold up the panel
+// Extra space inside the case to hold up the panel @shared
 case_inner_padding_left = 6;
 case_inner_padding_right = 4;
 case_inner_padding_top = 4;
 case_inner_padding_bottom = 4;
 
-// 7.3"E eInk panel
-// // How much case to add around the panel
-// panel_border_left   = 2.0;
-// panel_border_right  = 2.0;
-// panel_border_top    = 6.0;
-// panel_border_bottom = 6.0;
-
-// // Gap in the border for the eInk panel's cables, mm, centered
-// panel_cable_gap_left = 0;
-// panel_cable_gap_right = 0;
-// panel_cable_gap_top = 0;
-// panel_cable_gap_bottom = 40;
-// panel_cable_gap_size = 2.0; // How into the border to cut
-// case_cable_gap_depth = 3.0; // How deep into the case to cut
-
-// // Extra space inside the case to hold up the panel
-// case_inner_padding_left = 2.0;
-// case_inner_padding_right = 2.0;
-// case_inner_padding_top = 2.0;
-// case_inner_padding_bottom = 2.0;
-
 /* [Panel supports] */
+
+// @shared
 
 case_center_support_vertical = true;
 case_center_support_horizontal = true;
 case_center_support_width = 4.0;
-
-// // 7.3"E eInk panel
-// case_center_support_vertical = false;
-// case_center_support_horizontal = false;
-// case_center_support_width = 4.0;
 
 /* [Case dimensions] */
 
@@ -103,49 +66,28 @@ fillet_radius = 2;
 // Panel cover thickness (together with panel_depth makes up the top part)
 panel_cover_depth = 2.0;
 
-// Total inside compartment thickness (layer 2.1)
+// Total inside compartment thickness (layer 2.1) @shared
 case_depth = 10.0; 
-
-// 7.3"E eInk panel
-// case_depth = 12.0; 
-
 
 // Back shell thickness (layer 2.2)
 back_depth = 2.0;
 
 /* [Screws and placement] */
 
-// Center of each screw hole from the corner
+// Center of each screw hole from the corner @shared
 screw_offset_left   = 5.0;
 screw_offset_right  = 5.0;
 screw_offset_top    = 5.0;
 screw_offset_bottom = 5.0;
 
-// 7.3"E eInk panel
-// // Center of each screw hole from the corner
-// screw_offset_left   = 3.2;
-// screw_offset_right  = 3.2;
-// screw_offset_top    = 3.2;
-// screw_offset_bottom = 3.2;
-
-// Extra screws on the top side (0.0 to 1.0)
+// Extra screws on the top side (0.0 to 1.0) @shared
 extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the bottom side (0.0 to 1.0)
+// Extra screws on the bottom side (0.0 to 1.0) @shared
 extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the left side (0.0 to 1.0)
+// Extra screws on the left side (0.0 to 1.0) @shared
 extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the right side (0.0 to 1.0)
+// Extra screws on the right side (0.0 to 1.0) @shared
 extra_screws_right = [0.5, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-
-// 7.3"E eInk panel
-// // Extra screws on the top side (0.0 to 1.0)
-// extra_screws_top = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-// // Extra screws on the bottom side (0.0 to 1.0)
-// extra_screws_bottom = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-// // Extra screws on the left side (0.0 to 1.0)
-// extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-// // Extra screws on the right side (0.0 to 1.0)
-// extra_screws_right = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 
 // Hole made into layer 1.2
 panel_screw_insert_diameter = 3.45;
@@ -159,51 +101,45 @@ case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the
 
 /* [Case side holes] */
 
+// @shared, set to zero and 2
+
 case_hole_left_top = 0;
 case_hole_left_bottom = 0;
-case_hole_right_top = 16;
-case_hole_right_bottom = 16;
+case_hole_right_top = 0;
+case_hole_right_bottom = 0;
 case_hole_top_left = 0;
 case_hole_top_right = 0;
 case_hole_bottom_left = 0;
 case_hole_bottom_right = 0;
 
-// 7.3"E eInk panel
-// case_hole_left_top = 0;
-// case_hole_left_bottom = 16;
-// case_hole_right_top = 0;
-// case_hole_right_bottom = 0;
-
-case_hole_left_top_offset = 5;
-case_hole_left_bottom_offset = 5;
-case_hole_right_top_offset = 10;
-case_hole_right_bottom_offset = 10;
-case_hole_top_left_offset = 5;
-case_hole_top_right_offset = 5;
-case_hole_bottom_left_offset = 5;
-case_hole_bottom_right_offset = 5;
+case_hole_left_top_offset = 0;
+case_hole_left_bottom_offset = 0;
+case_hole_right_top_offset = 0;
+case_hole_right_bottom_offset = 0;
+case_hole_top_left_offset = 0;
+case_hole_top_right_offset = 0;
+case_hole_bottom_left_offset = 0;
+case_hole_bottom_right_offset = 0;
 
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
 /* [Kickstand (experimental)] */
 
-kickstand = false;
-kickstand_width = 40;
-kickstand_height = 80;
-kickstand_depth = 7;
+kickstand = false; // @shared
+kickstand_width = 40; // @shared
+kickstand_height = 80; // @shared
+kickstand_depth = 7; // @shared
 kickstand_bottom_start = 3;
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
-kickstand_hinge_diameter = 2.2;
-kickstand_leg_hole_diameter = 5;
-hinge_top_extra_leverage = 3; // overrides kickstand_gap_thickness on the top
+kickstand_hinge_diameter = 2.2; // @shared
+kickstand_leg_hole_diameter = 5; // @shared
+hinge_top_extra_leverage = 3; // overrides kickstand_gap_thickness on the top @shared
 hinge_wall_padding = 0.2; // distance from the back wall
 hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
 
 /* [Debug] */
-
-print_view = true;
 
 // Gap between STL parts for visual debugging
 debug_gap = 40;
@@ -470,27 +406,6 @@ module caseBody () {
             );
             if (panel_cable_gap_top > 0) {
                 render_panel_cable_gap_top(case_cable_gap_depth, -0.11);
-            }
-        }
-
-        difference() {
-            // bottom chamfer
-            let (
-                l = panel_width_with_clearance - case_inner_padding_left - case_inner_padding_right, 
-                w = case_depth, 
-                h = -case_depth
-            )
-            translate([
-                panel_border_left + case_inner_padding_left,
-                panel_border_top  + panel_height_with_clearance - case_inner_padding_bottom - case_depth,
-                case_depth
-            ])
-            polyhedron(//pt 0        1        2        3        4        5
-                points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-            );
-            if (panel_cable_gap_bottom > 0) {
-                render_panel_cable_gap_bottom(case_cable_gap_depth, -0.11);
             }
         }
     }

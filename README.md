@@ -8,21 +8,25 @@
 - Kickstand for tabletop usage
 - Large 13" frames optimized for vertical printing without supports
 
+
+
 ### Waveshare 7.3" E Spectra 6 color
 
-Features a kickstand
+Features a kickstand. The case depth for electronics is 12mm.
 
-- [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.stl), [3mf](https://github.com/FrameOS/cases/blob/main/mark1/exports/7in3e.3mf)
+- Download: [stl](https://github.com/FrameOS/cases/blob/main/exports/mark1/7in3e.stl), [3mf](https://github.com/FrameOS/cases/blob/main/exports/mark1/7in3e.3mf)
 
-![7in3e](./mark1/images/7in3e-model.png)
+![7in3e](./images/mark1/7in3e-model.png)
 
 ### Waveshare 13.3" E Spectra 6 color
 
 **Note:** beware of shrinkage when printing vertically! Scale your model up by 1mm before printing to combat this!
 
-- [stl](https://github.com/FrameOS/cases/blob/main/mark1/exports/13in3e-upright.stl)
+The case depth for electronics is 10mm.
 
-![13in3e](./mark1/images/13in3e-upright.png)
+- Download: [stl](https://github.com/FrameOS/cases/blob/main/exports/mark1/13in3e-upright.stl)
+
+![13in3e](./images/mark1/13in3e-upright.png)
 
 
 ### Inspiration
