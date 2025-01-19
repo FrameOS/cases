@@ -4,6 +4,11 @@
 
 $fn = $preview ? 32 : 100;
 
+/* [View settings] */
+
+view_mode="ready_to_print"; // [ready_to_print, stacked]
+
+
 /* [Panel dimensions] */
 
 // Physical width of the eInk panel (mm)
@@ -70,12 +75,14 @@ screw_offset_right  = 3.2;
 screw_offset_top    = 3.2;
 screw_offset_bottom = 3.2;
 
-// Extra screws to add to the frame in all sides
-// TODO: make configurable in makerworld
-extra_screws_top = [];
-extra_screws_bottom = [];
-extra_screws_left = [];
-extra_screws_right = [];
+// Extra screws on the top side (0.0 to 1.0)
+extra_screws_top = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+// Extra screws on the bottom side (0.0 to 1.0)
+extra_screws_bottom = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+// Extra screws on the left side (0.0 to 1.0)
+extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+// Extra screws on the right side (0.0 to 1.0)
+extra_screws_right = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 
 // Hole made into layer 1.2
 panel_screw_insert_diameter = 3.45;
@@ -164,20 +171,24 @@ screw_positions = [
     [ frame_full_width - screw_offset_right, frame_full_height - screw_offset_top ],
 
     for (s = extra_screws_bottom)
-        [ screw_offset_left + s * (frame_full_width - screw_offset_left - screw_offset_right), 
-          frame_full_height - screw_offset_top ],
+        if (s != 0 && s != 1)
+            [ screw_offset_left + s * (frame_full_width - screw_offset_left - screw_offset_right), 
+            frame_full_height - screw_offset_top ],
 
     for (s = extra_screws_top)
-        [ screw_offset_left + s * (frame_full_width - screw_offset_left - screw_offset_right), 
-          screw_offset_bottom ],
+        if (s != 0 && s != 1)
+            [ screw_offset_left + s * (frame_full_width - screw_offset_left - screw_offset_right), 
+            screw_offset_bottom ],
 
     for (s = extra_screws_left)
-        [ screw_offset_left, 
-          screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ],
+        if (s != 0 && s != 1)
+            [ screw_offset_left, 
+            screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ],
 
     for (s = extra_screws_right)
-        [ frame_full_width - screw_offset_right, 
-          screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ]
+        if (s != 0 && s != 1)
+            [ frame_full_width - screw_offset_right, 
+            screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ]
 ];
 
 
@@ -604,8 +615,8 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
 
 print_gap = 20;
 
-rotate(print_view ? [0, 0, 0] : [0, 180, 0])
-translate(print_view ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
+rotate(view_mode == "ready_to_print" ? [0, 0, 0] : [0, 180, 0])
+translate(view_mode == "ready_to_print" ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
     panel_cover();
 
 rotate([0, 180, 0])
