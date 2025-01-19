@@ -1,5 +1,5 @@
 /*****************************************************************************/
-/*                          Global Parameters                                */
+/*                          FrameOS Mark1 Case                               */
 /*****************************************************************************/
 
 $fn = $preview ? 32 : 100;
@@ -110,9 +110,9 @@ case_hole_bottom_right_offset = 5;
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
-/* [Kickstand] */
+/* [Kickstand (experimental)] */
 
-kickstand = true;
+kickstand = false;
 kickstand_width = 40;
 kickstand_height = 80;
 kickstand_depth = 7;
