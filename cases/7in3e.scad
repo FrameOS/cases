@@ -1,6 +1,6 @@
-/*****************************************************************************/
-/*          FrameOS Mark1 Case. WaveShare 7.3"E frame subsitutions.          */
-/*****************************************************************************/
+// Waveshare 7.3"E ePaper case
+
+include <mark1.scad>
 
 /* [View settings] */
 

@@ -1,5 +1,7 @@
 # FrameOS parametric cases
 
+https://cases.frameos.net/
+
 ## Mark 1
 
 - Parametric design - change any dimension and regenerate
@@ -7,12 +9,6 @@
 - Custom number of screws on any edge
 - Kickstand for tabletop usage
 - Large 13" frames optimized for vertical printing without supports
-
-## Running locally:
-
-Run `npm start [model]`. Where `model` can be `7in3e`, `13in3e`, or anything else from the `models/` folder. PRs welcome!
-
-Open the generated `dist/out.scad` in [OpenSCAD](https://openscad.org/), or in [MakerWorld's MarkerLab's Parametric Model Marker](https://makerworld.com/en/makerlab/parametricModelMaker) (say that 3 times), and print the STL.
 
 ### Waveshare 7.3" E Spectra 6 color
 
@@ -32,7 +28,10 @@ The case depth for electronics is 10mm.
 
 ![13in3e](./images/mark1/13in3e-upright.png)
 
+## Developing
 
-### Inspiration
+Install [OpenSCAD](https://openscad.org/) and run any of the `.scad` files locally.
+
+## Inspiration
 
 This model was inspired by [this case](https://www.printables.com/model/76756-waveshare-75-screen-case) and [its remix](https://www.printables.com/model/82001-waveshare-75-screen-case-remix), yet is reimplemented from scratch.

@@ -1,13 +1,10 @@
-/*****************************************************************************/
-/*                          FrameOS Mark1 Case                               */
-/*****************************************************************************/
+/* FrameOS Mark1 Case */
 
-$fn = 32; //$preview ? 32 : 100;
+$fn = 32;
 
 /* [View settings] */
 
 view_mode="ready_to_print"; // [ready_to_print, stacked]
-
 print_mode="vertical"; // [vertical, horizontal]
 
 
