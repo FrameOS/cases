@@ -4,9 +4,7 @@ include <mark1.scad>
 
 /* [View settings] */
 
-view_mode="ready_to_print"; // [ready_to_print, stacked]
-print_mode="vertical"; // [vertical, horizontal]
-
+view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
 /* [Panel dimensions] */
 

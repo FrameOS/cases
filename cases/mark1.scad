@@ -1,12 +1,8 @@
-/* FrameOS Mark1 Case */
-
-$fn = 32;
+/* FrameOS Case: Mark I */
 
 /* [View settings] */
 
-view_mode="ready_to_print"; // [ready_to_print, stacked]
-print_mode="vertical"; // [vertical, horizontal]
-
+view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
 /* [Panel dimensions] */
 
@@ -140,6 +136,8 @@ hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
 
 // Gap between STL parts for visual debugging
 debug_gap = 40;
+
+$fn = 32;
 
 
 /*****************************************************************************/
@@ -282,7 +280,7 @@ module render_panel_cable_gap_top(depth, translate_depth) {
       panel_cable_gap_size * 2 + case_inner_padding_top + 0.11, // 2x to cut into the chamfer
       depth + 0.11
   ]); 
-  if (print_mode == "vertical") {
+  if (view_mode == "print_vertical") {
     let (l = panel_cable_gap_top, w = depth, h = depth)
     translate([
     panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
@@ -309,7 +307,7 @@ module render_panel_cable_gap_left(depth, translate_depth) {
       panel_cable_gap_left,
       depth + 0.11
   ]); 
-  if (print_mode == "vertical") {
+  if (view_mode == "print_vertical") {
     let (l = panel_cable_gap_size + case_inner_padding_left + 0.11, w = depth, h = depth)
     translate([
       panel_border_left - panel_cable_gap_size,
@@ -336,7 +334,7 @@ module render_panel_cable_gap_right(depth, translate_depth) {
       panel_cable_gap_right,
       depth + 0.11
   ]); 
-  if (print_mode == "vertical") {
+  if (view_mode == "print_vertical") {
     let (l = panel_cable_gap_size + case_inner_padding_right + 0.11, w = depth, h = depth)
     translate([
       panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.11,
@@ -384,7 +382,7 @@ module caseBody () {
         case_holes();
     }
      // chamfer the edges
-    if (print_mode == "vertical") {
+    if (view_mode == "print_vertical") {
         difference() {
             // top chamfer
             let (
@@ -505,7 +503,7 @@ module case() {
                             translate([frame_full_width / 4 + frame_full_width / 3, frame_full_height / 2 - (case_center_support_width / 2), 0])
                             cube([frame_full_width / 6, case_center_support_width, case_depth]);
 
-                            if (print_mode == "vertical") {
+                            if (view_mode == "print_vertical") {
                                 let (l = frame_full_width / 6, w = -case_depth, h = -case_depth)
                                 translate([frame_full_width / 4, frame_full_height / 2 + (case_center_support_width / 2) + case_depth, case_depth])
                                 polyhedron(//pt 0        1        2        3        4        5
@@ -528,7 +526,7 @@ module case() {
                             translate([frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4 + frame_full_height / 3, 0])
                             cube([case_center_support_width, frame_full_height / 6, case_depth]);
 
-                            if (print_mode == "vertical") {
+                            if (view_mode == "print_vertical") {
                                 let (l = case_center_support_width, w = -case_depth, h = -case_depth)
                                 translate([
                                     frame_full_width / 2 - (case_center_support_width / 2), 
@@ -762,24 +760,26 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
 print_gap = 20;
 
 rotate(
-    view_mode == "ready_to_print" 
-    ? [0, 0, 180] 
+    view_mode == "print_vertical" 
+    ? [180, 180, 180]
+    : view_mode == "print_horizontal" 
+    ? [0, 0, 180]
     : [0, 180, 0])
 translate(
-    view_mode == "ready_to_print" 
-    ? print_mode == "vertical" 
+    view_mode == "print_vertical" 
       ? [-frame_full_width/2, -frame_full_height - print_gap - debug_gap, 0]
-      : [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
-    : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)]) 
+      : view_mode == "print_horizontal" 
+        ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
+        : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)])  // stacked
 panel_cover();
 
 rotate(
-    view_mode == "ready_to_print" && print_mode == "vertical" 
-    ? [90, 180, 0] 
+    view_mode == "print_vertical" 
+    ? [90, 180, 180] 
     : [0, 180, 0]
 )
 translate(
-    view_mode == "ready_to_print" && print_mode == "vertical" 
+    view_mode == "print_vertical" 
     ? [-frame_full_width/2, -frame_full_height, 0] 
     : [-frame_full_width/2, -frame_full_height/2, 0]
 ) 
