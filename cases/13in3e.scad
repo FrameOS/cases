@@ -82,3 +82,9 @@ case_hole_bottom_depth = 2;
 /* [Kickstand (experimental)] */
 
 kickstand = false;
+kickstand_width = 40;
+kickstand_height = 160;
+kickstand_depth = 7;
+kickstand_hinge_diameter = 2.2;
+kickstand_leg_hole_diameter = 5;
+hinge_top_extra_leverage = 3;
