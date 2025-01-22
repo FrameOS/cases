@@ -79,7 +79,6 @@ case_hole_right_bottom_offset = 10;
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
-/* [Kickstand (experimental)] */
+/* [Kickstand] */
 
-kickstand = false;
-kickstand_width = 40;
+kickstand = false; // Not good when printing vertically

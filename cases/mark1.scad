@@ -63,7 +63,7 @@ panel_cover_depth = 2.0;
 case_depth = 10.0; 
 
 // Back shell thickness (layer 2.2)
-back_depth = 2.0;
+back_depth = 1.6;
 
 /* [Screws and placement] */
 
@@ -117,28 +117,30 @@ case_hole_bottom_right_offset = 0;
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
-/* [Kickstand (experimental)] */
+/* [Kickstand] */
 
 kickstand = true; // @shared
-kickstand_width = 40;
-kickstand_leg_width = 10; // @shared
+kickstand_width = 80;
+kickstand_leg_width = 20; // @shared
 kickstand_height_percentage = 65; // @shared
 kickstand_leg_bridge_offset_percentage = 15;
-kickstand_leg_bridge_height = 10;
+kickstand_leg_bridge_height = 10; // @shared
 kickstand_depth = 7; // @shared
 kickstand_bottom_start = 3;
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2; // @shared
 kickstand_leg_hole_diameter = 5; // @shared
-hinge_top_extra_leverage = 1; // @shared overrides kickstand_gap_thickness on the top @shared
-hinge_wall_padding = 0.2; // distance from the back wall
-hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
+hinge_top_extra_leverage = 1; // Height added to the leg above the hinge. Increasing reduces rotation angle @shared
+hinge_wall_padding = 0.2; // Distance from the back wall
+hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
+kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open @shared
 
 /* [Debug] */
 
 // Gap between STL parts for visual debugging
 debug_gap = 40;
+cross_section_percentage = 0; // [0:100]
 
 $fn = 32;
 
@@ -613,6 +615,11 @@ module caseWithKickstand() {
         leg_x_starts_hole[0] + kickstand_gap_thickness,
         leg_x_starts_hole[1] + kickstand_gap_thickness,
     ];
+    leg_yz = [
+        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_gap_thickness + kickstand_wall_thickness,
+        case_depth + back_depth - hinge_real_depth / 2
+    ];
+
     leg_bridge_leg_y = frame_full_height - kickstand_bottom_start - kickstand_leg_bridge_offset - kickstand_leg_bridge_height * 2;
     leg_bridge_hole_y = leg_bridge_leg_y - kickstand_gap_thickness;
     leg_bridge_full_y = leg_bridge_leg_y - kickstand_wall_thickness;
@@ -702,11 +709,9 @@ module caseWithKickstand() {
                 cylinder(d = hinge_real_depth, h = kickstand_leg_width);
 
                 // Render the large leg
-                translate([
-                    x, 
-                    frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_gap_thickness + kickstand_wall_thickness,  // no kickstand_gap_thickness here, 
-                    case_depth + back_depth - hinge_real_depth / 2
-                ])
+                translate([x, hinge_start[1], hinge_start[2]])
+                rotate([kickstand_rotation, 0, 0])
+                translate([0, leg_yz[0] - hinge_start[1], leg_yz[1] - hinge_start[2]])
                 cube([
                     kickstand_leg_width, 
                     kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness,
@@ -714,10 +719,12 @@ module caseWithKickstand() {
                 ]);
             }
             // Render the leg bridge
+            translate([0, hinge_start[1], hinge_start[2]])
+            rotate([kickstand_rotation, 0, 0])
             translate([
                 leg_x_starts_leg[0] + kickstand_leg_width, 
-                leg_bridge_leg_y,
-                case_depth + back_depth - hinge_real_depth / 2
+                leg_bridge_leg_y - hinge_start[1],
+                case_depth + back_depth - hinge_real_depth / 2 - hinge_start[2]
             ])
             cube([
                 kickstand_width - 2 * kickstand_leg_width, 
@@ -733,29 +740,64 @@ module caseWithKickstand() {
 
         // Render an empty cylinder into the feet of the kickstand
         for (x = leg_x_starts_leg) {
+            translate([0, hinge_start[1], hinge_start[2]])
+            rotate([kickstand_rotation, 0, 0])
             translate([
                 x - 0.11, 
-                frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 3,
-                case_depth + back_depth - hinge_real_depth / 4
+                frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 3 - hinge_start[1],
+                case_depth + back_depth - hinge_real_depth / 4 - hinge_start[2]
             ])
             rotate([90, 0, 90])
             cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22);
         }
+
+        // Render an empty cyclinter at the top of the leg bridge
+        translate([0, hinge_start[1], hinge_start[2]])
+        rotate([kickstand_rotation, 0, 0])
+        translate([
+            leg_x_starts_leg[0] + kickstand_leg_width, 
+            leg_bridge_leg_y - hinge_start[1],
+            case_depth + back_depth - hinge_real_depth / 4 - hinge_start[2]
+        ])
+        rotate([90, 0, 90])
+        cylinder(d = hinge_real_depth / 3, h = (kickstand_width - kickstand_leg_width * 2));
+
+        // Render an empty cyclinter at the bottom of the leg bridge
+        translate([0, hinge_start[1], hinge_start[2]])
+        rotate([kickstand_rotation, 0, 0])
+        translate([
+            leg_x_starts_leg[0] + kickstand_leg_width, 
+            leg_bridge_leg_y - hinge_start[1] + kickstand_leg_bridge_height + 0.11,
+            case_depth + back_depth - hinge_real_depth / 4 - hinge_start[2]
+        ])
+        rotate([90, 0, 90])
+        cylinder(d = hinge_real_depth / 3, h = (kickstand_width - kickstand_leg_width * 2));
     }
 
-    // Render an full cylinder into the base of the frame
-    for (x = leg_x_starts_hole) {
+    // Do not print this for vertical prints, as the legs will get stuck into it
+    if (view_mode != "print_vertical") {
+        // Render an full cylinder into the frame to snap the legs into
+        for (x = leg_x_starts_hole) {
+            translate([
+                x - 0.11, 
+                frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 2,
+                case_depth + back_depth - hinge_real_depth / 4
+            ])
+            rotate([90, 0, 90])
+            cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22 + kickstand_gap_thickness * 2);
+        }
+        // Render a cyclinder at the top of the leg bridge
         translate([
-            x - 0.11, 
-            frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 2,
+            leg_x_starts_leg[0] + kickstand_leg_width + kickstand_gap_thickness, 
+            leg_bridge_leg_y - kickstand_gap_thickness,
             case_depth + back_depth - hinge_real_depth / 4
         ])
         rotate([90, 0, 90])
-        cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22 + kickstand_gap_thickness * 2);
+        cylinder(d = hinge_real_depth / 3, h = (kickstand_width - kickstand_leg_width * 2 - kickstand_gap_thickness * 2));
     }
-
+    
+    // Render a cylinder as a hinge
     for (x = leg_x_starts_full) {
-        // Render a cylinder as a hinge
         translate([x, hinge_start[1], hinge_start[2]])
         rotate([90, 0, 90])
         cylinder(d = kickstand_hinge_diameter, h = kickstand_leg_full_width - 0.22);
@@ -845,8 +887,10 @@ translate(
         difference() {
             caseWithKickstand();
             // cut off half
-            // translate([-0.1, -0.1, -0.1])
-            // cube([frame_full_width * 0, frame_full_height, 30]);
+            if (cross_section_percentage > 0 && cross_section_percentage < 100) {
+                translate([-0.1, -0.1, -0.1])
+                cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 0.2, 30]);
+            }
         }
     } else {
         case();

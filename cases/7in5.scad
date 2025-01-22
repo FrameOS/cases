@@ -76,8 +76,12 @@ case_hole_left_bottom_offset = 5;
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
-/* [Kickstand (experimental)] */
+/* [Kickstand] */
 
 kickstand = true;
-kickstand_width = 40;
+kickstand_width = 80;
+kickstand_leg_width = 20;
+kickstand_leg_bridge_height = 7;
+kickstand_height_percentage = 65;
 kickstand_depth = 7;
+kickstand_rotation = 0; 
