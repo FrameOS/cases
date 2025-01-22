@@ -131,7 +131,7 @@ kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2; // @shared
 kickstand_leg_hole_diameter = 5; // @shared
-hinge_top_extra_leverage = 2; // @shared overrides kickstand_gap_thickness on the top @shared
+hinge_top_extra_leverage = 1; // @shared overrides kickstand_gap_thickness on the top @shared
 hinge_wall_padding = 0.2; // distance from the back wall
 hinge_cylinder_gap = 0.5; // gap between the hinge and the cylinder
 
