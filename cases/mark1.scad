@@ -131,9 +131,9 @@ kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2; // @shared
 kickstand_leg_hole_diameter = 5; // @shared
-hinge_top_extra_leverage = 1; // Height added to the leg above the hinge. Increasing reduces rotation angle @shared
-hinge_wall_padding = 0.2; // Distance from the back wall
-hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
+kickstand_hinge_top_extra_leverage = 1; // Height added to the leg above the hinge. Increasing reduces rotation angle @shared
+kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
+kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
 kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open @shared
 
 /* [Debug] */
@@ -597,10 +597,10 @@ module renderKickstand() {
 }
 
 module caseWithKickstand() {
-    hinge_real_depth = kickstand_depth - kickstand_wall_thickness - hinge_wall_padding - kickstand_hinge_diameter / 2;
+    hinge_real_depth = kickstand_depth - kickstand_wall_thickness - kickstand_hinge_wall_padding - kickstand_hinge_diameter / 2;
     hinge_start = [
         frame_full_width / 2 - kickstand_full_width / 2 + 0.11, 
-        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness + kickstand_depth / 2 + hinge_top_extra_leverage,  // no kickstand_gap_thickness here, 
+        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness + kickstand_depth / 2 + kickstand_hinge_top_extra_leverage,  // no kickstand_gap_thickness here, 
         case_depth + back_depth - hinge_real_depth / 2
     ];
     leg_x_starts_full = [
@@ -623,7 +623,7 @@ module caseWithKickstand() {
     leg_bridge_leg_y = frame_full_height - kickstand_bottom_start - kickstand_leg_bridge_offset - kickstand_leg_bridge_height * 2;
     leg_bridge_hole_y = leg_bridge_leg_y - kickstand_gap_thickness;
     leg_bridge_full_y = leg_bridge_leg_y - kickstand_wall_thickness;
-    leg_top_height_full = kickstand_depth + hinge_top_extra_leverage + kickstand_wall_thickness * 2 + kickstand_gap_thickness;
+    leg_top_height_full = kickstand_depth + kickstand_hinge_top_extra_leverage + kickstand_wall_thickness * 2 + kickstand_gap_thickness;
 
     // Make a hole in the case
     difference() {
@@ -736,7 +736,7 @@ module caseWithKickstand() {
         // Render an empty cylinder inside the top cylinder, where the hinge will go through
         translate([leg_x_starts_leg[0] - 0.11, hinge_start[1], hinge_start[2]])
         rotate([90, 0, 90])
-        cylinder(d = kickstand_hinge_diameter + hinge_cylinder_gap * 2, h = kickstand_width + 0.22);
+        cylinder(d = kickstand_hinge_diameter + kickstand_hinge_cylinder_gap * 2, h = kickstand_width + 0.22);
 
         // Render an empty cylinder into the feet of the kickstand
         for (x = leg_x_starts_leg) {
