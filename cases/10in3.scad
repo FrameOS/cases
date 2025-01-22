@@ -1,4 +1,4 @@
-// Waveshare 13.3"E ePaper case
+// Waveshare 10.3" ePaper case
 
 include <mark1.scad>
 
@@ -11,35 +11,35 @@ view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 // Physical width of the eInk panel (mm)
 panel_width  = 284.49;
 // Physical height of the eInk panel (mm)
-panel_height = 208.81;
+panel_height = 216.69;
 
 // Dimensions of the bezel on the eInk panel
-panel_bezel_left   = 11.7;
-panel_bezel_right  = 3.3;
+panel_bezel_left   = 3.1;
+panel_bezel_right  = 3.1;
 panel_bezel_top    = 3.1;
-panel_bezel_bottom = 3.1;
+panel_bezel_bottom = 13.7;
 
 /* [Border around and below panel] */
 
 // How much case to add around the panel
-panel_border_left   = 3.2;
-panel_border_right  = 11.6;
-panel_border_top    = 11.8;
-panel_border_bottom = 11.8;
+panel_border_left   = 6;
+panel_border_right  = 6;
+panel_border_top    = 6;
+panel_border_bottom = 3;
 
 // Gap in the border for the eInk panel's cables, mm, centered
-panel_cable_gap_left = 142;
+panel_cable_gap_left = 0;
 panel_cable_gap_right = 0;
 panel_cable_gap_top = 0;
-panel_cable_gap_bottom = 0;
+panel_cable_gap_bottom = 141;
 panel_cable_gap_size = 2.0; // How into the border to cut
 case_cable_gap_depth = 3.0; // How deep into the case to cut
 
 // Extra space inside the case to hold up the panel
-case_inner_padding_left = 6;
+case_inner_padding_left = 4;
 case_inner_padding_right = 4;
 case_inner_padding_top = 4;
-case_inner_padding_bottom = 4;
+case_inner_padding_bottom = 6;
 
 /* [Panel supports] */
 
@@ -55,15 +55,15 @@ case_depth = 10.0;
 /* [Screws and placement] */
 
 // Center of each screw hole from the corner
-screw_offset_left   = 5.0;
-screw_offset_right  = 5.0;
-screw_offset_top    = 5.0;
-screw_offset_bottom = 5.0;
+screw_offset_left   = 4.0;
+screw_offset_right  = 4.0;
+screw_offset_top    = 4.0;
+screw_offset_bottom = 4.0;
 
 // Extra screws on the top side (0.0 to 1.0)
-extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_top = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the bottom side (0.0 to 1.0)
-extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_bottom = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the left side (0.0 to 1.0)
 extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the right side (0.0 to 1.0)
