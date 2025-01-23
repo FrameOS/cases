@@ -155,7 +155,7 @@ usb_cutout_hole_height = 6.0;
 
 // Gap between STL parts for visual debugging
 debug_gap = 40;
-cross_section_percentage = 69; // [0:100]
+cross_section_percentage = 0; // [0:100]
 
 $fn = 32;
 
@@ -587,15 +587,15 @@ module case() {
                 ])
                 cube([
                     usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, 
-                    usb_cutout_box_height + usb_cutout_box_wall_thickness * 2, 
+                    usb_cutout_box_height + usb_cutout_box_wall_thickness, 
                     usb_cutout_box_depth + usb_cutout_box_wall_thickness
                 ]);
-                if (view_mode == "print_vertical") {
-                    let (l = usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, w = -usb_cutout_box_depth, h = -usb_cutout_box_depth)
 
+                if (usb_cutout_hole_postition != "bottom") {
+                    let (l = usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, w = -usb_cutout_box_depth, h = -usb_cutout_box_depth)
                     translate([
                         frame_full_width * usb_cutout_offset_x_percentage / 100, 
-                        frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_height + usb_cutout_box_wall_thickness * 2 + usb_cutout_box_depth,
+                        frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_height + usb_cutout_box_wall_thickness + usb_cutout_box_depth,
                         back_depth + case_depth - usb_cutout_box_wall_thickness
                     ])
                     polyhedron(//pt 0        1        2        3        4        5
@@ -639,6 +639,18 @@ module case() {
                 usb_cutout_box_height, 
                 usb_cutout_box_depth + 0.11
             ]);
+            if (usb_cutout_hole_postition != "bottom") {
+                let (l = usb_cutout_box_width, w = -usb_cutout_box_depth-0.11, h = -usb_cutout_box_depth-0.11)
+                translate([
+                    frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
+                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness*1.2 + usb_cutout_box_height + usb_cutout_box_depth - 0.11,
+                    back_depth + case_depth + 0.11
+                ])
+                polyhedron(//pt 0        1        2        3        4        5
+                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+            );
+            }
 
             // Hole into what's remaining
             if (usb_cutout_hole_postition == "left" || usb_cutout_hole_postition == "right") {

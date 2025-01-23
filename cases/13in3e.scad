@@ -81,7 +81,14 @@ case_hole_bottom_depth = 2;
 
 /* [Kickstand] */
 
-kickstand = false; // Not good when printing vertically
+kickstand = true;
+kickstand_width = 80;
+kickstand_leg_width = 10;
+kickstand_leg_bridge_height = 10;
+kickstand_height_percentage = 65;
+kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...)
+kickstand_depth = 7;
+kickstand_rotation = 0; 
 
 /* [USB cutout] */
 

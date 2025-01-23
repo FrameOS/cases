@@ -28,11 +28,12 @@ panel_height = 208.81;
 // Total inside compartment thickness (layer 2.1)
 case_depth = 10.0; 
 // Add a kickstand
-kickstand = false;
+kickstand = true;
 // Add a cutout for the USB port
 usb_cutout = false;
 // Vertical spacers holding up the frame
 case_center_support_vertical = true;
 // Horizontal spacers holding up the frame
 case_center_support_horizontal = true;
-
+// Peek into the case
+cross_section_percentage = 0; // [0:100]
