@@ -70,8 +70,10 @@ extra_screws_right = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 
 /* [Case side holes] */
 
-case_hole_left_bottom = 16;
-case_hole_left_bottom_offset = 5;
+case_hole_left_top = 0;
+case_hole_left_top_offset = 5;
+case_hole_right_top = 0;
+case_hole_right_top_offset = 5;
 
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
@@ -80,7 +82,7 @@ case_hole_bottom_depth = 2;
 
 kickstand = true;
 kickstand_width = 80;
-kickstand_leg_width = 20;
+kickstand_leg_width = 10;
 kickstand_leg_bridge_height = 10;
 kickstand_height_percentage = 65;
 kickstand_depth = 7;

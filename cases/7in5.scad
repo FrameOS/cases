@@ -80,7 +80,7 @@ case_hole_bottom_depth = 2;
 
 kickstand = true;
 kickstand_width = 80;
-kickstand_leg_width = 20;
+kickstand_leg_width = 10;
 kickstand_leg_bridge_height = 10;
 kickstand_height_percentage = 65;
 kickstand_depth = 7;

@@ -121,7 +121,7 @@ case_hole_bottom_depth = 2;
 
 kickstand = true; // @shared
 kickstand_width = 80;
-kickstand_leg_width = 20; // @shared
+kickstand_leg_width = 10; // @shared
 kickstand_height_percentage = 65; // @shared
 kickstand_leg_bridge_offset_percentage = 15;
 kickstand_leg_bridge_height = 10; // @shared
@@ -719,6 +719,20 @@ module caseWithKickstand() {
                     case_depth + back_depth - kickstand_depth
                 ])
                 cube([kickstand_leg_full_width, leg_top_height_full, kickstand_depth]);
+                
+                if (view_mode == "print_vertical") {
+                    let (l = kickstand_leg_full_width, w = -kickstand_depth, h = -kickstand_depth)
+                    translate([
+                        x, 
+                        frame_full_height - kickstand_bottom_start - kickstand_height + leg_top_height_full + kickstand_depth, 
+                        case_depth + back_depth
+                    ])
+                    polyhedron(//pt 0        1        2        3        4        5
+                        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                    );
+                }
+
                 // Long base leg
                 translate([
                     x, 
@@ -726,6 +740,19 @@ module caseWithKickstand() {
                     case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness
                 ])
                 cube([kickstand_leg_full_width, kickstand_height, kickstand_depth / 2 + kickstand_gap_thickness]);
+
+                if (view_mode == "print_vertical" && kickstand_bottom_start >= kickstand_depth) {
+                    let (l = kickstand_leg_full_width, w = -kickstand_depth / 2 - kickstand_gap_thickness, h = -kickstand_depth / 2 - kickstand_gap_thickness)
+                    translate([
+                        x, 
+                        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_height + kickstand_depth / 2 + kickstand_gap_thickness,
+                        case_depth + back_depth
+                    ])
+                    polyhedron(//pt 0        1        2        3        4        5
+                        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                    );
+                }
             }
             // Protective box around the leg bridge
             translate([
@@ -738,6 +765,19 @@ module caseWithKickstand() {
                 kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2 + kickstand_wall_thickness * 2, 
                 kickstand_depth
             ]);
+
+            if (view_mode == "print_vertical") {
+                let (l = kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 4, w = -kickstand_depth, h = -kickstand_depth)
+                translate([
+                    leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness * 2, 
+                    leg_bridge_full_y + kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2 + kickstand_wall_thickness * 2 + kickstand_depth, 
+                    case_depth + back_depth
+                ])
+                polyhedron(//pt 0        1        2        3        4        5
+                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                );
+            }
         }
         // Now the holes
         for (x = leg_x_starts_hole) {
