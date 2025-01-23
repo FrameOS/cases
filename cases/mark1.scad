@@ -131,7 +131,8 @@ kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2; // @shared
 kickstand_leg_hole_diameter = 5; // @shared
-kickstand_hinge_top_extra_leverage = 1; // Height added to the leg above the hinge. Increasing reduces rotation angle @shared
+kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...) @shared
+kickstand_hinge_top_cavity = 1; // Height by which to make the cavity above the top of the hinge taller
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
 kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open @shared
@@ -147,14 +148,14 @@ usb_cutout_box_depth = 7;
 usb_cutout_box_wall_thickness = 1;
 usb_cutout_hole_postition = "top"; // [top, bottom]
 usb_cutout_hole_width = 14;
-usb_cutout_hole_height = 5.5;
+usb_cutout_hole_height = 6.0;
 
 
 /* [Debug] */
 
 // Gap between STL parts for visual debugging
 debug_gap = 40;
-cross_section_percentage = 0; // [0:100]
+cross_section_percentage = 69; // [0:100]
 
 $fn = 32;
 
@@ -673,10 +674,6 @@ module case() {
 /*                             Kickstand                                     */
 /*****************************************************************************/
 
-module renderKickstand() {
-    cube([kickstand_full_width, kickstand_height, kickstand_depth]);
-}
-
 module caseWithKickstand() {
     hinge_real_depth = kickstand_depth - kickstand_wall_thickness - kickstand_hinge_wall_padding - kickstand_hinge_diameter / 2;
     hinge_start = [
@@ -715,10 +712,10 @@ module caseWithKickstand() {
                 // Top thicker part
                 translate([
                     x, 
-                    frame_full_height - kickstand_bottom_start - kickstand_height, 
+                    frame_full_height - kickstand_bottom_start - kickstand_height - kickstand_hinge_top_cavity, 
                     case_depth + back_depth - kickstand_depth
                 ])
-                cube([kickstand_leg_full_width, leg_top_height_full, kickstand_depth]);
+                cube([kickstand_leg_full_width, leg_top_height_full + kickstand_hinge_top_cavity, kickstand_depth]);
                 
                 if (view_mode == "print_vertical") {
                     let (l = kickstand_leg_full_width, w = -kickstand_depth, h = -kickstand_depth)
@@ -791,6 +788,17 @@ module caseWithKickstand() {
                 kickstand_leg_width + 2 * kickstand_gap_thickness,
                 leg_top_height_full - 2 * kickstand_wall_thickness,
                 kickstand_depth - kickstand_wall_thickness
+            ]);
+            // Top thicker part - top extra cavity
+            translate([
+                x,
+                frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness - kickstand_hinge_top_cavity,
+                case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
+            ])
+            cube([
+                kickstand_leg_width + 2 * kickstand_gap_thickness,
+                kickstand_hinge_top_cavity + 0.11,
+                kickstand_depth - kickstand_wall_thickness * 2
             ]);
 
             // Long base leg
@@ -872,17 +880,6 @@ module caseWithKickstand() {
             cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22);
         }
 
-        // Render an empty cyclinter at the top of the leg bridge
-        translate([0, hinge_start[1], hinge_start[2]])
-        rotate([kickstand_rotation, 0, 0])
-        translate([
-            leg_x_starts_leg[0] + kickstand_leg_width, 
-            leg_bridge_leg_y - hinge_start[1],
-            case_depth + back_depth - hinge_real_depth / 4 - hinge_start[2]
-        ])
-        rotate([90, 0, 90])
-        cylinder(d = hinge_real_depth / 3, h = (kickstand_width - kickstand_leg_width * 2));
-
         // Render an empty cyclinter at the bottom of the leg bridge
         translate([0, hinge_start[1], hinge_start[2]])
         rotate([kickstand_rotation, 0, 0])
@@ -907,14 +904,6 @@ module caseWithKickstand() {
             rotate([90, 0, 90])
             cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22 + kickstand_gap_thickness * 2);
         }
-        // Render a cyclinder at the top of the leg bridge
-        translate([
-            leg_x_starts_leg[0] + kickstand_leg_width + kickstand_gap_thickness, 
-            leg_bridge_leg_y - kickstand_gap_thickness,
-            case_depth + back_depth - hinge_real_depth / 4
-        ])
-        rotate([90, 0, 90])
-        cylinder(d = hinge_real_depth / 3, h = (kickstand_width - kickstand_leg_width * 2 - kickstand_gap_thickness * 2));
     }
     
     // Render a cylinder as a hinge
@@ -980,39 +969,44 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
 
 print_gap = 20;
 
-rotate(
-    view_mode == "print_vertical" 
-    ? [180, 180, 180]
-    : view_mode == "print_horizontal" 
-    ? [0, 0, 180]
-    : [0, 180, 0])
-translate(
-    view_mode == "print_vertical" 
-      ? [-frame_full_width/2, -frame_full_height - print_gap - debug_gap, 0]
-      : view_mode == "print_horizontal" 
-        ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
-        : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)])  // stacked
-panel_cover();
+difference() {
+    union() {
+        rotate(
+            view_mode == "print_vertical" 
+            ? [180, 180, 180]
+            : view_mode == "print_horizontal" 
+            ? [0, 0, 180]
+            : [0, 180, 0])
+        translate(
+            view_mode == "print_vertical" 
+            ? [-frame_full_width/2, -frame_full_height - print_gap - debug_gap, 0]
+            : view_mode == "print_horizontal" 
+                ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
+                : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)])  // stacked
+        panel_cover();
 
-rotate(
-    view_mode == "print_vertical" 
-    ? [90, 180, 180] 
-    : [0, 180, 0]
-)
-translate(
-    view_mode == "print_vertical" 
-    ? [-frame_full_width/2, -frame_full_height, 0] 
-    : [-frame_full_width/2, -frame_full_height/2, 0]
-) 
-    difference() {
+        rotate(
+            view_mode == "print_vertical" 
+            ? [90, 180, 180] 
+            : [0, 180, 0]
+        )
+        translate(
+            view_mode == "print_vertical" 
+            ? [-frame_full_width/2, -frame_full_height, 0] 
+            : [-frame_full_width/2, -frame_full_height/2, 0]
+        ) 
         if (kickstand) {
             caseWithKickstand();
         } else {
             case();
         };
-        // cut off half
-        if (cross_section_percentage > 0 && cross_section_percentage < 100) {
-            translate([-0.1, -0.1, -0.1])
-            cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 0.2, 30]);
-        }
+        // translate([-frame_full_width / 2, -400, -100])
+        // cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 500, 500]);
     }
+
+    // cut off half
+    if (cross_section_percentage > 0 && cross_section_percentage < 100) {
+        translate([-frame_full_width / 2 - 0.11, -400, -100])
+        cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 500, 500]);
+    }
+}

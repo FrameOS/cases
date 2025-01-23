@@ -94,4 +94,4 @@ usb_cutout_box_depth = 7;
 usb_cutout_box_wall_thickness = 1;
 usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
 usb_cutout_hole_width = 14;
-usb_cutout_hole_height = 5.5;
+usb_cutout_hole_height = 6.0;
