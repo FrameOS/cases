@@ -49,7 +49,7 @@ case_center_support_width = 4.0;
 
 /* [Case dimensions] */
 
-// Total inside compartment thickness (layer 2.1)
+// Total inside compartment thickness
 case_depth = 10.0; 
 
 /* [Screws and placement] */

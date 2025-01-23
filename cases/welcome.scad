@@ -25,10 +25,11 @@ view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 panel_width  = 284.49;
 // Physical height of the eInk panel (mm)
 panel_height = 208.81;
-// Total inside compartment thickness (layer 2.1)
+// Total inside compartment thickness
 case_depth = 10.0; 
 // Add a kickstand
 kickstand = true;
+kickstand_rotation = 0; // [0:45]
 // Add a cutout for the USB port
 usb_cutout = false;
 // Vertical spacers holding up the frame

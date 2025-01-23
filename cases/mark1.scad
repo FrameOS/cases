@@ -11,24 +11,48 @@ panel_width  = 284.49;
 // Physical height of the eInk panel (mm) @shared
 panel_height = 208.81;
 
-// Thickness of the eInk panel (layer 1.2: border)
-panel_depth  = 1.2;
 // Clearance around the eInk panel (mm)
 clearance = 0.3;
 
-// Dimensions of the bezel on the eInk panel @shared
+// Dimensions of the bezel on the eInk panel. Will be covered by the panel cover. @shared
 panel_bezel_left   = 11.7;
 panel_bezel_right  = 3.3;
 panel_bezel_top    = 3.1;
 panel_bezel_bottom = 3.1;
 
-/* [Border around and below panel] */
+/* [Border] */
 
 // How much case to add around the panel @shared
 panel_border_left   = 3.2;
 panel_border_right  = 11.6;
 panel_border_top    = 11.8;
 panel_border_bottom = 11.8;
+
+/* [Panel supports] */
+
+// Extra space inside the case to hold up the panel @shared
+case_inner_padding_left = 6;
+case_inner_padding_right = 4;
+case_inner_padding_top = 4;
+case_inner_padding_bottom = 4;
+
+/* [Case dimensions] */
+
+fillet_radius = 2;
+
+// Panel cover thickness
+panel_cover_depth = 1.6;
+
+// Thickness of the eInk panel as measured
+panel_depth  = 1.2;
+
+// Total inside compartment thickness @shared
+case_depth = 7.0; 
+
+// Back plate thickness 
+back_depth = 1.6;
+
+/* [Cable holes for panel] */
 
 // Gap in the border for the eInk panel's cables, mm, centered @shared
 panel_cable_gap_left = 142;
@@ -38,12 +62,6 @@ panel_cable_gap_bottom = 0;
 panel_cable_gap_size = 2.0; // How into the border to cut
 case_cable_gap_depth = 3.0; // How deep into the case to cut
 
-// Extra space inside the case to hold up the panel @shared
-case_inner_padding_left = 6;
-case_inner_padding_right = 4;
-case_inner_padding_top = 4;
-case_inner_padding_bottom = 4;
-
 /* [Panel supports] */
 
 // @shared
@@ -51,19 +69,6 @@ case_inner_padding_bottom = 4;
 case_center_support_vertical = true;
 case_center_support_horizontal = true;
 case_center_support_width = 4.0;
-
-/* [Case dimensions] */
-
-fillet_radius = 2;
-
-// Panel cover thickness (together with panel_depth makes up the top part)
-panel_cover_depth = 2.0;
-
-// Total inside compartment thickness (layer 2.1) @shared
-case_depth = 10.0; 
-
-// Back shell thickness (layer 2.2)
-back_depth = 1.6;
 
 /* [Screws and placement] */
 
