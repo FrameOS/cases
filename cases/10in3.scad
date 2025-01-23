@@ -82,3 +82,16 @@ case_hole_bottom_depth = 2;
 /* [Kickstand] */
 
 kickstand = false; // Not good when printing vertically
+
+/* [USB cutout] */
+
+usb_cutout = true;
+usb_cutout_offset_x_percentage = 80;
+usb_cutout_offset_y_percentage = 20;
+usb_cutout_box_width = 20;
+usb_cutout_box_height = 50;
+usb_cutout_box_depth = 7;
+usb_cutout_box_wall_thickness = 1;
+usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
+usb_cutout_hole_width = 14;
+usb_cutout_hole_height = 5.5;

@@ -16,8 +16,10 @@
 // This is a fork of the OpenSCAD playground. Big props to them!
 // - https://github.com/openscad/openscad-playground
 
-// Edit "13in3e.scad" directly for more options
-include <13in3e.scad>
+// Edit "7in3e.scad" directly for more options
+include <7in3e.scad>
+
+view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
 // Physical width of the eInk panel (mm)
 panel_width  = 284.49;
@@ -27,6 +29,8 @@ panel_height = 208.81;
 case_depth = 10.0; 
 // Add a kickstand
 kickstand = false;
+// Add a cutout for the USB port
+usb_cutout = false;
 // Vertical spacers holding up the frame
 case_center_support_vertical = true;
 // Horizontal spacers holding up the frame

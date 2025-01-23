@@ -4,7 +4,7 @@ include <mark1.scad>
 
 /* [View settings] */
 
-view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
+view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
 /* [Panel dimensions] */
 
@@ -49,7 +49,7 @@ case_center_support_horizontal = false;
 /* [Case dimensions] */
 
 // Total inside compartment thickness (layer 2.1)
-case_depth = 12.0; 
+case_depth = 7.0; 
 
 /* [Screws and placement] */
 
@@ -85,3 +85,16 @@ kickstand_leg_bridge_height = 10;
 kickstand_height_percentage = 65;
 kickstand_depth = 7;
 kickstand_rotation = 0; 
+
+/* [USB cutout] */
+
+usb_cutout = true;
+usb_cutout_offset_x_percentage = 80;
+usb_cutout_offset_y_percentage = 20;
+usb_cutout_box_width = 20;
+usb_cutout_box_height = 50;
+usb_cutout_box_depth = 7;
+usb_cutout_box_wall_thickness = 1;
+usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
+usb_cutout_hole_width = 14;
+usb_cutout_hole_height = 5.5;
