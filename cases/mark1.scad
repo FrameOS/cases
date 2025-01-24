@@ -41,13 +41,13 @@ case_inner_padding_bottom = 4;
 fillet_radius = 2;
 
 // Panel cover thickness
-panel_cover_depth = 1.6;
+panel_cover_depth = 1.8;
 
 // Thickness of the eInk panel as measured
 panel_depth  = 1.2;
 
 // Total inside compartment thickness @shared
-case_depth = 7.0; 
+case_depth = 10.0;
 
 // Back plate thickness 
 back_depth = 1.6;
@@ -137,7 +137,7 @@ kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2; // @shared
 kickstand_leg_hole_diameter = 5; // @shared
 kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...) @shared
-kickstand_hinge_top_cavity = 1; // Height by which to make the cavity above the top of the hinge taller
+kickstand_hinge_top_cavity = 2; // Height by which to make the cavity above the top of the hinge taller
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
 kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open @shared
@@ -150,7 +150,7 @@ usb_cutout_offset_y_percentage = 20;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 50;
 usb_cutout_box_depth = 7;
-usb_cutout_box_wall_thickness = 1;
+usb_cutout_box_wall_thickness = 0.8;
 usb_cutout_hole_postition = "top"; // [top, bottom]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
@@ -283,101 +283,70 @@ module panel_cover() {
 }
 
 module render_panel_cable_gap_bottom(depth, translate_depth) {
-  translate(
-    [
-      panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
-      panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_depth - 0.11,
-      translate_depth
-    ]
-  )
-  cube([
-      panel_cable_gap_bottom,
-      panel_cable_gap_size + case_inner_padding_bottom + 0.11 + case_depth,
-      depth + 0.11
-  ]); 
+    cubeWithAngledTopBottom(
+        loc=[
+            panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_bottom / 2,
+            panel_border_top + panel_height_with_clearance - case_inner_padding_bottom - case_depth - 0.11,
+            translate_depth
+        ],
+        size=[
+            panel_cable_gap_bottom,
+            panel_cable_gap_size + case_inner_padding_bottom + 0.11 + case_depth,
+            depth + 0.11
+        ]
+    );
 }
 
 module render_panel_cable_gap_top(depth, translate_depth) {
-  translate(
-    [
-      panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
-      panel_border_top - panel_cable_gap_size,
-      translate_depth
-    ]
-  )
-  cube([
-      panel_cable_gap_top,
-      panel_cable_gap_size * 2 + case_inner_padding_top + 0.11, // 2x to cut into the chamfer
-      depth + 0.11
-  ]); 
-  if (view_mode == "print_vertical") {
-    let (l = panel_cable_gap_top, w = depth, h = depth)
-    translate([
-    panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
-    panel_border_top - panel_cable_gap_size - depth + 0.11,
-    translate_depth
-    ])
-    polyhedron(//pt 0        1        2        3        4        5
-        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+    cubeWithAngledTopBottom(
+        loc=[
+            panel_border_left + panel_width_with_clearance / 2 - panel_cable_gap_top / 2,
+            panel_border_top - panel_cable_gap_size,
+            translate_depth
+        ],
+        size=[
+            panel_cable_gap_top,
+            panel_cable_gap_size * 2 + case_inner_padding_top + 0.11, // 2x to cut into the chamfer
+            depth + 0.11
+        ],
+        top=(view_mode == "print_vertical"),
+        topReverse=true
     );
-  }
 }
 
 module render_panel_cable_gap_left(depth, translate_depth) {
-  translate(
-    [
-      panel_border_left - panel_cable_gap_size,
-      panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_left / 2,
-      translate_depth
-    ]
-  )
-  cube([
-      panel_cable_gap_size + case_inner_padding_left + 0.11,
-      panel_cable_gap_left,
-      depth + 0.11
-  ]); 
-  if (view_mode == "print_vertical") {
-    let (l = panel_cable_gap_size + case_inner_padding_left + 0.11, w = depth, h = depth)
-    translate([
-      panel_border_left - panel_cable_gap_size,
-      panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_left / 2 - depth + 0.11,
-      translate_depth
-    ])
-    polyhedron(//pt 0        1        2        3        4        5
-        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+    cubeWithAngledTopBottom(
+        loc=[
+            panel_border_left - panel_cable_gap_size,
+            panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_left / 2,
+            translate_depth
+        ],
+        size=[
+            panel_cable_gap_size + case_inner_padding_left + 0.11,
+            panel_cable_gap_left,
+            depth + 0.11
+        ],
+        top=(view_mode == "print_vertical"),
+        topReverse=true
     );
-  }
 }
 
 module render_panel_cable_gap_right(depth, translate_depth) {
-  translate(
-    [
-      panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.11,
-      panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2,
-      translate_depth
-    ]
-  )
-  cube([
-      panel_cable_gap_size + case_inner_padding_right + 0.11,
-      panel_cable_gap_right,
-      depth + 0.11
-  ]); 
-  if (view_mode == "print_vertical") {
-    let (l = panel_cable_gap_size + case_inner_padding_right + 0.11, w = depth, h = depth)
-    translate([
-      panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.11,
-      panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2 - depth + 0.11,
-      translate_depth
-    ])
-    polyhedron(//pt 0        1        2        3        4        5
-        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+    cubeWithAngledTopBottom(
+        loc=[
+            panel_border_left + panel_width_with_clearance - case_inner_padding_right - 0.11,
+            panel_border_top + panel_height_with_clearance / 2 - panel_cable_gap_right / 2,
+            translate_depth
+        ],
+        size=[
+            panel_cable_gap_size + case_inner_padding_right + 0.11,
+            panel_cable_gap_right,
+            depth + 0.11
+        ],
+        top=(view_mode == "print_vertical"),
+        topReverse=true
     );
-  }
 }
-
 
 /*****************************************************************************/
 /*                             Case body                                     */
@@ -527,87 +496,48 @@ module case() {
                     union() {
                         // Center support
                         if (case_center_support_horizontal) {
-                            translate([frame_full_width / 4, frame_full_height / 2 - (case_center_support_width / 2), 0])
-                            cube([frame_full_width / 6, case_center_support_width, case_depth]);
-
-                            translate([frame_full_width / 4 + frame_full_width / 3, frame_full_height / 2 - (case_center_support_width / 2), 0])
-                            cube([frame_full_width / 6, case_center_support_width, case_depth]);
-
-                            if (view_mode == "print_vertical") {
-                                let (l = frame_full_width / 6, w = -case_depth, h = -case_depth)
-                                translate([frame_full_width / 4, frame_full_height / 2 + (case_center_support_width / 2) + case_depth, case_depth])
-                                polyhedron(//pt 0        1        2        3        4        5
-                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                                );
-                                let (l = frame_full_width / 6, w = -case_depth, h = -case_depth)
-                                translate([frame_full_width / 4 + frame_full_width / 3, frame_full_height / 2 + (case_center_support_width / 2) + case_depth, case_depth])
-                                polyhedron(//pt 0        1        2        3        4        5
-                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                                );
-                            }
+                            cubeWithAngledTopBottom(
+                                loc=[frame_full_width / 4, frame_full_height / 2 - (case_center_support_width / 2), 0],
+                                size=[frame_full_width / 6, case_center_support_width, case_depth],
+                                bottom=(view_mode == "print_vertical")
+                            );
+                            cubeWithAngledTopBottom(
+                                loc=[frame_full_width / 4 + frame_full_width / 3, frame_full_height / 2 - (case_center_support_width / 2), 0],
+                                size=[frame_full_width / 6, case_center_support_width, case_depth],
+                                bottom=(view_mode == "print_vertical")
+                            );
                         }
 
                         if (case_center_support_vertical) {
-                            translate([frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4, 0])
-                            cube([case_center_support_width, frame_full_height / 6, case_depth]);
-
-                            translate([frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4 + frame_full_height / 3, 0])
-                            cube([case_center_support_width, frame_full_height / 6, case_depth]);
-
-                            if (view_mode == "print_vertical") {
-                                let (l = case_center_support_width, w = -case_depth, h = -case_depth)
-                                translate([
-                                    frame_full_width / 2 - (case_center_support_width / 2), 
-                                    frame_full_height / 4 + frame_full_height / 6 + case_depth,
-                                    case_depth
-                                ])
-                                polyhedron(//pt 0        1        2        3        4        5
-                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                                );
-
-                                let (l = case_center_support_width, w = -case_depth, h = -case_depth)
-                                translate([
-                                    frame_full_width / 2 - (case_center_support_width / 2), 
-                                    frame_full_height / 4 + frame_full_height / 2 + case_depth,
-                                    case_depth
-                                ])
-                                polyhedron(//pt 0        1        2        3        4        5
-                                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                                );
-                            }
+                            cubeWithAngledTopBottom(
+                                loc=[frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4, 0],
+                                size=[case_center_support_width, frame_full_height / 6, case_depth],
+                                bottom=(view_mode == "print_vertical")
+                            );
+                            cubeWithAngledTopBottom(
+                                loc=[frame_full_width / 2 - (case_center_support_width / 2), frame_full_height / 4 + frame_full_height / 3, 0],
+                                size=[case_center_support_width, frame_full_height / 6, case_depth],
+                                bottom=(view_mode == "print_vertical")
+                            );
                         }
                     };
                 }
             };
 
             if (usb_cutout) {
-                translate([
-                    frame_full_width * usb_cutout_offset_x_percentage / 100, 
-                    frame_full_height * usb_cutout_offset_y_percentage / 100,
-                    back_depth + case_depth - (usb_cutout_box_depth + usb_cutout_box_wall_thickness),
-                ])
-                cube([
-                    usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, 
-                    usb_cutout_box_height + usb_cutout_box_wall_thickness, 
-                    usb_cutout_box_depth + usb_cutout_box_wall_thickness
-                ]);
-
-                if (usb_cutout_hole_postition != "bottom") {
-                    let (l = usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, w = -usb_cutout_box_depth, h = -usb_cutout_box_depth)
-                    translate([
+                cubeWithAngledTopBottom(
+                    loc=[
                         frame_full_width * usb_cutout_offset_x_percentage / 100, 
-                        frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_height + usb_cutout_box_wall_thickness + usb_cutout_box_depth,
-                        back_depth + case_depth - usb_cutout_box_wall_thickness
-                    ])
-                    polyhedron(//pt 0        1        2        3        4        5
-                        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                    );
-                }
+                        frame_full_height * usb_cutout_offset_y_percentage / 100,
+                        back_depth + case_depth - (usb_cutout_box_depth + usb_cutout_box_wall_thickness),
+                    ], 
+                    size =[
+                        usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, 
+                        usb_cutout_box_height + usb_cutout_box_wall_thickness, 
+                        usb_cutout_box_depth + usb_cutout_box_wall_thickness
+                    ], 
+                    bottom=(usb_cutout_hole_postition != "bottom")
+                );
             }
 
             // Cut out a piece of the cube
@@ -634,28 +564,19 @@ module case() {
 
         if (usb_cutout) {
             // Cutout into box
-            translate([
-                frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
-                frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
-                back_depth + case_depth - usb_cutout_box_depth,
-            ])
-            cube([
-                usb_cutout_box_width, 
-                usb_cutout_box_height, 
-                usb_cutout_box_depth + 0.11
-            ]);
-            if (usb_cutout_hole_postition != "bottom") {
-                let (l = usb_cutout_box_width, w = -usb_cutout_box_depth-0.11, h = -usb_cutout_box_depth-0.11)
-                translate([
+            cubeWithAngledTopBottom(
+                loc=[
                     frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
-                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness*1.2 + usb_cutout_box_height + usb_cutout_box_depth - 0.11,
-                    back_depth + case_depth + 0.11
-                ])
-                polyhedron(//pt 0        1        2        3        4        5
-                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
+                    back_depth + case_depth - usb_cutout_box_depth,
+                ], 
+                size =[
+                    usb_cutout_box_width, 
+                    usb_cutout_box_height, 
+                    usb_cutout_box_depth + 0.11
+                ], 
+                bottom=(usb_cutout_hole_postition != "bottom")
             );
-            }
 
             // Hole into what's remaining
             if (usb_cutout_hole_postition == "left" || usb_cutout_hole_postition == "right") {
@@ -727,121 +648,103 @@ module caseWithKickstand() {
             // Protective box around the kickstand legs
             for (x = leg_x_starts_full) {
                 // Top thicker part
-                translate([
-                    x, 
-                    frame_full_height - kickstand_bottom_start - kickstand_height - kickstand_hinge_top_cavity, 
-                    case_depth + back_depth - kickstand_depth
-                ])
-                cube([kickstand_leg_full_width, leg_top_height_full + kickstand_hinge_top_cavity, kickstand_depth]);
+                cubeWithAngledTopBottom(
+                    loc=[
+                        x, 
+                        frame_full_height - kickstand_bottom_start - kickstand_height - kickstand_hinge_top_cavity, 
+                        case_depth + back_depth - kickstand_depth
+                    ],
+                    size=[kickstand_leg_full_width, leg_top_height_full + kickstand_hinge_top_cavity, kickstand_depth],
+                    bottom=(view_mode == "print_vertical")
+                );
                 
-                if (view_mode == "print_vertical") {
-                    let (l = kickstand_leg_full_width, w = -kickstand_depth, h = -kickstand_depth)
-                    translate([
-                        x, 
-                        frame_full_height - kickstand_bottom_start - kickstand_height + leg_top_height_full + kickstand_depth, 
-                        case_depth + back_depth
-                    ])
-                    polyhedron(//pt 0        1        2        3        4        5
-                        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                    );
-                }
-
                 // Long base leg
-                translate([
-                    x, 
-                    frame_full_height - kickstand_bottom_start - kickstand_height, 
-                    case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness
-                ])
-                cube([kickstand_leg_full_width, kickstand_height, kickstand_depth / 2 + kickstand_gap_thickness]);
-
-                if (view_mode == "print_vertical" && kickstand_bottom_start >= kickstand_depth) {
-                    let (l = kickstand_leg_full_width, w = -kickstand_depth / 2 - kickstand_gap_thickness, h = -kickstand_depth / 2 - kickstand_gap_thickness)
-                    translate([
+                cubeWithAngledTopBottom(
+                    loc=[
                         x, 
-                        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_height + kickstand_depth / 2 + kickstand_gap_thickness,
-                        case_depth + back_depth
-                    ])
-                    polyhedron(//pt 0        1        2        3        4        5
-                        points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                        faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
-                    );
-                }
-            }
-            // Protective box around the leg bridge
-            translate([
-                leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness * 2, 
-                leg_bridge_full_y, 
-                case_depth + back_depth - kickstand_depth
-            ])
-            cube([
-                kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 4, 
-                kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2 + kickstand_wall_thickness * 2, 
-                kickstand_depth
-            ]);
-
-            if (view_mode == "print_vertical") {
-                let (l = kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 4, w = -kickstand_depth, h = -kickstand_depth)
-                translate([
-                    leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness * 2, 
-                    leg_bridge_full_y + kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2 + kickstand_wall_thickness * 2 + kickstand_depth, 
-                    case_depth + back_depth
-                ])
-                polyhedron(//pt 0        1        2        3        4        5
-                    points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
-                    faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+                        frame_full_height - kickstand_bottom_start - kickstand_height, 
+                        case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness
+                    ],
+                    size=[kickstand_leg_full_width, kickstand_height, kickstand_depth / 2 + kickstand_gap_thickness],
+                    bottom=(view_mode == "print_vertical" && kickstand_bottom_start >= kickstand_depth)
                 );
             }
+    
+            // Protective box around the leg bridge
+            cubeWithAngledTopBottom(
+                loc=[
+                    leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness * 2, 
+                    leg_bridge_full_y + kickstand_depth - kickstand_wall_thickness, 
+                    case_depth + back_depth - kickstand_depth
+                ],
+                size=[
+                    kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 4, 
+                    kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2 + kickstand_wall_thickness * 2 - kickstand_depth, 
+                    kickstand_depth
+                ],
+                // top=true
+                top=true,
+                bottom=(view_mode == "print_vertical" && kickstand_leg_bridge_offset >= kickstand_depth + fillet_radius)
+            );
         }
         // Now the holes
         for (x = leg_x_starts_hole) {
             // Top thicker part
-            translate([
-                x,
-                frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
-                case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
-            ])
-            cube([
-                kickstand_leg_width + 2 * kickstand_gap_thickness,
-                leg_top_height_full - 2 * kickstand_wall_thickness,
-                kickstand_depth - kickstand_wall_thickness
-            ]);
+            cubeWithAngledTopBottom(
+                loc=[
+                    x,
+                    frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
+                    case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
+                ],
+                size=[
+                    kickstand_leg_width + 2 * kickstand_gap_thickness,
+                    leg_top_height_full - 2 * kickstand_wall_thickness,
+                    kickstand_depth - kickstand_wall_thickness
+                ]
+            );
             // Top thicker part - top extra cavity
-            translate([
-                x,
-                frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness - kickstand_hinge_top_cavity,
-                case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
-            ])
-            cube([
-                kickstand_leg_width + 2 * kickstand_gap_thickness,
-                kickstand_hinge_top_cavity + 0.11,
-                kickstand_depth - kickstand_wall_thickness * 2
-            ]);
-
+            cubeWithAngledTopBottom(
+                loc=[
+                    x,
+                    frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness - kickstand_hinge_top_cavity,
+                    case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
+                ],
+                size=[
+                    kickstand_leg_width + 2 * kickstand_gap_thickness,
+                    kickstand_hinge_top_cavity + 0.11,
+                    kickstand_depth - kickstand_wall_thickness * 2
+                ]
+            );
             // Long base leg
-            translate([
-                x,
-                frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
-                case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness + kickstand_wall_thickness
-            ])
-            cube([
-                kickstand_leg_width + 2 * kickstand_gap_thickness,
-                kickstand_height - 2 * kickstand_wall_thickness,
-                kickstand_depth / 2 - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
-            ]);
+            cubeWithAngledTopBottom(
+                loc=[
+                    x,
+                    frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
+                    case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness + kickstand_wall_thickness
+                ],
+                size=[
+                    kickstand_leg_width + 2 * kickstand_gap_thickness,
+                    kickstand_height - 2 * kickstand_wall_thickness,
+                    kickstand_depth / 2 - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
+                ]
+            );
         }
 
-        // Leg bridge
-        translate([
-            leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness - 0.11, 
-            leg_bridge_hole_y, 
-            case_depth + back_depth - kickstand_depth + kickstand_wall_thickness - 0.11
-        ])
-        cube([
-            kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 2 + 0.22, 
-            kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2, 
-            kickstand_depth - kickstand_wall_thickness + 0.22
-        ]);
+        // Leg bridge hole
+        cubeWithAngledTopBottom(
+            loc=[
+                leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness - 0.11, 
+                leg_bridge_hole_y + kickstand_wall_thickness + kickstand_depth / 1.414, 
+                case_depth + back_depth - kickstand_depth + kickstand_wall_thickness - 0.11
+            ],
+            size=[
+                kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 2 + 0.22, 
+                kickstand_leg_bridge_height * 2 - kickstand_depth / 1.414, 
+                kickstand_depth - kickstand_wall_thickness + 0.22
+            ],
+            top=true,
+            bottom=(view_mode == "print_vertical" && kickstand_leg_bridge_offset >= kickstand_depth + fillet_radius)
+        );
     }
     
     // The kickstand itself
@@ -867,16 +770,20 @@ module caseWithKickstand() {
             // Render the leg bridge
             translate([0, hinge_start[1], hinge_start[2]])
             rotate([kickstand_rotation, 0, 0])
-            translate([
-                leg_x_starts_leg[0] + kickstand_leg_width, 
-                leg_bridge_leg_y - hinge_start[1],
-                case_depth + back_depth - hinge_real_depth / 2 - hinge_start[2]
-            ])
-            cube([
-                kickstand_width - 2 * kickstand_leg_width, 
-                kickstand_leg_bridge_height, 
-                hinge_real_depth / 2
-            ]);
+            cubeWithAngledTopBottom(
+                loc=[
+                    leg_x_starts_leg[0] + kickstand_leg_width, 
+                    leg_bridge_leg_y - hinge_start[1] + hinge_real_depth / 2,
+                    case_depth + back_depth - hinge_real_depth / 2 - hinge_start[2]
+                ],
+                size=[
+                    kickstand_width - 2 * kickstand_leg_width, 
+                    kickstand_leg_bridge_height - hinge_real_depth, 
+                    hinge_real_depth / 2
+                ],
+                top=true,
+                bottom=true
+            );
         }
 
         // Render an empty cylinder inside the top cylinder, where the hinge will go through
@@ -978,6 +885,27 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
     }
 }
 
+module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=false, bottomReverse=false) {
+    translate(loc)
+    cube(size);
+
+    if (top) {
+        translate([loc[0], loc[1] - (topReverse ? size[2] : 0) + 0.01, loc[2]])
+        rotate(topReverse ? [0,0,0] : [90,0,0])
+        polyhedron(//pt 0        1        2        3        4        5
+            points=[[0,0,0], [size[0],0,0], [size[0],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[0],size[2],size[2]]],
+            faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+        );
+    }
+    if (bottom) {
+        translate([loc[0], loc[1] + size[1] + (bottomReverse ? 0 : size[2]) - 0.01, loc[2] + size[2]])
+        rotate(bottomReverse ? [270,0,0] : [180,0,0])
+        polyhedron(//pt 0        1        2        3        4        5
+            points=[[0,0,0], [size[0],0,0], [size[0],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[0],size[2],size[2]]],
+            faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+        );
+    }
+}
 
 
 /*****************************************************************************/
@@ -996,7 +924,7 @@ difference() {
             : [0, 180, 0])
         translate(
             view_mode == "print_vertical" 
-            ? [-frame_full_width/2, -frame_full_height - print_gap - debug_gap, 0]
+            ? [-frame_full_width/2, -frame_full_height - print_gap, 0]
             : view_mode == "print_horizontal" 
                 ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
                 : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)])  // stacked
@@ -1027,3 +955,4 @@ difference() {
         cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 500, 500]);
     }
 }
+

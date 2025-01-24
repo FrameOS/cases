@@ -5,6 +5,7 @@ include <mark1.scad>
 /* [View settings] */
 
 view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
+uniform_border_override = false; // Make all bezels the same size
 
 /* [Panel dimensions] */
 
@@ -22,10 +23,10 @@ panel_bezel_bottom = 3.1;
 /* [Border around and below panel] */
 
 // How much case to add around the panel
-panel_border_left   = 3.2;
-panel_border_right  = 11.6;
-panel_border_top    = 11.8;
-panel_border_bottom = 11.8;
+panel_border_left   = 6.2;
+panel_border_right  = 14.6;
+panel_border_top    = 14.8;
+panel_border_bottom = 14.8;
 
 // Gap in the border for the eInk panel's cables, mm, centered
 panel_cable_gap_left = 142;
@@ -50,26 +51,26 @@ case_center_support_width = 4.0;
 /* [Case dimensions] */
 
 // Total inside compartment thickness
-case_depth = 10.0; 
+case_depth = 7.0; 
 
 /* [Screws and placement] */
 
 // Center of each screw hole from the corner
-screw_offset_left   = 5.0;
-screw_offset_right  = 5.0;
-screw_offset_top    = 5.0;
-screw_offset_bottom = 5.0;
+screw_offset_left   = 3.2;
+screw_offset_right  = 3.2;
+screw_offset_top    = 3.2;
+screw_offset_bottom = 3.2;
 
 // Extra screws on the top side (0.0 to 1.0)
 extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the bottom side (0.0 to 1.0)
 extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the left side (0.0 to 1.0)
-extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_left = [0.17, 0.83, 0, 0, 0]; // [0.0:0.05:1.0]
 // Extra screws on the right side (0.0 to 1.0)
-extra_screws_right = [0.5, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_right = [0.333, 0.667, 0, 0, 0]; // [0.0:0.05:1.0]
 
-/* [Case side holes] */
+/* [Case side holes] */ 
 
 case_hole_right_top = 16;
 case_hole_right_bottom = 16;
@@ -85,20 +86,22 @@ kickstand = true;
 kickstand_width = 80;
 kickstand_leg_width = 10;
 kickstand_leg_bridge_height = 10;
+kickstand_leg_bridge_offset_percentage = 10;
 kickstand_height_percentage = 65;
 kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...)
+kickstand_hinge_top_cavity = 2; // Height by which to make the cavity above the top of the hinge taller
 kickstand_depth = 7;
 kickstand_rotation = 0; 
 
 /* [USB cutout] */
 
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 80;
+usb_cutout_offset_x_percentage = 15;
 usb_cutout_offset_y_percentage = 20;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 50;
 usb_cutout_box_depth = 7;
-usb_cutout_box_wall_thickness = 1;
+usb_cutout_box_wall_thickness = 0.8;
 usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;

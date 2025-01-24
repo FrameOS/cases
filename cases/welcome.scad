@@ -20,6 +20,7 @@
 include <7in3e.scad>
 
 view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
+uniform_border_override = false; // Make all bezels the same size
 
 // Physical width of the eInk panel (mm)
 panel_width  = 284.49;
