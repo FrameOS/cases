@@ -5,7 +5,6 @@ include <mark1.scad>
 /* [View settings] */
 
 view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
-uniform_border_override = false; // Make all bezels the same size
 
 /* [Panel dimensions] */
 
