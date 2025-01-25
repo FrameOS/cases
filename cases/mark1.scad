@@ -125,7 +125,7 @@ case_hole_bottom_depth = 2;
 /* [Kickstand] */
 
 kickstand = true; // @shared
-kickstand_width = 80;
+kickstand_width = 90;
 kickstand_leg_width = 10; // @shared
 kickstand_height_percentage = 65; // @shared
 kickstand_leg_bridge_offset_percentage = 15;
@@ -155,6 +155,16 @@ usb_cutout_hole_postition = "top"; // [top, bottom]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
 
+/* [Hanging hole] */
+
+hanging_hole = true;
+hanging_hole_large_diameter = 6;
+hanging_hole_small_diameter = 2;
+hanging_hole_offset = 20;
+hanging_hole_box_width = 10;
+hanging_hole_box_height = 14;
+hanging_hole_depth = 7;
+hanging_hole_wall_thickness = 1;
 
 /* [Debug] */
 
@@ -539,6 +549,21 @@ module case() {
                     bottom=(usb_cutout_hole_postition != "bottom")
                 );
             }
+            if (hanging_hole) {
+                cubeWithAngledTopBottom(
+                    loc=[
+                        (frame_full_width - hanging_hole_box_width - hanging_hole_wall_thickness * 2) / 2, 
+                        hanging_hole_offset - hanging_hole_wall_thickness, 
+                        back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth)
+                    ],
+                    size=[
+                        hanging_hole_box_width + 2 * hanging_hole_wall_thickness, 
+                        hanging_hole_box_height + 2 * hanging_hole_wall_thickness, 
+                        min(back_depth + case_depth, hanging_hole_depth)
+                    ],
+                    bottom=(view_mode == "print_vertical")
+                );
+            }
 
             // Cut out a piece of the cube
             caseBody();
@@ -605,6 +630,46 @@ module case() {
                 ]);
             }
         }
+
+        if (hanging_hole) {
+            cubeWithAngledTopBottom(
+                loc=[
+                    (frame_full_width - hanging_hole_box_width) / 2, 
+                    hanging_hole_offset, 
+                    back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth) + hanging_hole_wall_thickness
+                ],
+                size=[
+                    hanging_hole_box_width, 
+                    hanging_hole_box_height, 
+                    min(back_depth + case_depth, hanging_hole_depth) - hanging_hole_wall_thickness * 2
+                ],
+                bottom=(view_mode == "print_vertical")
+            );
+
+            // Big cyclinter hole
+            translate([
+                frame_full_width / 2, 
+                hanging_hole_offset + hanging_hole_box_height * 0.75, 
+                case_depth - 0.11
+            ])
+            rotate([0, 0, 90])
+            cylinder(d = hanging_hole_large_diameter, h = back_depth + 0.21);
+            // Small cyclinter hole
+            translate([
+                frame_full_width / 2, 
+                hanging_hole_offset + hanging_hole_box_height * 0.75 - hanging_hole_large_diameter, 
+                case_depth - 0.11
+            ])
+            rotate([0, 0, 90])
+            cylinder(d = hanging_hole_small_diameter, h = back_depth + 0.21);
+            // Box connecitng the two
+            translate([
+                frame_full_width / 2 - hanging_hole_small_diameter / 2,
+                hanging_hole_offset + hanging_hole_box_height * 0.75 - hanging_hole_large_diameter, 
+                case_depth - 0.11
+            ])
+            cube([hanging_hole_small_diameter, hanging_hole_large_diameter, back_depth + 0.21]);
+        }
     }
 }
 
@@ -614,9 +679,10 @@ module case() {
 
 module caseWithKickstand() {
     hinge_real_depth = kickstand_depth - kickstand_wall_thickness - kickstand_hinge_wall_padding - kickstand_hinge_diameter / 2;
+    hinge_top_offset = kickstand_wall_thickness + kickstand_depth / 2 + kickstand_hinge_top_extra_leverage;
     hinge_start = [
         frame_full_width / 2 - kickstand_full_width / 2 + 0.11, 
-        frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness + kickstand_depth / 2 + kickstand_hinge_top_extra_leverage,  // no kickstand_gap_thickness here, 
+        frame_full_height - kickstand_bottom_start - kickstand_height + hinge_top_offset,
         case_depth + back_depth - hinge_real_depth / 2
     ];
     leg_x_starts_full = [
@@ -631,9 +697,10 @@ module caseWithKickstand() {
         leg_x_starts_hole[0] + kickstand_gap_thickness,
         leg_x_starts_hole[1] + kickstand_gap_thickness,
     ];
+    leg_depth = kickstand_depth  - kickstand_gap_thickness - kickstand_wall_thickness;
     leg_yz = [
         frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_gap_thickness + kickstand_wall_thickness,
-        case_depth + back_depth - hinge_real_depth / 2
+        case_depth + back_depth - leg_depth
     ];
 
     leg_bridge_leg_y = frame_full_height - kickstand_bottom_start - kickstand_leg_bridge_offset - kickstand_leg_bridge_height * 2;
@@ -652,7 +719,7 @@ module caseWithKickstand() {
                     loc=[
                         x, 
                         frame_full_height - kickstand_bottom_start - kickstand_height - kickstand_hinge_top_cavity, 
-                        case_depth + back_depth - kickstand_depth
+                        case_depth + back_depth - kickstand_depth - kickstand_gap_thickness
                     ],
                     size=[kickstand_leg_full_width, leg_top_height_full + kickstand_hinge_top_cavity, kickstand_depth],
                     bottom=(view_mode == "print_vertical")
@@ -663,9 +730,9 @@ module caseWithKickstand() {
                     loc=[
                         x, 
                         frame_full_height - kickstand_bottom_start - kickstand_height, 
-                        case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness
+                        case_depth + back_depth - kickstand_depth - kickstand_gap_thickness
                     ],
-                    size=[kickstand_leg_full_width, kickstand_height, kickstand_depth / 2 + kickstand_gap_thickness],
+                    size=[kickstand_leg_full_width, kickstand_height, kickstand_depth + kickstand_gap_thickness],
                     bottom=(view_mode == "print_vertical" && kickstand_bottom_start >= kickstand_depth)
                 );
             }
@@ -707,7 +774,7 @@ module caseWithKickstand() {
                 loc=[
                     x,
                     frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness - kickstand_hinge_top_cavity,
-                    case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
+                    case_depth + back_depth - kickstand_depth + kickstand_gap_thickness
                 ],
                 size=[
                     kickstand_leg_width + 2 * kickstand_gap_thickness,
@@ -720,12 +787,12 @@ module caseWithKickstand() {
                 loc=[
                     x,
                     frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
-                    case_depth + back_depth - kickstand_depth / 2 - kickstand_gap_thickness + kickstand_wall_thickness
+                    case_depth + back_depth - kickstand_depth - kickstand_gap_thickness + kickstand_wall_thickness
                 ],
                 size=[
                     kickstand_leg_width + 2 * kickstand_gap_thickness,
                     kickstand_height - 2 * kickstand_wall_thickness,
-                    kickstand_depth / 2 - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
+                    kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
                 ]
             );
         }
@@ -735,12 +802,12 @@ module caseWithKickstand() {
             loc=[
                 leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness - 0.11, 
                 leg_bridge_hole_y + kickstand_wall_thickness + kickstand_depth / 1.414, 
-                case_depth + back_depth - kickstand_depth + kickstand_wall_thickness - 0.11
+                case_depth + back_depth - kickstand_depth + kickstand_gap_thickness 
             ],
             size=[
                 kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 2 + 0.22, 
                 kickstand_leg_bridge_height * 2 - kickstand_depth / 1.414, 
-                kickstand_depth - kickstand_wall_thickness + 0.22
+                kickstand_depth - kickstand_gap_thickness + 0.11
             ],
             top=true,
             bottom=(view_mode == "print_vertical" && kickstand_leg_bridge_offset >= kickstand_depth + fillet_radius)
@@ -757,14 +824,24 @@ module caseWithKickstand() {
                 rotate([90, 0, 90])
                 cylinder(d = hinge_real_depth, h = kickstand_leg_width);
 
+                // Render the large leg top
+                translate([x, hinge_start[1], hinge_start[2]])
+                rotate([kickstand_rotation, 0, 0])
+                translate([0, leg_yz[0] - hinge_start[1], case_depth + back_depth - (hinge_real_depth / 2) - hinge_start[2]])
+                cube([
+                    kickstand_leg_width, 
+                    hinge_top_offset,
+                    hinge_real_depth / 2
+                ]);
+
                 // Render the large leg
                 translate([x, hinge_start[1], hinge_start[2]])
                 rotate([kickstand_rotation, 0, 0])
-                translate([0, leg_yz[0] - hinge_start[1], leg_yz[1] - hinge_start[2]])
+                translate([0, leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter, leg_yz[1] - hinge_start[2]])
                 cube([
                     kickstand_leg_width, 
-                    kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness,
-                    hinge_real_depth / 2
+                    kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter,
+                    leg_depth
                 ]);
             }
             // Render the leg bridge
@@ -773,13 +850,13 @@ module caseWithKickstand() {
             cubeWithAngledTopBottom(
                 loc=[
                     leg_x_starts_leg[0] + kickstand_leg_width, 
-                    leg_bridge_leg_y - hinge_start[1] + hinge_real_depth / 2,
-                    case_depth + back_depth - hinge_real_depth / 2 - hinge_start[2]
+                    leg_bridge_leg_y - hinge_start[1] + leg_depth,
+                    case_depth + back_depth - leg_depth - hinge_start[2]
                 ],
                 size=[
                     kickstand_width - 2 * kickstand_leg_width, 
                     kickstand_leg_bridge_height - hinge_real_depth, 
-                    hinge_real_depth / 2
+                    leg_depth
                 ],
                 top=true,
                 bottom=true
@@ -798,22 +875,11 @@ module caseWithKickstand() {
             translate([
                 x - 0.11, 
                 frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 3 - hinge_start[1],
-                case_depth + back_depth - hinge_real_depth / 4 - hinge_start[2]
+                case_depth + back_depth - hinge_start[2] - leg_depth / 2
             ])
             rotate([90, 0, 90])
-            cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22);
+            cylinder(d = leg_depth  * 0.75, h = kickstand_leg_width + 0.22);
         }
-
-        // Render an empty cyclinter at the bottom of the leg bridge
-        translate([0, hinge_start[1], hinge_start[2]])
-        rotate([kickstand_rotation, 0, 0])
-        translate([
-            leg_x_starts_leg[0] + kickstand_leg_width, 
-            leg_bridge_leg_y - hinge_start[1] + kickstand_leg_bridge_height + 0.11,
-            case_depth + back_depth - hinge_real_depth / 4 - hinge_start[2]
-        ])
-        rotate([90, 0, 90])
-        cylinder(d = hinge_real_depth / 3, h = (kickstand_width - kickstand_leg_width * 2));
     }
 
     // Do not print this for vertical prints, as the legs will get stuck into it

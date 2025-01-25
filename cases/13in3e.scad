@@ -50,7 +50,7 @@ case_center_support_width = 4.0;
 /* [Case dimensions] */
 
 // Total inside compartment thickness
-case_depth = 7.0; 
+case_depth = 8.0; 
 
 /* [Screws and placement] */
 
@@ -71,18 +71,13 @@ extra_screws_right = [0.333, 0.667, 0, 0, 0]; // [0.0:0.05:1.0]
 
 /* [Case side holes] */ 
 
-case_hole_right_top = 16;
-case_hole_right_bottom = 16;
-case_hole_right_top_offset = 10;
-case_hole_right_bottom_offset = 10;
-
 case_hole_top_depth = 2;
 case_hole_bottom_depth = 2;
 
 /* [Kickstand] */
 
 kickstand = true;
-kickstand_width = 80;
+kickstand_width = 90;
 kickstand_leg_width = 10;
 kickstand_leg_bridge_height = 10;
 kickstand_leg_bridge_offset_percentage = 10;
@@ -95,12 +90,16 @@ kickstand_rotation = 0;
 /* [USB cutout] */
 
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 15;
+usb_cutout_offset_x_percentage = 25;
 usb_cutout_offset_y_percentage = 20;
 usb_cutout_box_width = 20;
-usb_cutout_box_height = 50;
+usb_cutout_box_height = 55;
 usb_cutout_box_depth = 7;
 usb_cutout_box_wall_thickness = 0.8;
 usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
+
+/* [Hanging hole] */
+
+hanging_hole_offset = 50;
