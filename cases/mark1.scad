@@ -14,6 +14,9 @@ panel_height = 208.81;
 // Clearance around the eInk panel (mm)
 clearance = 0.3;
 
+// Scale to adjust for vertical print shrinkage. 0.4% by default
+vertical_print_scale = 1.004; 
+
 // Dimensions of the bezel on the eInk panel. Will be covered by the panel cover. @shared
 panel_bezel_left   = 11.7;
 panel_bezel_right  = 3.3;
@@ -41,7 +44,7 @@ case_inner_padding_bottom = 4;
 fillet_radius = 2;
 
 // Panel cover thickness
-panel_cover_depth = 1.8;
+panel_cover_depth = 1.6;
 
 // Thickness of the eInk panel as measured
 panel_depth  = 1.2;
@@ -136,8 +139,7 @@ kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2; // @shared
 kickstand_leg_hole_diameter = 5; // @shared
-kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...) @shared
-kickstand_hinge_top_cavity = 2; // Height by which to make the cavity above the top of the hinge taller
+kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation @shared
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
 kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open @shared
@@ -158,11 +160,11 @@ usb_cutout_hole_height = 6.0;
 /* [Hanging hole] */
 
 hanging_hole = true;
-hanging_hole_large_diameter = 6;
-hanging_hole_small_diameter = 2;
-hanging_hole_offset = 20;
-hanging_hole_box_width = 10;
-hanging_hole_box_height = 14;
+hanging_hole_large_diameter = 8;
+hanging_hole_small_diameter = 3;
+hanging_hole_offset = 18;
+hanging_hole_box_width = 12;
+hanging_hole_box_height = 16;
 hanging_hole_depth = 7;
 hanging_hole_wall_thickness = 1;
 
@@ -697,7 +699,8 @@ module caseWithKickstand() {
         leg_x_starts_hole[0] + kickstand_gap_thickness,
         leg_x_starts_hole[1] + kickstand_gap_thickness,
     ];
-    leg_depth = kickstand_depth  - kickstand_gap_thickness - kickstand_wall_thickness;
+    leg_depth = kickstand_depth - kickstand_gap_thickness - kickstand_wall_thickness;
+    leg_bridge_depth = leg_depth * 0.8;
     leg_yz = [
         frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_gap_thickness + kickstand_wall_thickness,
         case_depth + back_depth - leg_depth
@@ -714,17 +717,6 @@ module caseWithKickstand() {
             case();
             // Protective box around the kickstand legs
             for (x = leg_x_starts_full) {
-                // Top thicker part
-                cubeWithAngledTopBottom(
-                    loc=[
-                        x, 
-                        frame_full_height - kickstand_bottom_start - kickstand_height - kickstand_hinge_top_cavity, 
-                        case_depth + back_depth - kickstand_depth - kickstand_gap_thickness
-                    ],
-                    size=[kickstand_leg_full_width, leg_top_height_full + kickstand_hinge_top_cavity, kickstand_depth],
-                    bottom=(view_mode == "print_vertical")
-                );
-                
                 // Long base leg
                 cubeWithAngledTopBottom(
                     loc=[
@@ -733,7 +725,8 @@ module caseWithKickstand() {
                         case_depth + back_depth - kickstand_depth - kickstand_gap_thickness
                     ],
                     size=[kickstand_leg_full_width, kickstand_height, kickstand_depth + kickstand_gap_thickness],
-                    bottom=(view_mode == "print_vertical" && kickstand_bottom_start >= kickstand_depth)
+                    bottom=(view_mode == "print_vertical" && kickstand_bottom_start >= kickstand_depth),
+                    top=true
                 );
             }
     
@@ -746,41 +739,28 @@ module caseWithKickstand() {
                 ],
                 size=[
                     kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 4, 
-                    kickstand_leg_bridge_height * 2 + kickstand_gap_thickness * 2 + kickstand_wall_thickness * 2 - kickstand_depth, 
+                    kickstand_leg_bridge_height * 2 + kickstand_wall_thickness * 2 - kickstand_depth * 2, 
                     kickstand_depth
                 ],
-                // top=true
                 top=true,
-                bottom=(view_mode == "print_vertical" && kickstand_leg_bridge_offset >= kickstand_depth + fillet_radius)
+                bottom=true
             );
         }
         // Now the holes
         for (x = leg_x_starts_hole) {
-            // Top thicker part
-            cubeWithAngledTopBottom(
-                loc=[
-                    x,
-                    frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
-                    case_depth + back_depth - kickstand_depth + kickstand_wall_thickness + 0.11
-                ],
-                size=[
-                    kickstand_leg_width + 2 * kickstand_gap_thickness,
-                    leg_top_height_full - 2 * kickstand_wall_thickness,
-                    kickstand_depth - kickstand_wall_thickness
-                ]
-            );
             // Top thicker part - top extra cavity
             cubeWithAngledTopBottom(
                 loc=[
                     x,
-                    frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness - kickstand_hinge_top_cavity,
+                    frame_full_height - kickstand_bottom_start - kickstand_height,
                     case_depth + back_depth - kickstand_depth + kickstand_gap_thickness
                 ],
                 size=[
                     kickstand_leg_width + 2 * kickstand_gap_thickness,
-                    kickstand_hinge_top_cavity + 0.11,
+                    kickstand_wall_thickness + 0.11,
                     kickstand_depth - kickstand_wall_thickness * 2
-                ]
+                ],
+                top=true
             );
             // Long base leg
             cubeWithAngledTopBottom(
@@ -801,16 +781,16 @@ module caseWithKickstand() {
         cubeWithAngledTopBottom(
             loc=[
                 leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness - 0.11, 
-                leg_bridge_hole_y + kickstand_wall_thickness + kickstand_depth / 1.414, 
+                leg_bridge_full_y + kickstand_depth, 
                 case_depth + back_depth - kickstand_depth + kickstand_gap_thickness 
             ],
             size=[
                 kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 2 + 0.22, 
-                kickstand_leg_bridge_height * 2 - kickstand_depth / 1.414, 
+                kickstand_leg_bridge_height * 2 - kickstand_depth * 2 + kickstand_gap_thickness, 
                 kickstand_depth - kickstand_gap_thickness + 0.11
             ],
             top=true,
-            bottom=(view_mode == "print_vertical" && kickstand_leg_bridge_offset >= kickstand_depth + fillet_radius)
+            bottom=true
         );
     }
     
@@ -850,13 +830,13 @@ module caseWithKickstand() {
             cubeWithAngledTopBottom(
                 loc=[
                     leg_x_starts_leg[0] + kickstand_leg_width, 
-                    leg_bridge_leg_y - hinge_start[1] + leg_depth,
-                    case_depth + back_depth - leg_depth - hinge_start[2]
+                    leg_bridge_leg_y - hinge_start[1] + leg_bridge_depth,
+                    case_depth + back_depth - leg_bridge_depth - hinge_start[2]
                 ],
                 size=[
                     kickstand_width - 2 * kickstand_leg_width, 
-                    kickstand_leg_bridge_height - hinge_real_depth, 
-                    leg_depth
+                    max(kickstand_leg_bridge_height - hinge_real_depth - leg_bridge_depth, 0), 
+                    leg_bridge_depth
                 ],
                 top=true,
                 bottom=true
@@ -1003,9 +983,10 @@ difference() {
         )
         translate(
             view_mode == "print_vertical" 
-            ? [-frame_full_width/2, -frame_full_height, 0] 
+            ? [-frame_full_width/2, -frame_full_height * vertical_print_scale, 0] 
             : [-frame_full_width/2, -frame_full_height/2, 0]
-        ) 
+        )
+        scale([1, view_mode == "print_vertical" ? vertical_print_scale : 1, 1])
         if (kickstand) {
             caseWithKickstand();
         } else {

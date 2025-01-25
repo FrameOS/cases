@@ -84,7 +84,7 @@ kickstand_leg_width = 10;
 kickstand_leg_bridge_height = 10;
 kickstand_leg_bridge_offset_percentage = 2.5;
 kickstand_height_percentage = 65;
-kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...)
+kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation
 kickstand_depth = 7;
 kickstand_rotation = 0; 
 

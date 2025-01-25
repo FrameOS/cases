@@ -13,27 +13,19 @@ panel_width  = 170.3;
 // Physical height of the eInk panel (mm)
 panel_height = 111.3;
 
-back_depth = 1.2;
-
-// // Dimensions of the bezel on the eInk panel
-// panel_bezel_left   = 5.2;
-// panel_bezel_right  = 5.2;
-// panel_bezel_top    = 4.9;
-// panel_bezel_bottom = 10.8;
-
-// // How much case to add around the panel
-// panel_border_left   = 2.0;
-// panel_border_right  = 2.0;
-// panel_border_top    = 6.0;
-// panel_border_bottom = 6.0;
-
 // Dimensions of the bezel on the eInk panel
 panel_bezel_left   = 5.2;
 panel_bezel_right  = 5.2;
 panel_bezel_top    = 4.9;
 panel_bezel_bottom = 10.8;
 
-// How much case to add around the panel
+// // How much case to add around the panel (slim)
+// panel_border_left   = 2.0;
+// panel_border_right  = 2.0;
+// panel_border_top    = 6.0;
+// panel_border_bottom = 6.0;
+
+// How much case to add around the panel (uniform)
 panel_border_left   = 8.8;
 panel_border_right  = 8.8;
 panel_border_top    = 9.1;
@@ -79,8 +71,19 @@ case_center_support_horizontal = false;
 
 /* [Case dimensions] */
 
-// Total inside compartment thickness
-case_depth = 12.0; 
+fillet_radius = 2.5;
+
+// Panel cover thickness
+panel_cover_depth = 1.6;
+
+// Thickness of the eInk panel as measured
+panel_depth  = 1.2;
+
+// Total inside compartment thickness @shared
+case_depth = 6.0;
+
+// Back plate thickness 
+back_depth = 1.2;
 
 /* [Case side holes] */
 
@@ -97,23 +100,27 @@ case_hole_bottom_depth = 2;
 kickstand = true;
 kickstand_width = 90;
 kickstand_leg_width = 10;
-kickstand_leg_bridge_height = 10;
-kickstand_leg_bridge_offset_percentage = 2.5;
+kickstand_leg_bridge_height = 8;
+kickstand_leg_bridge_offset_percentage = 0;
 kickstand_height_percentage = 65;
-kickstand_hinge_top_extra_leverage = 2; // Height added to the flap above the hinge. Increasing reduces max rotation (2mm=45deg, 3mm=35deg, ...)
-kickstand_hinge_top_cavity = 2; // Height by which to make the cavity above the top of the hinge taller
-kickstand_depth = 7;
+kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation
+kickstand_depth = 6.7;
 kickstand_rotation = 0; 
 
 /* [USB cutout] */
 
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 74;
+usb_cutout_offset_x_percentage = 80;
 usb_cutout_offset_y_percentage = 28;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 50;
-usb_cutout_box_depth = 10;
-usb_cutout_box_wall_thickness = 1;
+usb_cutout_box_depth = 6.4;
+usb_cutout_box_wall_thickness = 0.8;
 usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
 usb_cutout_hole_width = 14;
-usb_cutout_hole_height = 6.0;
+usb_cutout_hole_height = 5.8;
+
+/* [Hanging hole] */
+
+hanging_hole = true;
+hanging_hole_offset = 4;
