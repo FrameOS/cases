@@ -11,6 +11,10 @@ function readDirRecursively(directory, relativePath = "") {
   const entries = fs.readdirSync(directory, { withFileTypes: true });
 
   for (const entry of entries) {
+    if (entry.name.startsWith(".")) {
+      // Skip hidden files and directories
+      continue;
+    }
     const fullPath = path.join(directory, entry.name);
     const relativeFilePath = path.join(relativePath, entry.name);
 

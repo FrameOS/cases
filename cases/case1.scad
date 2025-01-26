@@ -4,8 +4,8 @@
 
 view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
-// Shrinkage adjustment when printing vertically. By default we measured 0.4mm of shrinkage for every 100mm of case.
-vertical_print_scale = 1.004; 
+// Shrinkage adjustment when printing vertically. By default 0.4mm of shrinkage for every 100mm of print height.
+vertical_print_scale = 1.004;
 
 /* [Panel dimensions] */
 

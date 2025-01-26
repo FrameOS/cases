@@ -60,3 +60,8 @@ usb_cutout_hole_height         = 5.8;
 // Hanging hole
 hanging_hole = true;
 hanging_hole_offset = 4;
+
+// Debug
+cross_section_percentage = 0; // [0:100]
+vertical_print_scale = 1.004; // 0.4mm shrinkage for every 100mm
+kickstand_rotation = 0;
