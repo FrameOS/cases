@@ -40,16 +40,27 @@ jobs:
           npm install
           NODE_ENV=production npm run build
 
-      # 6. Force-push the contents of `dist` to openscad-playground-deploy
+      # 6. Deploy dist to openscad-playground-deploy 
       - name: Deploy dist to openscad-playground-deploy
         run: |
-          cd openscad-playground/dist
-          git init
+          # Clone deploy repo with shallow depth
+          git clone --depth=1 \
+            https://${{ secrets.CASES_DEPLOY_TOKEN }}@github.com/FrameOS/openscad-playground-deploy.git \
+            deploy
+
+          # Remove all existing files in the deploy repo (except .git)
+          rm -rf deploy/*
+
+          # Copy new dist files from openscad-playground
+          cp -r openscad-playground/dist/* deploy
+
+          # Commit and push changes
+          cd deploy
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add .
-          git commit -m "Deploy"
-          git branch -M main
-          # Force push to the external repo
-          git remote add origin "https://${{ secrets.CASES_DEPLOY_TOKEN }}@github.com/FrameOS/openscad-playground-deploy.git"
-          git push -f origin main
+          # If there are no changes, this will fail; so we use '|| echo' to prevent an error
+          git commit -m "Deploy" || echo "No changes to commit"
+
+          git push origin main
