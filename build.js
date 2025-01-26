@@ -39,10 +39,15 @@ fs.writeFileSync(
   JSON.stringify(models, null, 2) // Pretty print JSON for easier readability
 );
 
+// openscad playground
+const playgroundDir = path.join(__dirname, "..", "openscad-playground", "src");
+
 // copy dist/cases.json to ../openscad-playground/src/cases.json
-fs.copyFileSync(
-  path.join(__dirname, "dist", "cases.json"),
-  path.join(__dirname, "..", "openscad-playground", "src", "cases.json")
-);
+if (!fs.existsSync(playgroundDir)) {
+  fs.copyFileSync(
+    path.join(__dirname, "dist", "cases.json"),
+    path.join(playgroundDir, "cases.json")
+  );
+}
 
 console.log("Cases have been built successfully!");
