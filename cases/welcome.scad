@@ -16,8 +16,8 @@
 // This is a fork of the OpenSCAD playground. Big props to them!
 // - https://github.com/openscad/openscad-playground
 
-// Edit "7in3e.scad" directly for more options
-include <7in3e.scad>
+// Edit "13in3e.scad" directly for more options
+include <13in3e.scad>
 
 view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
@@ -25,7 +25,7 @@ view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 panel_width  = 284.49;
 // Physical height of the eInk panel (mm)
 panel_height = 208.81;
-// Total inside compartment thickness
+// Total inside compartment thickness. Measure and adjust this!
 case_depth = 10.0; 
 // Add a kickstand
 kickstand = true;
