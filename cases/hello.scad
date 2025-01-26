@@ -20,7 +20,7 @@
 
 // This is just a quick demo with a few configuration options.
 // Open "waveshare.13in3e.scad" for more settings,
-// ... or peek into "case1.scad" for all of them.
+// ... or peek into "case1.scad" to see all of them.
 
 include <waveshare.13in3e.scad>
 
