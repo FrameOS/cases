@@ -16,7 +16,7 @@
 // This is a fork of the OpenSCAD playground. Big props to them!
 // - https://github.com/openscad/openscad-playground
 
-/************** Demo **************/
+/* [Demo] */
 
 // This is just a quick demo with a few configuration options.
 // Open "waveshare.13in3e.scad" for more settings,
