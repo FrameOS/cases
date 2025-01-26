@@ -25,7 +25,6 @@ case_inner_padding_top    = 2.0;
 case_inner_padding_bottom = 2.0;
 
 // Cable gap
-panel_cable_gap_left   = 0;
 panel_cable_gap_bottom = 40;
 
 // Case depth

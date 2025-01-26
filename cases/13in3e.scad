@@ -33,10 +33,10 @@ screw_offset_right  = 3.2;
 screw_offset_top    = 3.2;
 screw_offset_bottom = 3.2;
 
-extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-extra_screws_left  = [0.17, 0.83, 0, 0, 0];
-extra_screws_right = [0.333, 0.667, 0, 0, 0];
+extra_screws_top    = [0.48, 0.52, 0, 0, 0];
+extra_screws_bottom = [0.48, 0.52, 0, 0, 0];
+extra_screws_left   = [0.17, 0.83, 0, 0, 0];
+extra_screws_right  = [0.333, 0.667, 0, 0, 0];
 
 // Center support
 case_center_support_vertical   = true;

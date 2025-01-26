@@ -25,11 +25,10 @@ case_inner_padding_top    = 2.0;
 case_inner_padding_bottom = 2.0;
 
 // Cable gap
-panel_cable_gap_left   = 0;
 panel_cable_gap_bottom = 40;
 
 // Case depth
-case_depth = 7.0;
+case_depth = 6.0;
 
 // Screws
 screw_offset_left   = 4.2;
