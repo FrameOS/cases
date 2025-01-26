@@ -1,0 +1,54 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the code
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      # 2. Use Node
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3. Install dependencies & run build.js in the main repo (FrameOS/cases)
+      - name: Install dependencies (FrameOS/cases)
+        run: npm install
+
+      - name: Run build script (FrameOS/cases)
+        run: node build.js
+
+      # 4. Clone the openscad-playground repo
+      - name: Clone openscad-playground
+        run: git clone https://github.com/FrameOS/openscad-playground.git
+
+      # 5. Build openscad-playground
+      - name: Build openscad-playground
+        run: |
+          cd openscad-playground
+          make public
+          npm install
+          NODE_ENV=production npm run build
+
+      # 6. Force-push the contents of `dist` to openscad-playground-deploy
+      - name: Deploy dist to openscad-playground-deploy
+        run: |
+          cd openscad-playground/dist
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Deploy"
+          git branch -M main
+          # Force push to the external repo
+          git remote add origin "https://${{ secrets.CASES_DEPLOY_TOKEN }}@github.com/FrameOS/openscad-playground-deploy.git"
+          git push -f origin main

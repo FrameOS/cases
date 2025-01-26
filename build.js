@@ -44,3 +44,5 @@ fs.copyFileSync(
   path.join(__dirname, "dist", "cases.json"),
   path.join(__dirname, "..", "openscad-playground", "src", "cases.json")
 );
+
+console.log("Cases have been built successfully!");
