@@ -43,7 +43,7 @@ fs.writeFileSync(
 const playgroundDir = path.join(__dirname, "..", "openscad-playground", "src");
 
 // copy dist/cases.json to ../openscad-playground/src/cases.json
-if (!fs.existsSync(playgroundDir)) {
+if (fs.existsSync(playgroundDir)) {
   fs.copyFileSync(
     path.join(__dirname, "dist", "cases.json"),
     path.join(playgroundDir, "cases.json")
