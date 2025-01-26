@@ -19,6 +19,12 @@ panel_border_right  = 2.0;
 panel_border_top    = 6.0;
 panel_border_bottom = 6.0;
 
+// // Uniform border
+// panel_border_left   = 9.2;
+// panel_border_right  = 9.2;
+// panel_border_top    = 9.9;
+// panel_border_bottom = 4.0;
+
 case_inner_padding_left   = 2.0;
 case_inner_padding_right  = 2.0;
 case_inner_padding_top    = 2.0;

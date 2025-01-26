@@ -19,6 +19,12 @@ panel_border_right  = 6;
 panel_border_top    = 6;
 panel_border_bottom = 6;
 
+// // Uniform border
+// panel_border_left   = 16.6;
+// panel_border_right  = 16.6;
+// panel_border_top    = 16.6;
+// panel_border_bottom = 6;
+
 case_inner_padding_bottom = 6;
 
 /* [Cable gap] */
