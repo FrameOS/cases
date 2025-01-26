@@ -29,7 +29,8 @@ panel_height = 208.81;
 case_depth = 10.0; 
 // Add a kickstand
 kickstand = true;
-kickstand_rotation = 0; // [0:45]
+// Kickstand rotation for debugging
+kickstand_rotation = 0; // [0:35]
 // Add a cutout for the USB port
 usb_cutout = false;
 // Vertical spacers holding up the frame

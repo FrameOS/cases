@@ -32,7 +32,7 @@ panel_border_top    = 11.8;
 panel_border_bottom = 11.8;
 
 // Supporting space below the panel
-case_inner_padding_left = 6;
+case_inner_padding_left = 4;
 case_inner_padding_right = 4;
 case_inner_padding_top = 4;
 case_inner_padding_bottom = 4;
@@ -40,7 +40,7 @@ case_inner_padding_bottom = 4;
 /* [Case dimensions] */
 
 // How round to make the case
-fillet_radius = 2;
+fillet_radius = 2.5;
 
 // Panel cover thickness
 panel_cover_depth = 1.6;
@@ -57,7 +57,7 @@ back_depth = 1.2;
 /* [Cable holes for panel] */
 
 // Gap in the border for the eInk panel's cables, mm, centered
-panel_cable_gap_left = 142;
+panel_cable_gap_left = 0;
 panel_cable_gap_right = 0;
 panel_cable_gap_top = 0;
 panel_cable_gap_bottom = 0;
@@ -122,22 +122,22 @@ case_hole_bottom_depth = 1;
 
 /* [Kickstand] */
 
-kickstand = true; //
+kickstand = true;
 kickstand_width = 90;
-kickstand_leg_width = 10; //
-kickstand_height_percentage = 65; //
+kickstand_leg_width = 10;
+kickstand_height_percentage = 65;
 kickstand_leg_bridge_offset_percentage = 15;
-kickstand_leg_bridge_height = 10; //
-kickstand_depth = 7; //
+kickstand_leg_bridge_height = 10;
+kickstand_depth = 7;
 kickstand_bottom_start = 3;
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
-kickstand_hinge_diameter = 2.2; //
-kickstand_leg_hole_diameter = 5; //
+kickstand_hinge_diameter = 2.2;
+kickstand_leg_hole_diameter = 5;
 kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
-kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open
+kickstand_rotation = 0; // Kickstand rotation angle, goes up to 35 when open
 
 /* [USB cutout] */
 
