@@ -1,6 +1,6 @@
 // Waveshare 13.3"E ePaper case
 
-include <mark1.scad>
+include <case1.scad>
 
 /* [View settings] */
 
@@ -50,7 +50,7 @@ case_center_support_width = 4.0;
 /* [Case dimensions] */
 
 // Total inside compartment thickness
-case_depth = 8.0; 
+case_depth = 6.0; 
 
 /* [Screws and placement] */
 
@@ -93,7 +93,7 @@ usb_cutout_offset_x_percentage = 25;
 usb_cutout_offset_y_percentage = 20;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 55;
-usb_cutout_box_depth = 7;
+usb_cutout_box_depth = 6.5;
 usb_cutout_box_wall_thickness = 0.8;
 usb_cutout_hole_postition = "top"; // [top, bottom, left, right]
 usb_cutout_hole_width = 14;
@@ -101,4 +101,4 @@ usb_cutout_hole_height = 6.0;
 
 /* [Hanging hole] */
 
-hanging_hole_offset = 50;
+hanging_hole_offset = 70;

@@ -1,6 +1,6 @@
 // Waveshare 7.3"E ePaper case
 
-include <mark1.scad>
+include <case1.scad>
 
 /* [View settings] */
 
@@ -20,24 +20,32 @@ panel_bezel_top    = 4.9;
 panel_bezel_bottom = 10.8;
 
 // // How much case to add around the panel (slim)
-// panel_border_left   = 2.0;
-// panel_border_right  = 2.0;
-// panel_border_top    = 6.0;
-// panel_border_bottom = 6.0;
+panel_border_left   = 2.0;
+panel_border_right  = 2.0;
+panel_border_top    = 6.0;
+panel_border_bottom = 6.0;
+screw_offset_left   = 3.2;
+screw_offset_right  = 3.2;
+screw_offset_top    = 3.2;
+screw_offset_bottom = 3.2;
 
 // How much case to add around the panel (uniform)
-panel_border_left   = 8.8;
-panel_border_right  = 8.8;
-panel_border_top    = 9.1;
-panel_border_bottom = 3.2;
+// panel_border_left   = 8.8;
+// panel_border_right  = 8.8;
+// panel_border_top    = 9.1;
+// panel_border_bottom = 3.2;
+// screw_offset_left   = 5.2;
+// screw_offset_right  = 5.2;
+// screw_offset_top    = 5.2;
+// screw_offset_bottom = 5.2;
 
 /* [Screws and placement] */
 
 // Center of each screw hole from the corner
-screw_offset_left   = 5.2;
-screw_offset_right  = 5.2;
-screw_offset_top    = 5.2;
-screw_offset_bottom = 5.2;
+// screw_offset_left   = 5.2;
+// screw_offset_right  = 5.2;
+// screw_offset_top    = 5.2;
+// screw_offset_bottom = 5.2;
 
 // Extra screws on the top side (0.0 to 1.0)
 extra_screws_top = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]

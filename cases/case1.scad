@@ -1,39 +1,37 @@
-/* FrameOS Case: Mark I */
+/* FrameOS Case 1 */
 
 /* [View settings] */
 
 view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
+// Shrinkage adjustment when printing vertically. By default we measured 0.4mm of shrinkage for every 100mm of case.
+vertical_print_scale = 1.004; 
+
 /* [Panel dimensions] */
 
-// Physical width of the eInk panel (mm) @shared
+// Physical width of the eInk panel (mm)
 panel_width  = 284.49;
-// Physical height of the eInk panel (mm) @shared
+// Physical height of the eInk panel (mm)
 panel_height = 208.81;
 
 // Clearance around the eInk panel (mm)
 clearance = 0.3;
 
-// Scale to adjust for vertical print shrinkage. 0.4% by default
-vertical_print_scale = 1.004; 
-
-// Dimensions of the bezel on the eInk panel. Will be covered by the panel cover. @shared
+// Dimensions of the bezel on the eInk panel. This part will be covered by the panel cover.
 panel_bezel_left   = 11.7;
 panel_bezel_right  = 3.3;
 panel_bezel_top    = 3.1;
 panel_bezel_bottom = 3.1;
 
-/* [Border] */
+/* [Border and inner padding] */
 
-// How much case to add around the panel @shared
+// How much border to add around the panel
 panel_border_left   = 3.2;
 panel_border_right  = 11.6;
 panel_border_top    = 11.8;
 panel_border_bottom = 11.8;
 
-/* [Panel supports] */
-
-// Extra space inside the case to hold up the panel @shared
+// Supporting space below the panel
 case_inner_padding_left = 6;
 case_inner_padding_right = 4;
 case_inner_padding_top = 4;
@@ -41,6 +39,7 @@ case_inner_padding_bottom = 4;
 
 /* [Case dimensions] */
 
+// How round to make the case
 fillet_radius = 2;
 
 // Panel cover thickness
@@ -49,15 +48,15 @@ panel_cover_depth = 1.6;
 // Thickness of the eInk panel as measured
 panel_depth  = 1.2;
 
-// Total inside compartment thickness @shared
+// Total inside compartment thickness
 case_depth = 10.0;
 
 // Back plate thickness 
-back_depth = 1.6;
+back_depth = 1.2;
 
 /* [Cable holes for panel] */
 
-// Gap in the border for the eInk panel's cables, mm, centered @shared
+// Gap in the border for the eInk panel's cables, mm, centered
 panel_cable_gap_left = 142;
 panel_cable_gap_right = 0;
 panel_cable_gap_top = 0;
@@ -67,27 +66,25 @@ case_cable_gap_depth = 3.0; // How deep into the case to cut
 
 /* [Panel supports] */
 
-// @shared
-
 case_center_support_vertical = true;
 case_center_support_horizontal = true;
 case_center_support_width = 4.0;
 
 /* [Screws and placement] */
 
-// Center of each screw hole from the corner @shared
+// Center of each screw hole from the corner
 screw_offset_left   = 5.0;
 screw_offset_right  = 5.0;
 screw_offset_top    = 5.0;
 screw_offset_bottom = 5.0;
 
-// Extra screws on the top side (0.0 to 1.0) @shared
+// Extra screws on the top side (0.0 to 1.0)
 extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the bottom side (0.0 to 1.0) @shared
+// Extra screws on the bottom side (0.0 to 1.0)
 extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the left side (0.0 to 1.0) @shared
+// Extra screws on the left side (0.0 to 1.0)
 extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the right side (0.0 to 1.0) @shared
+// Extra screws on the right side (0.0 to 1.0)
 extra_screws_right = [0.5, 0, 0, 0, 0]; // [0.0:0.05:1.0]
 
 // Hole made into layer 1.2
@@ -101,8 +98,6 @@ case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
 case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the heat set insert
 
 /* [Case side holes] */
-
-// @shared, set to zero and 2
 
 case_hole_left_top = 0;
 case_hole_left_bottom = 0;
@@ -122,27 +117,27 @@ case_hole_top_right_offset = 0;
 case_hole_bottom_left_offset = 0;
 case_hole_bottom_right_offset = 0;
 
-case_hole_top_depth = 2;
-case_hole_bottom_depth = 2;
+case_hole_top_depth = 1;
+case_hole_bottom_depth = 1;
 
 /* [Kickstand] */
 
-kickstand = true; // @shared
+kickstand = true; //
 kickstand_width = 90;
-kickstand_leg_width = 10; // @shared
-kickstand_height_percentage = 65; // @shared
+kickstand_leg_width = 10; //
+kickstand_height_percentage = 65; //
 kickstand_leg_bridge_offset_percentage = 15;
-kickstand_leg_bridge_height = 10; // @shared
-kickstand_depth = 7; // @shared
+kickstand_leg_bridge_height = 10; //
+kickstand_depth = 7; //
 kickstand_bottom_start = 3;
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
-kickstand_hinge_diameter = 2.2; // @shared
-kickstand_leg_hole_diameter = 5; // @shared
-kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation @shared
+kickstand_hinge_diameter = 2.2; //
+kickstand_leg_hole_diameter = 5; //
+kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
-kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open @shared
+kickstand_rotation = 0; // Kickstand rotation angle, goes up to 45 when open
 
 /* [USB cutout] */
 
@@ -174,8 +169,9 @@ hanging_hole_wall_thickness = 1;
 debug_gap = 40;
 cross_section_percentage = 0; // [0:100]
 
-$fn = 32;
+// End of variables.
 
+$fn = 32;
 
 /*****************************************************************************/
 /*                Derived Dimensions (overall frame size)                    */
