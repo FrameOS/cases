@@ -8,21 +8,21 @@ view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 panel_width  = 284.49;
 panel_height = 208.81;
 
-panel_bezel_left   = 11.7;
-panel_bezel_right  = 3.3;
+panel_bezel_left   = 3.3;
+panel_bezel_right  = 11.7;
 panel_bezel_top    = 3.1;
 panel_bezel_bottom = 3.1;
 
 /* [Border and inner padding] */
-panel_border_left   = 6.2;
-panel_border_right  = 14.6;
+panel_border_left   = 14.6;
+panel_border_right  = 6.2;
 panel_border_top    = 14.8;
 panel_border_bottom = 14.8;
 
-case_inner_padding_left = 6;
+case_inner_padding_right = 6;
 
 /* [Cable gap] */
-panel_cable_gap_left = 142;
+panel_cable_gap_right = 142;
 
 /* [Case depth] */
 case_depth = 6.0;
@@ -35,8 +35,8 @@ screw_offset_bottom = 3.2;
 
 extra_screws_top    = [0.48, 0.52, 0, 0, 0];
 extra_screws_bottom = [0.48, 0.52, 0, 0, 0];
-extra_screws_left   = [0.17, 0.83, 0, 0, 0];
-extra_screws_right  = [0.333, 0.667, 0, 0, 0];
+extra_screws_left   = [0.333, 0.667, 0, 0, 0];
+extra_screws_right  = [0.17, 0.83, 0, 0, 0];
 
 /* [Center support] */
 case_center_support_vertical   = true;
@@ -49,7 +49,8 @@ kickstand_hinge_top_extra_leverage     = 5;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 25;
+usb_cutout_offset_x_percentage = 10;
+usb_cutout_offset_y_percentage = 18;
 usb_cutout_box_height          = 55;
 usb_cutout_box_depth           = 6.5;
 
