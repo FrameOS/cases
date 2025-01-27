@@ -123,7 +123,7 @@ case_hole_bottom_depth = 1;
 /* [Kickstand] */
 
 kickstand = true;
-kickstand_width = 90;
+kickstand_width = 95;
 kickstand_leg_width = 10;
 kickstand_height_percentage = 65;
 kickstand_leg_bridge_offset_percentage = 15;
@@ -541,9 +541,10 @@ module case() {
                     ], 
                     size =[
                         usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, 
-                        usb_cutout_box_height + usb_cutout_box_wall_thickness, 
+                        usb_cutout_box_height + usb_cutout_box_wall_thickness * 2,
                         usb_cutout_box_depth + usb_cutout_box_wall_thickness
                     ], 
+                    top=(view_mode=="print_vertical" && usb_cutout_hole_postition != "top"),
                     bottom=(usb_cutout_hole_postition != "bottom")
                 );
             }
@@ -598,6 +599,7 @@ module case() {
                     usb_cutout_box_height, 
                     usb_cutout_box_depth + 0.11
                 ], 
+                top=(view_mode=="print_vertical" && usb_cutout_hole_postition != "top"),
                 bottom=(usb_cutout_hole_postition != "bottom")
             );
 
