@@ -45,22 +45,30 @@ extra_screws_left   = [0.5, 0, 0, 0, 0];
 extra_screws_right  = [0.5, 0, 0, 0, 0];
 
 /* [Center support] */
-case_center_support_vertical   = true;
+case_center_support_vertical   = false;
 case_center_support_horizontal = true;
 
 /* [Kickstand] */
 kickstand = true;
 kickstand_hinge_top_extra_leverage = 5;
+kickstand_leg_bridge_offset_percentage = 5;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 12;
-usb_cutout_offset_y_percentage = 30;
-usb_cutout_box_depth           = 7;
+usb_cutout_offset_x_percentage = 10;
+usb_cutout_offset_y_percentage = 12;
+usb_cutout_box_width = 70;
+usb_cutout_box_height = 20;
+usb_cutout_box_depth = 7;
+usb_cutout_box_wall_thickness = 0.8;
+usb_cutout_hole_position = "right"; // [top, bottom, left, right]
+usb_cutout_hole_width = 14;
+usb_cutout_hole_height = 6.0;
+
 
 /* [Hanging hole] */
 hanging_hole = true;
-hanging_hole_offset = 70;
+hanging_hole_offset = 50;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
