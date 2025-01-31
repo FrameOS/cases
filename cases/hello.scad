@@ -41,8 +41,8 @@ usb_cutout = false;
 // Hanging hole
 hanging_hole = true;
 // Vertical spacers holding up the frame
-case_center_support_vertical = true;
+case_center_support_vertical = false;
 // Horizontal spacers holding up the frame
-case_center_support_horizontal = true;
+case_center_support_horizontal = false;
 // Peek into the case (for debugging)
 cross_section_percentage = 0; // [0:100]
