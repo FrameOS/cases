@@ -148,7 +148,7 @@ usb_cutout_box_width = 20;
 usb_cutout_box_height = 50;
 usb_cutout_box_depth = 7;
 usb_cutout_box_wall_thickness = 0.8;
-usb_cutout_hole_position = "top"; // [top, bottom, left, right]
+usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
 
@@ -167,6 +167,8 @@ hanging_hole_wall_thickness = 1;
 
 // Gap between STL parts for visual debugging
 debug_gap = 40;
+// Gap on baseplate between case and body when printing
+print_gap = 10;
 cross_section_percentage = 0; // [0:100]
 
 // End of variables.
@@ -545,7 +547,7 @@ module case() {
                         usb_cutout_box_depth + usb_cutout_box_wall_thickness
                     ], 
                     top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top"),
-                    bottom=(usb_cutout_hole_position != "bottom")
+                    bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom")
                 );
             }
             if (hanging_hole) {
@@ -600,7 +602,7 @@ module case() {
                     usb_cutout_box_depth + 0.11
                 ], 
                 top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top"),
-                bottom=(usb_cutout_hole_position != "bottom")
+                bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom")
             );
 
             // Hole into what's remaining
@@ -616,7 +618,7 @@ module case() {
                     usb_cutout_hole_width, 
                     usb_cutout_hole_height
                 ]);
-            } else {
+            } else if (usb_cutout_hole_position == "top" || usb_cutout_hole_position == "bottom") {
                 translate([
                     frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
                     frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 
@@ -628,6 +630,18 @@ module case() {
                     usb_cutout_box_wall_thickness + 0.22, 
                     usb_cutout_hole_height
                 ]);
+            } else if (usb_cutout_hole_position == "back") {
+                translate([
+                    frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
+                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 + (usb_cutout_box_height - usb_cutout_hole_height) / 2 + usb_cutout_box_wall_thickness,
+                    back_depth + case_depth - usb_cutout_box_depth - usb_cutout_box_wall_thickness - 0.11,
+                ])
+                cube([
+                    usb_cutout_hole_width, 
+                    usb_cutout_hole_height,
+                    usb_cutout_box_wall_thickness + 0.22, 
+                ]);
+
             }
         }
 
@@ -956,24 +970,28 @@ module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=fa
 /*                              Rendering                                    */
 /*****************************************************************************/
 
-print_gap = 20;
-
 difference() {
     union() {
+        // Cover panel
         rotate(
             view_mode == "print_vertical" 
             ? [180, 180, 180]
             : view_mode == "print_horizontal" 
-            ? [0, 0, 180]
+            ? frame_full_width > frame_full_height
+              ? [0, 0, 180]
+              : [0, 0, 0]
             : [0, 180, 0])
         translate(
             view_mode == "print_vertical" 
             ? [-frame_full_width/2, -frame_full_height - print_gap, 0]
             : view_mode == "print_horizontal" 
-                ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
+                ? frame_full_width > frame_full_height
+                  ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
+                  : [frame_full_width/2+print_gap, -frame_full_height/2, -(case_depth + back_depth)]
                 : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)])  // stacked
         panel_cover();
 
+        // Case body
         rotate(
             view_mode == "print_vertical" 
             ? [90, 180, 180] 
