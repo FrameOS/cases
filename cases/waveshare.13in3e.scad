@@ -44,6 +44,7 @@ case_center_support_horizontal = true;
 
 /* [Kickstand] */
 kickstand = true;
+kickstand_width = 95;
 kickstand_leg_bridge_offset_percentage = 10;
 kickstand_hinge_top_extra_leverage     = 5;
 
