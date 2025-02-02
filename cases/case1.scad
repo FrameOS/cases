@@ -537,8 +537,8 @@ module case() {
             if (usb_cutout) {
                 cubeWithAngledTopBottom(
                     loc=[
-                        frame_full_width * usb_cutout_offset_x_percentage / 100, 
-                        frame_full_height * usb_cutout_offset_y_percentage / 100,
+                        (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100, 
+                        (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100,
                         back_depth + case_depth - (usb_cutout_box_depth + usb_cutout_box_wall_thickness),
                     ], 
                     size =[
@@ -592,8 +592,8 @@ module case() {
             // Cutout into box
             cubeWithAngledTopBottom(
                 loc=[
-                    frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
-                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
+                    (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
+                    (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
                     back_depth + case_depth - usb_cutout_box_depth,
                 ], 
                 size =[
@@ -608,9 +608,9 @@ module case() {
             // Hole into what's remaining
             if (usb_cutout_hole_position == "left" || usb_cutout_hole_position == "right") {
                 translate([
-                    frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11
+                    (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11
                     + (usb_cutout_hole_position == "right" ? usb_cutout_box_width + usb_cutout_box_wall_thickness : 0), 
-                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_height - usb_cutout_hole_width) / 2,
+                    (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_height - usb_cutout_hole_width) / 2,
                     back_depth + case_depth - usb_cutout_box_depth + (usb_cutout_box_depth - usb_cutout_hole_height) / 2,
                 ])
                 cube([
@@ -620,8 +620,8 @@ module case() {
                 ]);
             } else if (usb_cutout_hole_position == "top" || usb_cutout_hole_position == "bottom") {
                 translate([
-                    frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
-                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 
+                    (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
+                    (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 
                     + (usb_cutout_hole_position == "bottom" ? usb_cutout_box_height + usb_cutout_box_wall_thickness : 0),
                     back_depth + case_depth - usb_cutout_box_depth + (usb_cutout_box_depth - usb_cutout_hole_height) / 2,
                 ])
@@ -632,8 +632,8 @@ module case() {
                 ]);
             } else if (usb_cutout_hole_position == "back") {
                 translate([
-                    frame_full_width * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
-                    frame_full_height * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 + (usb_cutout_box_height - usb_cutout_hole_height) / 2 + usb_cutout_box_wall_thickness,
+                    (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
+                    (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 + (usb_cutout_box_height - usb_cutout_hole_height) / 2 + usb_cutout_box_wall_thickness,
                     back_depth + case_depth - usb_cutout_box_depth - usb_cutout_box_wall_thickness - 0.11,
                 ])
                 cube([

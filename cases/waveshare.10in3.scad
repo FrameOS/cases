@@ -56,7 +56,7 @@ kickstand_leg_bridge_offset_percentage = 5;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 10;
+usb_cutout_offset_x_percentage = 8;
 usb_cutout_offset_y_percentage = 12;
 usb_cutout_box_width = 70;
 usb_cutout_box_height = 20;
@@ -66,10 +66,9 @@ usb_cutout_hole_position = "right"; // [top, bottom, left, right]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
 
-
 /* [Hanging hole] */
 hanging_hole = true;
-hanging_hole_offset = 50;
+hanging_hole_offset = 30;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]

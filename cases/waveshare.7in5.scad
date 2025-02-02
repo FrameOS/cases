@@ -60,7 +60,8 @@ kickstand_depth                         = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_offset_y_percentage = 28;
+usb_cutout_offset_x_percentage = 92;
+usb_cutout_offset_y_percentage = 50;
 usb_cutout_box_depth           = 6.4;
 usb_cutout_hole_height         = 5.8;
 
