@@ -6,7 +6,7 @@ view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
 
 /* [Panel dimensions] */
 panel_width  = 69.7;
-panel_height = 98.5;
+panel_height = 98.3;
 panel_depth  = 6.8;
 
 panel_bezel_left   = 10.5;
@@ -20,14 +20,10 @@ panel_border_left   = 3.0;
 panel_border_top    = 6.0;
 panel_border_bottom = 6.0;
 
-case_inner_padding_left   = 2.0;
+case_inner_padding_left   = 3.2;
 case_inner_padding_right  = 2.0;
 case_inner_padding_top    = 2.0;
 case_inner_padding_bottom = 1.0;
-
-/* [Cable gap] */
-panel_cable_gap_right = 30;
-panel_cable_gap_size = 0.8; // How into the border to cut
 
 /* [Case depth] */
 case_depth = 6.0;
@@ -59,10 +55,11 @@ kickstand_depth                         = 6.7;
 usb_cutout = true;
 usb_cutout_hole_position = "back"; // [top, bottom, left, right, back]
 usb_cutout_offset_x_percentage = 50;
-usb_cutout_offset_y_percentage = 82;
+usb_cutout_offset_y_percentage = 80;
 usb_cutout_box_width = 17;
 usb_cutout_box_height = 11;
 usb_cutout_box_depth           = 2.2;
+usb_cutout_box_wall_thickness  = 1.2;
 usb_cutout_hole_height         = 5.8;
 
 /* [Hanging hole] */

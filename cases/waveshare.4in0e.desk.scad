@@ -6,7 +6,7 @@ view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
 
 /* [Panel dimensions] */
 panel_width  = 67.8;
-panel_height = 101.1;
+panel_height = 101.0;
 panel_depth  = 6.8;
 
 panel_bezel_left   = 6.2;
@@ -55,10 +55,11 @@ kickstand_depth                         = 6.7;
 usb_cutout = true;
 usb_cutout_hole_position = "back"; // [top, bottom, left, right, back]
 usb_cutout_offset_x_percentage = 50;
-usb_cutout_offset_y_percentage = 82;
+usb_cutout_offset_y_percentage = 80;
 usb_cutout_box_width = 17;
 usb_cutout_box_height = 11;
 usb_cutout_box_depth           = 2.2;
+usb_cutout_box_wall_thickness  = 1.2;
 usb_cutout_hole_height         = 5.8;
 
 /* [Hanging hole] */

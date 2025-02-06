@@ -546,8 +546,8 @@ module case() {
                         usb_cutout_box_height + usb_cutout_box_wall_thickness * 2,
                         usb_cutout_box_depth + usb_cutout_box_wall_thickness
                     ], 
-                    top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top"),
-                    bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom")
+                    top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top") || usb_cutout_hole_position == "back",
+                    bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom") || usb_cutout_hole_position == "back"
                 );
             }
             if (hanging_hole) {
@@ -575,17 +575,17 @@ module case() {
             // Screw thread hole that goes all the way
             translate([c[0], c[1], - 0.11])
             cylinder(d = case_screw_hole_thread_diameter,
-                      h = case_depth + back_depth + 0.11);
+                     h = case_depth + back_depth + 0.11);
             
             // Cylinder hole from back to insert
             translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
             cylinder(d = case_screw_hole_diameter,
-                      h = case_depth + back_depth - case_screw_hole_insert_depth - case_screw_hole_floor_depth + 0.11); // Hole for the screw thread
+                     h = case_depth + back_depth - case_screw_hole_insert_depth - case_screw_hole_floor_depth + 0.11); // Hole for the screw thread
             
             // Cylinder hole from front to insert
             translate([c[0], c[1], - 0.11]) // Solid border around the screw hole
             cylinder(d = case_screw_hole_diameter,
-                      h = case_screw_hole_insert_depth + 0.11); // Hole for the screw thread
+                     h = case_screw_hole_insert_depth + 0.11); // Hole for the screw thread
         }
 
         if (usb_cutout) {
@@ -596,13 +596,13 @@ module case() {
                     (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
                     back_depth + case_depth - usb_cutout_box_depth,
                 ], 
-                size =[
+                size=[
                     usb_cutout_box_width, 
                     usb_cutout_box_height, 
                     usb_cutout_box_depth + 0.11
                 ], 
-                top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top"),
-                bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom")
+                top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top") || usb_cutout_hole_position == "back",
+                bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom") || usb_cutout_hole_position == "back"
             );
 
             // Hole into what's remaining
