@@ -4,6 +4,9 @@ include <case1.scad>;
 /* [View settings] */
 view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
 
+/* [Case depth] */
+case_depth = 10.0;
+
 /* [Panel dimensions] */
 panel_width  = 216.70;
 panel_height = 174.41;
@@ -29,9 +32,6 @@ case_inner_padding_bottom = 6;
 
 /* [Cable gap] */
 panel_cable_gap_bottom = 141;
-
-/* [Case depth] */
-case_depth = 10.0;
 
 /* [Screws] */
 screw_offset_left   = 3.2;
