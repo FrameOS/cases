@@ -47,7 +47,7 @@ case_center_support_horizontal = false;
 kickstand = true;
 kickstand_width = 64;
 kickstand_leg_width = 6;
-kickstand_leg_bridge_height             = 7;
+kickstand_leg_bridge_height             = 6.5;
 kickstand_leg_bridge_offset_percentage  = 0;
 kickstand_depth                         = 6.7;
 

@@ -127,7 +127,7 @@ kickstand_width = 95;
 kickstand_leg_width = 10;
 kickstand_height_percentage = 65;
 kickstand_leg_bridge_offset_percentage = 15;
-kickstand_leg_bridge_height = 10;
+kickstand_leg_bridge_height = 7;
 kickstand_depth = 7;
 kickstand_bottom_start = 3;
 kickstand_wall_thickness = 1;
@@ -783,9 +783,10 @@ module caseWithKickstand() {
                 ],
                 size=[
                     kickstand_leg_width + 2 * kickstand_gap_thickness,
-                    kickstand_height - 2 * kickstand_wall_thickness,
+                    kickstand_height - 2 * kickstand_wall_thickness - leg_depth,
                     kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
-                ]
+                ],
+                bottom=true
             );
         }
 
@@ -843,9 +844,10 @@ module caseWithKickstand() {
                     ],
                     size=[
                         kickstand_leg_width, 
-                        kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter,
+                        kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth,
                         leg_depth
-                    ]
+                    ],
+                    bottom=true
                 );
             }
             // Render the leg bridge

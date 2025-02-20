@@ -47,6 +47,8 @@ kickstand = true;
 kickstand_width = 95;
 kickstand_leg_bridge_offset_percentage = 10;
 kickstand_hinge_top_extra_leverage     = 5;
+kickstand_leg_bridge_height             = 6.5;
+kickstand_depth                         = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
