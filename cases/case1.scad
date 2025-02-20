@@ -819,22 +819,34 @@ module caseWithKickstand() {
                 // Render the large leg top
                 translate([x, hinge_start[1], hinge_start[2]])
                 rotate([kickstand_rotation, 0, 0])
-                translate([0, leg_yz[0] - hinge_start[1], case_depth + back_depth - (hinge_real_depth / 2) - hinge_start[2]])
-                cube([
-                    kickstand_leg_width, 
-                    hinge_top_offset,
-                    hinge_real_depth / 2
-                ]);
+                cubeWithAngledTopBottom(
+                    loc=[
+                        0, 
+                        leg_yz[0] - hinge_start[1], 
+                        case_depth + back_depth - (hinge_real_depth / 2) - hinge_start[2]
+                    ],
+                    size=[
+                        kickstand_leg_width, 
+                        hinge_top_offset,
+                        hinge_real_depth / 2
+                    ]
+                );
 
                 // Render the large leg
                 translate([x, hinge_start[1], hinge_start[2]])
                 rotate([kickstand_rotation, 0, 0])
-                translate([0, leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter, leg_yz[1] - hinge_start[2]])
-                cube([
-                    kickstand_leg_width, 
-                    kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter,
-                    leg_depth
-                ]);
+                cubeWithAngledTopBottom(
+                    loc=[
+                        0, 
+                        leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter,
+                        leg_yz[1] - hinge_start[2]
+                    ],
+                    size=[
+                        kickstand_leg_width, 
+                        kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter,
+                        leg_depth
+                    ]
+                );
             }
             // Render the leg bridge
             translate([0, hinge_start[1], hinge_start[2]])
@@ -943,7 +955,7 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
     }
 }
 
-module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=false, bottomReverse=false) {
+module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=false, bottomReverse=false, left=false, leftReverse=false, right=false, rightReverse=false) {
     translate(loc)
     cube(size);
 
@@ -960,6 +972,24 @@ module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=fa
         rotate(bottomReverse ? [270,0,0] : [180,0,0])
         polyhedron(//pt 0        1        2        3        4        5
             points=[[0,0,0], [size[0],0,0], [size[0],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[0],size[2],size[2]]],
+            faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+        );
+    }
+    if (left) {
+        translate([loc[0] - (leftReverse ? 0 : size[2]) + 0.01, loc[1], loc[2] + size[2]])
+        rotate(leftReverse ? [270,0,90] : [180,0,90])
+        polyhedron(//pt 0        1        2        3        4        5
+            points=[[0,0,0], [size[1],0,0], [size[1],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[1],size[2],size[2]]],
+            faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+        );
+    }
+    if (right) {
+        translate([loc[0] + size[0] + (rightReverse ? 0 : size[2]) - 0.01, loc[1] + size[1], loc[2] + size[2]])
+        // translate([loc[0] + size[0] + (rightReverse ? 0 : size[2]) - 0.01, loc[1], loc[2]])
+        rotate(rightReverse ? [270,0,270] : [180,0,270])
+        polyhedron(//pt 0        1        2        3        4        5
+            points=[[0,0,0], [size[1],0,0], [size[1],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[1],size[2],size[2]],
+            ],
             faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
         );
     }
