@@ -1004,19 +1004,19 @@ module cubeWithLeftRightGapBridge(
         cubeWithAngledTopBottom(
             [loc[0] + gap_width, loc[1], loc[2]],
             [size[0] - gap_width * 2, size[1], size[2]], 
-            top, topReverse, 
-            bottom, bottomReverse, 
-            left, leftReverse, 
-            right, rightReverse
+            top=false,
+            bottom=false,
+            left=false,
+            right=false
         );
     } else {
         cubeWithAngledTopBottom(
             [loc[0], loc[1] + gap_width, loc[2]],
             [size[0], size[1] - gap_width * 2, size[2]], 
-            top, topReverse, 
-            bottom, bottomReverse, 
-            left, leftReverse, 
-            right, rightReverse
+            top=false,
+            bottom=false,
+            left=false,
+            right=false
         );
     }
     cubeWithAngledTopBottom(
