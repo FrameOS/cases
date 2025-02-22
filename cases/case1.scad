@@ -577,10 +577,25 @@ module case() {
             cylinder(d = case_screw_hole_thread_diameter,
                      h = case_depth + back_depth + 0.11);
             
-            // Cylinder hole from back to insert
-            translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
-            cylinder(d = case_screw_hole_diameter,
-                     h = case_depth + back_depth - case_screw_hole_insert_depth - case_screw_hole_floor_depth + 0.11); // Hole for the screw thread
+            hole_depth = case_depth + back_depth - case_screw_hole_insert_depth - case_screw_hole_floor_depth + 0.11;
+
+            if (hole_depth > case_screw_hole_diameter - case_screw_hole_thread_diameter) {
+                // Cylinder hole from back to insert - chamfer
+                translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
+                cylinder(d2 = case_screw_hole_diameter,
+                        d1 = case_screw_hole_thread_diameter,
+                        h = case_screw_hole_diameter - case_screw_hole_thread_diameter); // Hole for the screw thread
+                // Cylinder hole from back to insert - tube
+                translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth + (case_screw_hole_diameter - case_screw_hole_thread_diameter) - 0.01]) // Solid border around the screw hole
+                cylinder(d = case_screw_hole_diameter,
+                        h = hole_depth - (case_screw_hole_diameter - case_screw_hole_thread_diameter) + 0.11); // Hole for the screw thread
+            } else {
+                // Cylinder hole from back to insert
+                translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
+                cylinder(d2 = case_screw_hole_diameter,
+                        d1 = case_screw_hole_thread_diameter,
+                        h = hole_depth); // Hole for the screw thread
+            }
             
             // Cylinder hole from front to insert
             translate([c[0], c[1], - 0.11]) // Solid border around the screw hole
@@ -590,7 +605,7 @@ module case() {
 
         if (usb_cutout) {
             // Cutout into box
-            cubeWithAngledTopBottom(
+            cubeWithLeftRightGapBridge(
                 loc=[
                     (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
                     (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
@@ -775,7 +790,7 @@ module caseWithKickstand() {
                 top=true
             );
             // Long base leg
-            cubeWithAngledTopBottom(
+            cubeWithLeftRightGapBridge(
                 loc=[
                     x,
                     frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_wall_thickness,
@@ -783,10 +798,11 @@ module caseWithKickstand() {
                 ],
                 size=[
                     kickstand_leg_width + 2 * kickstand_gap_thickness,
-                    kickstand_height - 2 * kickstand_wall_thickness - leg_depth,
+                    kickstand_height - 2 * kickstand_wall_thickness - (kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness),
                     kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
                 ],
-                bottom=true
+                bottom=true,
+                gap_width=0.4
             );
         }
 
@@ -873,35 +889,8 @@ module caseWithKickstand() {
         translate([leg_x_starts_leg[0] - 0.11, hinge_start[1], hinge_start[2]])
         rotate([90, 0, 90])
         cylinder(d = kickstand_hinge_diameter + kickstand_hinge_cylinder_gap * 2, h = kickstand_width + 0.22);
-
-        // Render an empty cylinder into the feet of the kickstand
-        for (x = leg_x_starts_leg) {
-            translate([0, hinge_start[1], hinge_start[2]])
-            rotate([kickstand_rotation, 0, 0])
-            translate([
-                x - 0.11, 
-                frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 3 - hinge_start[1],
-                case_depth + back_depth - hinge_start[2] - leg_depth / 2
-            ])
-            rotate([90, 0, 90])
-            cylinder(d = leg_depth  * 0.75, h = kickstand_leg_width + 0.22);
-        }
     }
 
-    // Do not print this for vertical prints, as the legs will get stuck into it
-    if (view_mode != "print_vertical") {
-        // Render an full cylinder into the frame to snap the legs into
-        for (x = leg_x_starts_hole) {
-            translate([
-                x - 0.11, 
-                frame_full_height - kickstand_bottom_start - kickstand_gap_thickness * 2,
-                case_depth + back_depth - hinge_real_depth / 4
-            ])
-            rotate([90, 0, 90])
-            cylinder(d = hinge_real_depth / 3, h = kickstand_leg_width + 0.22 + kickstand_gap_thickness * 2);
-        }
-    }
-    
     // Render a cylinder as a hinge
     for (x = leg_x_starts_full) {
         translate([x, hinge_start[1], hinge_start[2]])
@@ -957,7 +946,13 @@ module filletBoxBottom(x, y, z, r = fillet_radius) {
     }
 }
 
-module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=false, bottomReverse=false, left=false, leftReverse=false, right=false, rightReverse=false) {
+module cubeWithAngledTopBottom(
+    loc, size, 
+    top=false, topReverse=false, 
+    bottom=false, bottomReverse=false, 
+    left=false, leftReverse=false, 
+    right=false, rightReverse=false
+) {
     translate(loc)
     cube(size);
 
@@ -997,6 +992,42 @@ module cubeWithAngledTopBottom(loc, size, top=false, topReverse=false, bottom=fa
     }
 }
 
+module cubeWithLeftRightGapBridge(
+    loc, size, 
+    top=false, topReverse=false, 
+    bottom=false, bottomReverse=false, 
+    left=false, leftReverse=false, 
+    right=false, rightReverse=false,
+    gap_width = 0.4
+) {
+    if (size[0] < size[1]) {
+        cubeWithAngledTopBottom(
+            [loc[0] + gap_width, loc[1], loc[2]],
+            [size[0] - gap_width * 2, size[1], size[2]], 
+            top, topReverse, 
+            bottom, bottomReverse, 
+            left, leftReverse, 
+            right, rightReverse
+        );
+    } else {
+        cubeWithAngledTopBottom(
+            [loc[0], loc[1] + gap_width, loc[2]],
+            [size[0], size[1] - gap_width * 2, size[2]], 
+            top, topReverse, 
+            bottom, bottomReverse, 
+            left, leftReverse, 
+            right, rightReverse
+        );
+    }
+    cubeWithAngledTopBottom(
+        [loc[0], loc[1], loc[2] + gap_width],
+        [size[0], size[1], size[2] - gap_width], 
+        top, topReverse, 
+        bottom, bottomReverse, 
+        left, leftReverse, 
+        right, rightReverse
+    );
+}
 
 /*****************************************************************************/
 /*                              Rendering                                    */

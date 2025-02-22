@@ -39,8 +39,8 @@ extra_screws_left   = [0.333, 0.667, 0, 0, 0];
 extra_screws_right  = [0.17, 0.83, 0, 0, 0];
 
 /* [Center support] */
-case_center_support_vertical   = true;
-case_center_support_horizontal = true;
+case_center_support_vertical   = false;
+case_center_support_horizontal = false;
 
 /* [Kickstand] */
 kickstand = true;
@@ -52,10 +52,20 @@ kickstand_depth                         = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
+usb_cutout_box_depth           = 6.5;
+
+// Vertical hole
 usb_cutout_offset_x_percentage = 10;
 usb_cutout_offset_y_percentage = 18;
 usb_cutout_box_height          = 55;
-usb_cutout_box_depth           = 6.5;
+
+// // Horizontal hole
+// usb_cutout_offset_x_percentage = 10;
+// usb_cutout_offset_y_percentage = 12;
+// usb_cutout_box_width = 55;
+// usb_cutout_box_height = 20;
+// usb_cutout_hole_position = "right"; // [top, bottom, left, right, back]
+
 
 /* [Hanging hole] */
 hanging_hole = true;
