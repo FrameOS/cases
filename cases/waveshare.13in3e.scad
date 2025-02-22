@@ -66,7 +66,6 @@ usb_cutout_box_height          = 55;
 // usb_cutout_box_height = 20;
 // usb_cutout_hole_position = "right"; // [top, bottom, left, right, back]
 
-
 /* [Hanging hole] */
 hanging_hole = true;
 hanging_hole_offset = 70;
