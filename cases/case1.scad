@@ -165,10 +165,31 @@ hanging_hole_wall_thickness = 1;
 
 /* [SD card adapter cutout] */
 
-sd_card_in_leg = true;
+sd_card_in_leg = false;
 sd_card_in_leg_side = "left"; // [left, right]
 sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 75.5;
+
+/* [Rear cooling] */
+rear_cooling = false;
+rear_cooling_x_start_percentage = 6.1;
+rear_cooling_x_end_percentage = 20;
+rear_cooling_y_start_percentage = 20;
+rear_cooling_y_end_percentage = 60;
+rear_cooling_radius = 2;
+rear_cooling_gap = 5;
+rear_cooling_offset = 5;
+
+/* [Raspberry Pi Zero Pinholes] */
+pi_pinholes = false;
+pi_pinholes_ordientation = "vertical"; // [horizontal, vertical]
+pi_pinholes_x_percentage = 5.5;
+pi_pinholes_y_percentage = 15;
+pi_pinholes_diameter = 2.5;
+pi_pinholes_spacer = 4.1;
+pi_pinholes_spacer_height = 3;
+pi_pinholes_height = 23;
+pi_pinholes_width = 58;
 
 /* [Debug] */
 
@@ -572,6 +593,9 @@ module case() {
                     bottom=(view_mode == "print_vertical")
                 );
             }
+            if (pi_pinholes) {
+                piPinholes();
+            }
 
             // Cut out a piece of the cube
             caseBody();
@@ -705,6 +729,10 @@ module case() {
                 case_depth - 0.11
             ])
             cube([hanging_hole_small_diameter, hanging_hole_large_diameter, back_depth + 0.21]);
+        }
+
+        if (rear_cooling) {
+            rearCooling();
         }
     }
 }
@@ -1056,9 +1084,6 @@ sd_adapter_height = 32;
 sd_adapter_depth = 2.2;
 sd_adapter_micro_width = 10.5;
 sd_adapter_micro_hole_height = 3.3;
-sd_card_x_position = (sd_card_in_leg_side == "left" ? leg_x_starts_hole[0] + 0.11 : leg_x_starts_hole[1] + 0.11) + 
-        (sd_card_in_leg_side_side == "left" ? 0 : kickstand_leg_width + kickstand_gap_thickness * 2 - 0.21);
-sd_card_y_position = sd_card_in_leg_y_percentage / 100 * kickstand_height + (frame_full_height - kickstand_height);
 
 module sdCardAdapterCutout() {
     translate([-sd_adapter_width / 2, 0, case_depth - 2 * sd_adapter_depth])
@@ -1081,6 +1106,44 @@ module sdCardAdapterBase() {
         cube([sd_adapter_width + 2 * sd_adapter_buffer, sd_adapter_height + sd_adapter_buffer, 2 * sd_adapter_depth]);
 
         sdCardAdapterCutout();
+    }
+}
+
+// Draw tiny holes into the back panel for cooling
+module rearCooling() {
+    rear_cooling_x_start = rear_cooling_x_start_percentage / 100 * frame_full_width;
+    rear_cooling_x_end = rear_cooling_x_end_percentage / 100 * frame_full_width;
+    rear_cooling_y_start = rear_cooling_y_start_percentage / 100 * frame_full_height;
+    rear_cooling_y_end = rear_cooling_y_end_percentage / 100 * frame_full_height;
+
+    for (x = [rear_cooling_x_start : rear_cooling_gap : rear_cooling_x_end]) {
+        for (y = [rear_cooling_y_start : rear_cooling_gap : rear_cooling_y_end]) {
+            translate([x, y, -0.11])
+            cylinder(d = rear_cooling_radius, h = case_depth + back_depth + 0.22);
+        }
+    }
+}
+
+module piPinholes() {
+    pin_holes_x = pi_pinholes_x_percentage / 100 * frame_full_width;
+    pin_holes_y = pi_pinholes_y_percentage / 100 * frame_full_height;
+
+    pin_hole_locations = pi_pinholes_ordientation == "horizontal" ? [
+        [pin_holes_x, pin_holes_y],
+        [pin_holes_x + pi_pinholes_width, pin_holes_y],
+        [pin_holes_x, pin_holes_y + pi_pinholes_height],
+        [pin_holes_x + pi_pinholes_width, pin_holes_y + pi_pinholes_height]
+    ] : [
+        [pin_holes_x, pin_holes_y],
+        [pin_holes_x + pi_pinholes_height, pin_holes_y],
+        [pin_holes_x, pin_holes_y + pi_pinholes_width],
+        [pin_holes_x + pi_pinholes_height, pin_holes_y + pi_pinholes_width]
+    ];
+    for (loc = pin_hole_locations) {
+        translate([loc[0], loc[1], -0.11])
+        cylinder(d = pi_pinholes_diameter, h = case_depth + 0.22);
+        translate([loc[0], loc[1], case_depth - pi_pinholes_spacer_height - 0.11])
+        cylinder(d = pi_pinholes_spacer, h = pi_pinholes_spacer_height + 0.22);
     }
 }
 

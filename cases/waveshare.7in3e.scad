@@ -6,6 +6,7 @@ view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
 
 /* [Case depth] */
 case_depth = 6.0;
+fillet_radius = 2.2;
 
 /* [Panel dimensions] */
 panel_width  = 170.3;
@@ -19,8 +20,8 @@ panel_bezel_bottom = 10.8;
 /* [Border and inner padding] */
 panel_border_left   = 2.0;
 panel_border_right  = 2.0;
-panel_border_top    = 6.4;
-panel_border_bottom = 6.4;
+panel_border_top    = 6.8;
+panel_border_bottom = 6.8;
 
 // // Uniform border
 // panel_border_left   = 9.2;
@@ -37,10 +38,10 @@ case_inner_padding_bottom = 2.0;
 panel_cable_gap_bottom = 40;
 
 /* [Screws] */
-screw_offset_left   = 4.2;
-screw_offset_right  = 4.2;
-screw_offset_top    = 3.7;
-screw_offset_bottom = 3.7;
+screw_offset_left   = 4.4;
+screw_offset_right  = 4.4;
+screw_offset_top    = 4.2;
+screw_offset_bottom = 4.2;
 
 extra_screws_top    = [0, 0, 0, 0, 0];
 extra_screws_bottom = [0, 0, 0, 0, 0];
@@ -68,6 +69,25 @@ usb_cutout_hole_height         = 5.8;
 /* [Hanging hole] */
 hanging_hole = true;
 hanging_hole_offset = 4;
+
+/* [SD card adapter cutout] */
+sd_card_in_leg = true;
+sd_card_in_leg_side = "left"; // [left, right]
+sd_card_in_leg_side_side = "left"; // [left, right]
+sd_card_in_leg_y_percentage = 75.5;
+
+/* [Rear cooling] */
+rear_cooling = true;
+rear_cooling_x_start_percentage = 6.3;
+rear_cooling_x_end_percentage = 20;
+rear_cooling_y_start_percentage = 18;
+rear_cooling_y_end_percentage = 60;
+
+/* [Raspberry Pi Zero Pinholes] */
+pi_pinholes = true;
+pi_pinholes_ordientation = "vertical"; // [horizontal, vertical]
+pi_pinholes_x_percentage = 5.5;
+pi_pinholes_y_percentage = 15;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
