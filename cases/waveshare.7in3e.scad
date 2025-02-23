@@ -2,7 +2,7 @@
 include <case1.scad>;
 
 /* [View Settings] */
-view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
+view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
 
 /* [Case depth] */
 case_depth = 6.0;
@@ -19,8 +19,8 @@ panel_bezel_bottom = 10.8;
 /* [Border and inner padding] */
 panel_border_left   = 2.0;
 panel_border_right  = 2.0;
-panel_border_top    = 6.0;
-panel_border_bottom = 6.0;
+panel_border_top    = 6.4;
+panel_border_bottom = 6.4;
 
 // // Uniform border
 // panel_border_left   = 9.2;
@@ -39,8 +39,8 @@ panel_cable_gap_bottom = 40;
 /* [Screws] */
 screw_offset_left   = 4.2;
 screw_offset_right  = 4.2;
-screw_offset_top    = 3.2;
-screw_offset_bottom = 3.2;
+screw_offset_top    = 3.7;
+screw_offset_bottom = 3.7;
 
 extra_screws_top    = [0, 0, 0, 0, 0];
 extra_screws_bottom = [0, 0, 0, 0, 0];

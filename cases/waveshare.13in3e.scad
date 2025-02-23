@@ -2,7 +2,7 @@
 include <case1.scad>;
 
 /* [View settings] */
-view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
+view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
 
 /* [Case depth] */
 case_depth = 6.0;
@@ -17,10 +17,10 @@ panel_bezel_top    = 3.1;
 panel_bezel_bottom = 3.1;
 
 /* [Border and inner padding] */
-panel_border_left   = 14.6;
-panel_border_right  = 6.2;
-panel_border_top    = 14.8;
-panel_border_bottom = 14.8;
+panel_border_left   = 16.0;
+panel_border_right  = 7.6;
+panel_border_top    = 16.2;
+panel_border_bottom = 16.2;
 
 case_inner_padding_right = 6;
 
@@ -28,10 +28,10 @@ case_inner_padding_right = 6;
 panel_cable_gap_right = 142;
 
 /* [Screws] */
-screw_offset_left   = 3.2;
-screw_offset_right  = 3.2;
-screw_offset_top    = 3.2;
-screw_offset_bottom = 3.2;
+screw_offset_left   = 4.6;
+screw_offset_right  = 4.6;
+screw_offset_top    = 4.6;
+screw_offset_bottom = 4.6;
 
 extra_screws_top    = [0.48, 0.52, 0, 0, 0];
 extra_screws_bottom = [0.48, 0.52, 0, 0, 0];
@@ -44,31 +44,39 @@ case_center_support_horizontal = false;
 
 /* [Kickstand] */
 kickstand = true;
-kickstand_width = 95;
+kickstand_width = 115;
+kickstand_height_percentage = 74;
 kickstand_leg_bridge_offset_percentage = 10;
-kickstand_hinge_top_extra_leverage     = 5;
-kickstand_leg_bridge_height             = 6.5;
-kickstand_depth                         = 6.7;
+kickstand_hinge_top_extra_leverage = 5;
+kickstand_leg_bridge_height = 6.5;
+kickstand_depth = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
 usb_cutout_box_depth           = 6.5;
 
-// Vertical hole
-usb_cutout_offset_x_percentage = 10;
-usb_cutout_offset_y_percentage = 18;
-usb_cutout_box_height          = 55;
-
-// // Horizontal hole
+// // Vertical hole
 // usb_cutout_offset_x_percentage = 10;
-// usb_cutout_offset_y_percentage = 12;
-// usb_cutout_box_width = 55;
-// usb_cutout_box_height = 20;
-// usb_cutout_hole_position = "right"; // [top, bottom, left, right, back]
+// usb_cutout_offset_y_percentage = 18;
+// usb_cutout_box_height          = 55;
+
+// Horizontal hole
+usb_cutout_offset_x_percentage = 10;
+usb_cutout_offset_y_percentage = 11;
+usb_cutout_box_width = 55;
+usb_cutout_box_height = 20;
+usb_cutout_hole_position = "right"; // [top, bottom, left, right, back]
 
 /* [Hanging hole] */
 hanging_hole = true;
 hanging_hole_offset = 70;
+
+/* [SD card adapter cutout] */
+
+sd_card_in_leg = true;
+sd_card_in_leg_side = "left"; // [left, right]
+sd_card_in_leg_side_side = "left"; // [left, right]
+sd_card_in_leg_y_percentage = 82.0;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]

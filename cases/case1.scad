@@ -163,6 +163,13 @@ hanging_hole_box_height = 16;
 hanging_hole_depth = 7;
 hanging_hole_wall_thickness = 1;
 
+/* [SD card adapter cutout] */
+
+sd_card_in_leg = true;
+sd_card_in_leg_side = "left"; // [left, right]
+sd_card_in_leg_side_side = "left"; // [left, right]
+sd_card_in_leg_y_percentage = 75.5;
+
 /* [Debug] */
 
 // Gap between STL parts for visual debugging
@@ -737,6 +744,9 @@ module caseWithKickstand() {
     leg_bridge_hole_y = leg_bridge_leg_y - kickstand_gap_thickness;
     leg_bridge_full_y = leg_bridge_leg_y - kickstand_wall_thickness;
     leg_top_height_full = kickstand_depth + kickstand_hinge_top_extra_leverage + kickstand_wall_thickness * 2 + kickstand_gap_thickness;
+    sd_card_x_position = (sd_card_in_leg_side == "left" ? leg_x_starts_hole[0] + 0.11 : leg_x_starts_hole[1] + 0.11) + 
+            (sd_card_in_leg_side_side == "left" ? 0 : kickstand_leg_width + kickstand_gap_thickness * 2 - 0.21);
+    sd_card_y_position = sd_card_in_leg_y_percentage / 100 * kickstand_height + (frame_full_height - kickstand_height);
 
     // Make a hole in the case
     difference() {
@@ -821,8 +831,14 @@ module caseWithKickstand() {
             top=true,
             bottom=true
         );
+
+        if (sd_card_in_leg) {
+            translate([sd_card_x_position, sd_card_y_position, 0])
+            rotate([0, 0, sd_card_in_leg_side_side == "left" ? 90 : -90])
+            sdCardAdapterCutout();
+        }
     }
-    
+
     // The kickstand itself
     difference() {
         union() {
@@ -883,6 +899,12 @@ module caseWithKickstand() {
                 top=true,
                 bottom=true
             );
+
+            if (sd_card_in_leg) {
+                translate([sd_card_x_position, sd_card_y_position, 0])
+                rotate([0, 0, sd_card_in_leg_side_side == "left" ? 90 : -90])
+                sdCardAdapterBase();
+            }
         }
 
         // Render an empty cylinder inside the top cylinder, where the hinge will go through
@@ -1027,6 +1049,39 @@ module cubeWithLeftRightGapBridge(
         left, leftReverse, 
         right, rightReverse
     );
+}
+
+sd_adapter_width = 24;
+sd_adapter_height = 32;
+sd_adapter_depth = 2.2;
+sd_adapter_micro_width = 10.5;
+sd_adapter_micro_hole_height = 3.3;
+sd_card_x_position = (sd_card_in_leg_side == "left" ? leg_x_starts_hole[0] + 0.11 : leg_x_starts_hole[1] + 0.11) + 
+        (sd_card_in_leg_side_side == "left" ? 0 : kickstand_leg_width + kickstand_gap_thickness * 2 - 0.21);
+sd_card_y_position = sd_card_in_leg_y_percentage / 100 * kickstand_height + (frame_full_height - kickstand_height);
+
+module sdCardAdapterCutout() {
+    translate([-sd_adapter_width / 2, 0, case_depth - 2 * sd_adapter_depth])
+    difference() {
+        union() {
+            cube([sd_adapter_width, sd_adapter_height, sd_adapter_depth]);
+            translate([(sd_adapter_width - sd_adapter_micro_width) / 2, 0, sd_adapter_depth - 0.01])
+            cube([sd_adapter_micro_width, sd_adapter_micro_hole_height, sd_adapter_depth]);
+        }
+        translate([sd_adapter_width, sd_adapter_height - 3.49, -0.11])
+        rotate([0, 0, 45])
+        cube([5.5, 5.5, sd_adapter_depth + 0.21]);
+    }
+}
+
+module sdCardAdapterBase() {
+    sd_adapter_buffer = 0.5;
+    difference() {
+        translate([-sd_adapter_width / 2 - sd_adapter_buffer, 0.01, case_depth - 2 * sd_adapter_depth + 0.01])
+        cube([sd_adapter_width + 2 * sd_adapter_buffer, sd_adapter_height + sd_adapter_buffer, 2 * sd_adapter_depth]);
+
+        sdCardAdapterCutout();
+    }
 }
 
 /*****************************************************************************/
