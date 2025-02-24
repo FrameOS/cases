@@ -74,7 +74,7 @@ hanging_hole_offset = 4;
 sd_card_in_leg = true;
 sd_card_in_leg_side = "left"; // [left, right]
 sd_card_in_leg_side_side = "left"; // [left, right]
-sd_card_in_leg_y_percentage = 75.5;
+sd_card_in_leg_y_percentage = 74;
 
 /* [Rear cooling] */
 rear_cooling = true;
