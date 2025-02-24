@@ -191,8 +191,19 @@ pi_pinholes_spacer_height = 3;
 pi_pinholes_height = 23;
 pi_pinholes_width = 58;
 
-/* [Debug] */
+/* [Side buttons] */
+side_buttons_left = [];
+side_buttons_right = [];
+side_buttons_top = [];
+side_buttons_bottom = [];
+side_button_width = 10 - 0.8;
+side_button_height = 4 - 0.8;
+side_button_extrude = 1.5;
+side_button_base = 1;
+side_button_base_border = 0.8;
+side_button_hole_gap = 0.1;
 
+/* [Debug] */
 // Gap between STL parts for visual debugging
 debug_gap = 40;
 // Gap on baseplate between case and body when printing
@@ -734,6 +745,8 @@ module case() {
         if (rear_cooling) {
             rearCooling();
         }
+
+        sideButtonHoles();
     }
 }
 
@@ -954,7 +967,7 @@ module caseWithKickstand() {
 /*****************************************************************************/
 
 
-module filletBox(x, y, z, r = fillet_radius) {
+module filletBox(x, y, z, r = fillet_radius, fn=64) {
     // Optional sanity check (warn if the fillet is too large):
     if (x < 2*r || y < 2*r || z < 2*r) {
         echo("WARNING: fillet radius is too large for box dimensions!");
@@ -969,33 +982,62 @@ module filletBox(x, y, z, r = fillet_radius) {
         cube([x - 2*r, y - 2*r, z - 2*r], center = false);
 
         // Add the sphere that “rounds” the corners/edges
-        sphere(r = r, $fn = 64);  // $fn=64 for smoother arcs
+        sphere(r = r, $fn = fn);  // $fn=64 for smoother arcs
     }
 }
 
-module filletBoxTop(x, y, z, r = fillet_radius) {
+module filletBoxTop(x, y, z, r = fillet_radius, fn=64) {
     intersection() {
         cube([x, y, z]);
-        filletBox(x, y, z * 2, r);
+        filletBox(x, y, z * 2, r, fn);
     }
 }
 
-module filletBoxMiddle(x, y, z, r = fillet_radius) {
-    intersection() {
-        cube([x, y, z]);
-        translate([0, 0, -z])
-        filletBox(x, y, z * 3, r);
-    }
-}
-
-module filletBoxBottom(x, y, z, r = fillet_radius) {
+module filletBoxMiddle(x, y, z, r = fillet_radius, fn=64) {
     intersection() {
         cube([x, y, z]);
         translate([0, 0, -z])
-        filletBox(x, y, z * 2, r);
+        filletBox(x, y, z * 3, r, fn);
     }
 }
 
+module filletBoxBottom(x, y, z, r = fillet_radius, fn=64) {
+    intersection() {
+        cube([x, y, z]);
+        translate([0, 0, -z])
+        filletBox(x, y, z * 2, r, fn);
+    }
+}
+
+module filletBoxLeft(x, y, z, r = fillet_radius, fn=64) {
+    intersection() {
+        cube([x, y, z]);
+        filletBox(x * 2, y, z, r, fn);
+    }
+}
+
+module filletBoxRight(x, y, z, r = fillet_radius, fn=64) {
+    intersection() {
+        cube([x, y, z]);
+        translate([-x, 0, 0])
+        filletBox(x * 2, y, z, r, fn);
+    }
+}
+
+module filletBoxUp(x, y, z, r = fillet_radius, fn=64) {
+    intersection() {
+        cube([x, y, z]);
+        filletBox(x, y * 2, z, r, fn);
+    }
+}
+
+module filletBoxDown(x, y, z, r = fillet_radius, fn=64) {
+    intersection() {
+        cube([x, y, z]);
+        translate([0, -y, 0])
+        filletBox(x, y * 2, z, r, fn);
+    }
+}
 module cubeWithAngledTopBottom(
     loc, size, 
     top=false, topReverse=false, 
@@ -1147,6 +1189,180 @@ module piPinholes() {
     }
 }
 
+module sideButtonHoles() {
+    // side buttons left
+    for (side_button = side_buttons_left) {
+        translate([
+            -side_button_extrude,
+            side_button * (frame_full_height - side_button_width) / 100 - side_button_hole_gap,
+            (case_depth - side_button_height) / 2 - side_button_hole_gap
+        ])
+        filletBoxLeft(
+            panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
+            side_button_width + side_button_hole_gap * 2,
+            side_button_height + side_button_hole_gap * 2,
+            min(side_button_height / 2 - 0.01, fillet_radius)
+        );
+    }
+
+    // side buttons right
+    for (side_button = side_buttons_right) {
+        translate([
+            frame_full_width - panel_border_right - case_inner_padding_right - side_button_base,
+            side_button * (frame_full_height - side_button_width) / 100 - side_button_hole_gap, 
+            (case_depth - side_button_height) / 2 - side_button_hole_gap
+        ])
+        filletBoxRight(
+            panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
+            side_button_width + side_button_hole_gap * 2,
+            side_button_height + side_button_hole_gap * 2,
+            min(side_button_height / 2 - 0.01, fillet_radius)
+        );
+    }
+
+    // side buttons top
+    for (side_button = side_buttons_top) {
+        translate([
+            side_button * (frame_full_width - side_button_width) / 100 - side_button_hole_gap, 
+            -side_button_extrude,
+            (case_depth - side_button_height) / 2 - side_button_hole_gap
+        ])
+        filletBoxUp(
+            side_button_width + side_button_hole_gap * 2,
+            panel_border_top + case_inner_padding_top + side_button_base + side_button_extrude,
+            side_button_height + side_button_hole_gap * 2,
+            min(side_button_height / 2 - 0.01, fillet_radius)
+        );
+    }
+
+    // side buttons bottom
+    for (side_button = side_buttons_bottom) {
+        translate([
+            side_button * (frame_full_width - side_button_width) / 100 - side_button_hole_gap, 
+            frame_full_height - panel_border_bottom - case_inner_padding_bottom - side_button_base,
+            (case_depth - side_button_height) / 2 - side_button_hole_gap
+        ])
+        filletBoxDown(
+            side_button_width + side_button_hole_gap * 2,
+            panel_border_bottom + case_inner_padding_bottom + side_button_base + side_button_extrude,
+            side_button_height + side_button_hole_gap * 2,
+            min(side_button_height / 2 - 0.01, fillet_radius)
+        );
+    }
+}
+
+
+module sideButtons() {
+    if (side_buttons_left) {
+        for (idx = [ 0 : len(side_buttons_left) - 1 ] ) {
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2),
+                0,
+                0
+            ])
+            filletBoxBottom(
+                side_button_width,
+                side_button_height,
+                side_button_base + side_button_extrude + panel_border_left + case_inner_padding_left,
+                min(side_button_height / 2 - 0.01, fillet_radius)
+            );
+
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                -side_button_base_border,
+                0
+            ])
+            cube([
+                side_button_width + side_button_base_border * 2,
+                side_button_height + side_button_base_border * 2,
+                side_button_base
+            ]);
+        }
+    }
+
+    if (side_buttons_right) {
+        for (idx = [ 0 : len(side_buttons_right) - 1 ] ) {
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2),
+                side_button_height + side_button_extrude * 2 + 2,
+                0
+            ])
+            filletBoxBottom(
+                side_button_width,
+                side_button_height,
+                side_button_base + side_button_extrude + panel_border_right + case_inner_padding_right,
+                min(side_button_height / 2 - 0.01, fillet_radius)
+            );
+
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                side_button_height + side_button_extrude * 2 + 2 -side_button_base_border,
+                0
+            ])
+            cube([
+                side_button_width + side_button_base_border * 2,
+                side_button_height + side_button_base_border * 2,
+                side_button_base
+            ]);
+        }
+    }
+
+    if (side_buttons_top) {
+        for (idx = [ 0 : len(side_buttons_top) - 1 ] ) {
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2),
+                (side_button_height + side_button_extrude * 2 + 2) * 2,
+                0
+            ])
+            filletBoxBottom(
+                side_button_width,
+                side_button_height,
+                side_button_base + side_button_extrude + panel_border_top + case_inner_padding_top,
+                min(side_button_height / 2 - 0.01, fillet_radius)
+            );
+
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                (side_button_height + side_button_extrude * 2 + 2) * 2 -side_button_base_border,
+                0
+            ])
+            cube([
+                side_button_width + side_button_base_border * 2,
+                side_button_height + side_button_base_border * 2,
+                side_button_base
+            ]);
+        }
+    }
+
+    if (side_buttons_bottom) {
+        for (idx = [ 0 : len(side_buttons_bottom) - 1 ] ) {
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2),
+                (side_button_height + side_button_extrude * 2 + 2) * 3,
+                0
+            ])
+            filletBoxBottom(
+                side_button_width,
+                side_button_height,
+                side_button_base + side_button_extrude + panel_border_bottom + case_inner_padding_bottom,
+                min(side_button_height / 2 - 0.01, fillet_radius)
+            );
+
+            translate([
+                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                (side_button_height + side_button_extrude * 2 + 2) * 3 -side_button_base_border,
+                0
+            ])
+            cube([
+                side_button_width + side_button_base_border * 2,
+                side_button_height + side_button_base_border * 2,
+                side_button_base
+            ]);
+        }
+    }
+}
+
+
 /*****************************************************************************/
 /*                              Rendering                                    */
 /*****************************************************************************/
@@ -1189,8 +1405,13 @@ difference() {
         } else {
             case();
         };
-        // translate([-frame_full_width / 2, -400, -100])
-        // cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 500, 500]);
+
+        translate([
+            frame_full_width / 2 + print_gap, 
+            - frame_full_height / 2, 
+            view_mode == "print_vertical" ? 0 : - case_depth - back_depth
+        ])
+        sideButtons();
     }
 
     // cut off half
