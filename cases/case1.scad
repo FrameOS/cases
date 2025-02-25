@@ -147,7 +147,8 @@ usb_cutout_offset_y_percentage = 20;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 50;
 usb_cutout_box_depth = 7;
-usb_cutout_box_wall_thickness = 0.8;
+usb_cutout_box_wall_thickness = 1.4;
+usb_cutout_back_wall_thickness = 0.8;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
@@ -578,12 +579,12 @@ module case() {
                     loc=[
                         (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100, 
                         (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100,
-                        back_depth + case_depth - (usb_cutout_box_depth + usb_cutout_box_wall_thickness),
+                        back_depth + case_depth - (usb_cutout_box_depth + usb_cutout_back_wall_thickness),
                     ], 
                     size =[
                         usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, 
                         usb_cutout_box_height + usb_cutout_box_wall_thickness * 2,
-                        usb_cutout_box_depth + usb_cutout_box_wall_thickness
+                        usb_cutout_box_depth + usb_cutout_back_wall_thickness
                     ], 
                     top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top") || usb_cutout_hole_position == "back",
                     bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom") || usb_cutout_hole_position == "back"
@@ -691,12 +692,12 @@ module case() {
                 translate([
                     (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
                     (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 + (usb_cutout_box_height - usb_cutout_hole_height) / 2 + usb_cutout_box_wall_thickness,
-                    back_depth + case_depth - usb_cutout_box_depth - usb_cutout_box_wall_thickness - 0.11,
+                    back_depth + case_depth - usb_cutout_box_depth - usb_cutout_back_wall_thickness - 0.11,
                 ])
                 cube([
                     usb_cutout_hole_width, 
                     usb_cutout_hole_height,
-                    usb_cutout_box_wall_thickness + 0.22, 
+                    usb_cutout_back_wall_thickness + 0.22, 
                 ]);
 
             }
