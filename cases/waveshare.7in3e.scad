@@ -43,8 +43,8 @@ screw_offset_right  = 4.4;
 screw_offset_top    = 4.2;
 screw_offset_bottom = 4.2;
 
-extra_screws_top    = [0, 0, 0, 0, 0];
-extra_screws_bottom = [0, 0, 0, 0, 0];
+extra_screws_top    = [0.5, 0, 0, 0, 0];
+extra_screws_bottom = [0.35, 0.65, 0, 0, 0];
 extra_screws_left   = [0, 0, 0, 0, 0];
 extra_screws_right  = [0, 0, 0, 0, 0];
 
@@ -65,10 +65,11 @@ usb_cutout_offset_x_percentage = 92;
 usb_cutout_offset_y_percentage = 70;
 usb_cutout_box_depth           = 6.4;
 usb_cutout_hole_height         = 5.8;
+usb_cutout_hole_width          = 14;
 
 /* [Hanging hole] */
 hanging_hole = true;
-hanging_hole_offset = 4;
+hanging_hole_offset = 7;
 
 /* [SD card adapter cutout] */
 sd_card_in_leg = true;

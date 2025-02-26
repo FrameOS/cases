@@ -129,7 +129,7 @@ kickstand_height_percentage = 65;
 kickstand_leg_bridge_offset_percentage = 15;
 kickstand_leg_bridge_height = 7;
 kickstand_depth = 7;
-kickstand_bottom_start = 3;
+kickstand_bottom_start = 2;
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2;
@@ -138,6 +138,12 @@ kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hi
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
 kickstand_rotation = 0; // Kickstand rotation angle, goes up to 35 when open
+kickstand_inner_snap = true;
+kickstand_inner_snap_reverse = true;
+kickstand_inner_snap_height_percentage = 50;
+kickstand_inner_snap_radius_hole = 1.0;
+kickstand_inner_snap_radius_ball = 1.5;
+kickstand_inner_snap_gap = 1.2;
 
 /* [USB cutout] */
 
@@ -882,17 +888,17 @@ module caseWithKickstand() {
     }
 
     // The kickstand itself
-    difference() {
-        union() {
+    difference () {
+        union () {
             // Legs
-            for (x = leg_x_starts_leg) {
+            for (index=[0:1]) {
                 // Render the leg's top cylinder over the hinge
-                translate([x, hinge_start[1], hinge_start[2]])
+                translate([leg_x_starts_leg[index], hinge_start[1], hinge_start[2]])
                 rotate([90, 0, 90])
                 cylinder(d = hinge_real_depth, h = kickstand_leg_width);
 
                 // Render the large leg top
-                translate([x, hinge_start[1], hinge_start[2]])
+                translate([leg_x_starts_leg[index], hinge_start[1], hinge_start[2]])
                 rotate([kickstand_rotation, 0, 0])
                 cubeWithAngledTopBottom(
                     loc=[
@@ -908,21 +914,29 @@ module caseWithKickstand() {
                 );
 
                 // Render the large leg
-                translate([x, hinge_start[1], hinge_start[2]])
-                rotate([kickstand_rotation, 0, 0])
-                cubeWithAngledTopBottom(
-                    loc=[
-                        0, 
-                        leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter,
-                        leg_yz[1] - hinge_start[2]
-                    ],
-                    size=[
-                        kickstand_leg_width, 
-                        kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth,
-                        leg_depth
-                    ],
-                    bottom=true
-                );
+                difference() {
+                    translate([leg_x_starts_leg[index], hinge_start[1], hinge_start[2]])
+                    rotate([kickstand_rotation, 0, 0])
+                    cubeWithAngledTopBottom(
+                        loc=[
+                            0, 
+                            leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter,
+                            leg_yz[1] - hinge_start[2]
+                        ],
+                        size=[
+                            kickstand_leg_width, 
+                            kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth,
+                            leg_depth
+                        ],
+                        bottom=true
+                    );
+                    if (kickstand_inner_snap) {
+                        translate([leg_x_starts_leg[index] + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? kickstand_leg_width : 0), hinge_start[1], hinge_start[2] - kickstand_gap_thickness])
+                        rotate([kickstand_rotation, 0, 0])
+                        translate([0, kickstand_inner_snap_height_percentage / 100 * (kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth), 0])
+                        sphere(d = kickstand_inner_snap_radius_hole * 2);
+                    }
+                }
             }
             // Render the leg bridge
             translate([0, hinge_start[1], hinge_start[2]])
@@ -955,11 +969,25 @@ module caseWithKickstand() {
         cylinder(d = kickstand_hinge_diameter + kickstand_hinge_cylinder_gap * 2, h = kickstand_width + 0.22);
     }
 
-    // Render a cylinder as a hinge
-    for (x = leg_x_starts_full) {
-        translate([x, hinge_start[1], hinge_start[2]])
+    for (index=[0:1]) {
+        // Render a cylinder as a hinge
+        translate([leg_x_starts_full[index], hinge_start[1], hinge_start[2]])
         rotate([90, 0, 90])
         cylinder(d = kickstand_hinge_diameter, h = kickstand_leg_full_width - 0.22);
+
+        // Render the snaps for the legs
+        if (kickstand_inner_snap) {
+            translate([
+                leg_x_starts_leg[index] + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? kickstand_leg_width : 0) + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? kickstand_inner_snap_gap : - kickstand_inner_snap_gap), 
+                hinge_start[1] + kickstand_inner_snap_height_percentage / 100 * (kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth), 
+                hinge_start[2] - kickstand_gap_thickness
+            ])
+            intersection() {
+                sphere(d = kickstand_inner_snap_radius_ball * 2);
+                translate([-kickstand_inner_snap_radius_hole * 2 + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? 0 : +kickstand_inner_snap_radius_hole * 2), -kickstand_inner_snap_radius_hole * 2, -kickstand_inner_snap_radius_hole * 2])
+                cube([kickstand_inner_snap_radius_hole * 2, kickstand_inner_snap_radius_hole * 4, kickstand_inner_snap_radius_hole * 4]);
+            }
+        }
     }
 }
 
