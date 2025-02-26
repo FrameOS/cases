@@ -56,7 +56,7 @@ case_center_support_horizontal = false;
 kickstand = true;
 kickstand_width = 95;
 kickstand_leg_bridge_height             = 6.5;
-kickstand_leg_bridge_offset_percentage  = 12;
+kickstand_leg_bridge_offset_percentage  = 15;
 kickstand_depth                         = 6.7;
 
 /* [USB cutout] */

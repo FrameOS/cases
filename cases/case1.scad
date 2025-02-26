@@ -203,12 +203,12 @@ side_buttons_left = [];
 side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
-side_button_width = 10 - 0.8;
-side_button_height = 4 - 0.8;
+side_button_width = 9.2;
+side_button_height = 3.2;
 side_button_extrude = 1.5;
 side_button_base = 1;
 side_button_base_border = 0.8;
-side_button_hole_gap = 0.1;
+side_button_hole_gap = 0.3;
 
 /* [Debug] */
 // Gap between STL parts for visual debugging

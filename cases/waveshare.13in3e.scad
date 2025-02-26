@@ -46,7 +46,7 @@ case_center_support_horizontal = false;
 kickstand = true;
 kickstand_width = 115;
 kickstand_height_percentage = 74;
-kickstand_leg_bridge_offset_percentage = 10;
+kickstand_leg_bridge_offset_percentage = 13.5;
 kickstand_hinge_top_extra_leverage = 5;
 kickstand_leg_bridge_height = 6.5;
 kickstand_depth = 6.7;
@@ -72,11 +72,30 @@ hanging_hole = true;
 hanging_hole_offset = 70;
 
 /* [SD card adapter cutout] */
-
 sd_card_in_leg = true;
 sd_card_in_leg_side = "left"; // [left, right]
 sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 82.0;
+
+/* [Rear cooling] */
+rear_cooling = false;
+rear_cooling_x_start_percentage = 6.3;
+rear_cooling_x_end_percentage = 20;
+rear_cooling_y_start_percentage = 18;
+rear_cooling_y_end_percentage = 60;
+
+/* [Raspberry Pi Zero Pinholes] */
+pi_pinholes = false;
+pi_pinholes_ordientation = "vertical"; // [horizontal, vertical]
+pi_pinholes_x_percentage = 5.5;
+pi_pinholes_y_percentage = 15;
+
+/* [Side buttons] */
+side_buttons_left = [];
+side_buttons_right = [];
+side_buttons_top = [];
+// side_buttons_top = [90];
+side_buttons_bottom = [];
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
