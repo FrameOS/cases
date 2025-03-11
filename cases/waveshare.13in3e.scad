@@ -33,8 +33,8 @@ screw_offset_right  = 4.6;
 screw_offset_top    = 4.6;
 screw_offset_bottom = 4.6;
 
-extra_screws_top    = [0.48, 0.52, 0, 0, 0];
-extra_screws_bottom = [0.48, 0.52, 0, 0, 0];
+extra_screws_top    = [0.333, 0.667, 0, 0];
+extra_screws_bottom = [0.36, 0.64, 0, 0];
 extra_screws_left   = [0.333, 0.667, 0, 0, 0];
 extra_screws_right  = [0.17, 0.83, 0, 0, 0];
 
@@ -46,7 +46,7 @@ case_center_support_horizontal = false;
 kickstand = true;
 kickstand_width = 115;
 kickstand_height_percentage = 74;
-kickstand_leg_bridge_offset_percentage = 13.5;
+kickstand_leg_bridge_offset_percentage = 14;
 kickstand_hinge_top_extra_leverage = 5;
 kickstand_leg_bridge_height = 6.5;
 kickstand_depth = 6.7;
@@ -61,11 +61,11 @@ usb_cutout_box_depth           = 6.5;
 // usb_cutout_box_height          = 55;
 
 // Horizontal hole
-usb_cutout_offset_x_percentage = 10;
-usb_cutout_offset_y_percentage = 11;
-usb_cutout_box_width = 55;
-usb_cutout_box_height = 20;
-usb_cutout_hole_position = "right"; // [top, bottom, left, right, back]
+usb_cutout_offset_x_percentage = 50;
+usb_cutout_offset_y_percentage = 60;
+usb_cutout_box_width = 20;
+usb_cutout_box_height = 55;
+usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 
 /* [Hanging hole] */
 hanging_hole = true;
@@ -78,23 +78,22 @@ sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 82.0;
 
 /* [Rear cooling] */
-rear_cooling = false;
-rear_cooling_x_start_percentage = 6.3;
-rear_cooling_x_end_percentage = 20;
-rear_cooling_y_start_percentage = 18;
-rear_cooling_y_end_percentage = 60;
+rear_cooling = true;
+rear_cooling_x_start_percentage = 41.2;
+rear_cooling_x_end_percentage = 58;
+rear_cooling_y_start_percentage = 13.6;
+rear_cooling_y_end_percentage = 21;
 
 /* [Raspberry Pi Zero Pinholes] */
-pi_pinholes = false;
-pi_pinholes_ordientation = "vertical"; // [horizontal, vertical]
-pi_pinholes_x_percentage = 5.5;
-pi_pinholes_y_percentage = 15;
+pi_pinholes = true;
+pi_pinholes_ordientation = "horizontal"; // [horizontal, vertical]
+pi_pinholes_x_percentage = 40;
+pi_pinholes_y_percentage = 12;
 
 /* [Side buttons] */
 side_buttons_left = [];
-side_buttons_right = [];
+side_buttons_left = [];
 side_buttons_top = [];
-// side_buttons_top = [90];
 side_buttons_bottom = [];
 
 /* [Debug] */
