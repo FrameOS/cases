@@ -24,10 +24,10 @@ panel_border_top    = 6.8;
 panel_border_bottom = 6.8;
 
 // // Uniform border
-// panel_border_left   = 9.2;
-// panel_border_right  = 9.2;
-// panel_border_top    = 9.9;
-// panel_border_bottom = 4.0;
+// panel_border_left   = 14 - panel_bezel_left;
+// panel_border_right  = 14 - panel_bezel_right;
+// panel_border_top    = 14 - panel_bezel_top;
+// panel_border_bottom = 14 - panel_bezel_bottom;
 
 case_inner_padding_left   = 2.0;
 case_inner_padding_right  = 2.0;

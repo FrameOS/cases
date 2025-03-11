@@ -162,9 +162,10 @@ usb_cutout_hole_height = 6.0;
 /* [Hanging hole] */
 
 hanging_hole = true;
+hanging_hole_edge = "top"; // [top, bottom, left, right]
 hanging_hole_large_diameter = 8;
 hanging_hole_small_diameter = 3;
-hanging_hole_offset = 18;
+hanging_hole_offset_percentage = 18;
 hanging_hole_box_width = 12;
 hanging_hole_box_height = 16;
 hanging_hole_depth = 7;
@@ -247,6 +248,21 @@ kickstand_height = frame_full_height * kickstand_height_percentage / 100;
 kickstand_full_width = kickstand_width + 2 * kickstand_wall_thickness + 2 * kickstand_gap_thickness;
 kickstand_leg_full_width = kickstand_leg_width + 2 * kickstand_wall_thickness + 2 * kickstand_gap_thickness;
 kickstand_leg_bridge_offset = kickstand_leg_bridge_offset_percentage * (kickstand_height - 2 * kickstand_leg_bridge_height) / 100;
+
+hanging_hole_offset = hanging_hole_offset_percentage * 
+                      (hanging_hole_edge == "left" || hanging_hole_edge == "right" 
+                      ? frame_full_width - hanging_hole_box_height 
+                      : frame_full_height - hanging_hole_box_height) / 100;
+hanging_hole_x = hanging_hole_edge == "left" 
+                    ? hanging_hole_offset
+                    : hanging_hole_edge == "right"
+                        ? frame_full_width - hanging_hole_offset - hanging_hole_box_height
+                        : (frame_full_width - hanging_hole_box_width) / 2;
+hanging_hole_y = hanging_hole_edge == "top"
+                    ? hanging_hole_offset
+                    : hanging_hole_edge == "bottom"
+                        ? frame_full_height - hanging_hole_offset - hanging_hole_box_height
+                        : (frame_full_height - hanging_hole_box_width) / 2;
 
 /*****************************************************************************/
 /*                 Utility: Corner Screw Hole Positions                      */
@@ -599,13 +615,17 @@ module case() {
             if (hanging_hole) {
                 cubeWithAngledTopBottom(
                     loc=[
-                        (frame_full_width - hanging_hole_box_width - hanging_hole_wall_thickness * 2) / 2, 
-                        hanging_hole_offset - hanging_hole_wall_thickness, 
+                        hanging_hole_x - hanging_hole_wall_thickness,
+                        hanging_hole_y - hanging_hole_wall_thickness,
                         back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth)
                     ],
                     size=[
-                        hanging_hole_box_width + 2 * hanging_hole_wall_thickness, 
-                        hanging_hole_box_height + 2 * hanging_hole_wall_thickness, 
+                        hanging_hole_edge == "top" || hanging_hole_edge == "bottom" 
+                            ? hanging_hole_box_width + hanging_hole_wall_thickness * 2
+                            : hanging_hole_box_height + hanging_hole_wall_thickness * 2, 
+                        hanging_hole_edge == "top" || hanging_hole_edge == "bottom" 
+                            ? hanging_hole_box_height + hanging_hole_wall_thickness * 2
+                            : hanging_hole_box_width + hanging_hole_wall_thickness * 2, 
                         min(back_depth + case_depth, hanging_hole_depth)
                     ],
                     bottom=(view_mode == "print_vertical")
@@ -712,13 +732,17 @@ module case() {
         if (hanging_hole) {
             cubeWithAngledTopBottom(
                 loc=[
-                    (frame_full_width - hanging_hole_box_width) / 2, 
-                    hanging_hole_offset, 
+                    hanging_hole_x,
+                    hanging_hole_y,
                     back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth) + hanging_hole_wall_thickness
                 ],
                 size=[
-                    hanging_hole_box_width, 
-                    hanging_hole_box_height, 
+                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                        ? hanging_hole_box_width
+                        : hanging_hole_box_height,
+                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                        ? hanging_hole_box_height
+                        : hanging_hole_box_width,
                     min(back_depth + case_depth, hanging_hole_depth) - hanging_hole_wall_thickness * 2
                 ],
                 bottom=(view_mode == "print_vertical")
@@ -726,27 +750,57 @@ module case() {
 
             // Big cyclinter hole
             translate([
-                frame_full_width / 2, 
-                hanging_hole_offset + hanging_hole_box_height * 0.75, 
+                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                    ? frame_full_width / 2
+                    : hanging_hole_edge == "left"
+                        ? hanging_hole_x + hanging_hole_box_height * 0.75
+                        : hanging_hole_x + hanging_hole_box_height * 0.25,
+                hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                    ? frame_full_height / 2
+                    : hanging_hole_edge == "top" 
+                        ? hanging_hole_y + hanging_hole_box_height * 0.75
+                        : hanging_hole_y + hanging_hole_box_height * 0.25,
                 case_depth - 0.11
             ])
             rotate([0, 0, 90])
             cylinder(d = hanging_hole_large_diameter, h = back_depth + 0.21);
+
             // Small cyclinter hole
             translate([
-                frame_full_width / 2, 
-                hanging_hole_offset + hanging_hole_box_height * 0.75 - hanging_hole_large_diameter, 
+                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                    ? frame_full_width / 2
+                    : hanging_hole_edge == "left"
+                        ? hanging_hole_x + hanging_hole_box_height * 0.25
+                        : hanging_hole_x + hanging_hole_box_height * 0.75,
+                hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                    ? frame_full_height / 2
+                    : hanging_hole_edge == "top" 
+                        ? hanging_hole_y + hanging_hole_box_height * 0.25
+                        : hanging_hole_y + hanging_hole_box_height * 0.75,
                 case_depth - 0.11
             ])
             rotate([0, 0, 90])
             cylinder(d = hanging_hole_small_diameter, h = back_depth + 0.21);
+
             // Box connecitng the two
             translate([
-                frame_full_width / 2 - hanging_hole_small_diameter / 2,
-                hanging_hole_offset + hanging_hole_box_height * 0.75 - hanging_hole_large_diameter, 
+                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                    ? frame_full_width / 2 - hanging_hole_small_diameter / 2
+                    : hanging_hole_x + hanging_hole_box_height * 0.25,
+                hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                    ? frame_full_height / 2 - hanging_hole_small_diameter / 2
+                    : hanging_hole_y + hanging_hole_box_height * 0.25,
                 case_depth - 0.11
             ])
-            cube([hanging_hole_small_diameter, hanging_hole_large_diameter, back_depth + 0.21]);
+            cube([
+                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                    ? hanging_hole_small_diameter
+                    : hanging_hole_large_diameter,
+                hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                    ? hanging_hole_small_diameter
+                    : hanging_hole_large_diameter,
+                back_depth + 0.21
+            ]);
         }
 
         if (rear_cooling) {
@@ -1227,7 +1281,7 @@ module sideButtonHoles() {
             (case_depth - side_button_height) / 2 - side_button_hole_gap
         ])
         filletBoxLeft(
-            panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
+            panel_border_left + case_inner_padding_left + side_button_base + side_button_extrude,
             side_button_width + side_button_hole_gap * 2,
             side_button_height + side_button_hole_gap * 2,
             min(side_button_height / 2 - 0.01, fillet_radius)
