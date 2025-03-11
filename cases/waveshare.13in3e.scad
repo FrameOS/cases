@@ -92,7 +92,7 @@ pi_pinholes_y_percentage = 12;
 
 /* [Side buttons] */
 side_buttons_left = [];
-side_buttons_left = [];
+side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
 
