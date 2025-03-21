@@ -40,7 +40,8 @@ case_inner_padding_bottom = 4;
 /* [Case dimensions] */
 
 // How round to make the case
-fillet_radius = 2.5;
+fillet_radius = 0;
+// fillet_radius = 2.5;
 
 // Panel cover thickness
 panel_cover_depth = 1.6;
@@ -53,6 +54,17 @@ case_depth = 10.0;
 
 // Back plate thickness 
 back_depth = 1.2;
+
+/* [Thick border] */
+thick_border = false;
+thick_border_width = 12.0;
+thick_border_extra_depth = 15.0;
+
+/* [Colors] */
+case_color = "yellow";
+panel_cover_color = "white";
+thick_border_color = "gray";
+kickstand_color = "white";
 
 /* [Cable holes for panel] */
 
@@ -159,6 +171,11 @@ usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 usb_cutout_hole_width = 14;
 usb_cutout_hole_height = 6.0;
 
+// Tiny USB-C
+// usb_cutout_hole_width = 9.1;
+// usb_cutout_hole_height = 3.41;
+// usb_cutout_box_wall_thickness = 4.0;
+
 /* [Hanging hole] */
 
 hanging_hole = true;
@@ -215,7 +232,7 @@ side_button_hole_gap = 0.3;
 // Gap between STL parts for visual debugging
 debug_gap = 40;
 // Gap on baseplate between case and body when printing
-print_gap = 10;
+print_gap = 10 + (thick_border ? thick_border_width : 0);
 cross_section_percentage = 0; // [0:100]
 
 // End of variables.
@@ -477,6 +494,26 @@ module caseBody () {
     }
 }
 
+module caseThickBorder () {
+    difference() {
+        color(thick_border_color)
+        translate([- thick_border_width, -thick_border_width, -thick_border_extra_depth + 0.01])
+        cube([
+            frame_full_width + 2 * thick_border_width, 
+            frame_full_height + 2 * thick_border_width, 
+            case_depth + back_depth + thick_border_extra_depth
+        ]);
+
+        color(thick_border_color)
+        translate([0, 0, -thick_border_extra_depth - 11])
+        cube([
+            frame_full_width,
+            frame_full_height,
+            case_depth + back_depth + thick_border_extra_depth + 22
+        ]);
+    }
+}
+
 module case_cable_gaps() {
     if (panel_cable_gap_bottom > 0) {
         render_panel_cable_gap_bottom(case_cable_gap_depth, -0.11);
@@ -565,6 +602,7 @@ module case() {
         union() {
             if (case_center_support_vertical || case_center_support_horizontal) {
                 difference() {
+                    color(case_color)
                     union() {
                         // Center support
                         if (case_center_support_horizontal) {
@@ -597,6 +635,7 @@ module case() {
             };
 
             if (usb_cutout) {
+                color(case_color)
                 cubeWithAngledTopBottom(
                     loc=[
                         (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100, 
@@ -613,6 +652,7 @@ module case() {
                 );
             }
             if (hanging_hole) {
+                color(case_color)
                 cubeWithAngledTopBottom(
                     loc=[
                         hanging_hole_x - hanging_hole_wall_thickness,
@@ -632,16 +672,24 @@ module case() {
                 );
             }
             if (pi_pinholes) {
+                color(case_color)
                 piPinholes();
             }
 
             // Cut out a piece of the cube
+            color(case_color)
             caseBody();
+
+            if (thick_border) {
+                color(thick_border_color)
+                caseThickBorder();
+            }
         };
         
         // Cut holes to the back
         for (c = screw_positions) {
             // Screw thread hole that goes all the way
+            color(case_color)
             translate([c[0], c[1], - 0.11])
             cylinder(d = case_screw_hole_thread_diameter,
                      h = case_depth + back_depth + 0.11);
@@ -650,16 +698,19 @@ module case() {
 
             if (hole_depth > case_screw_hole_diameter - case_screw_hole_thread_diameter) {
                 // Cylinder hole from back to insert - chamfer
+                color(case_color)
                 translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
                 cylinder(d2 = case_screw_hole_diameter,
                         d1 = case_screw_hole_thread_diameter,
                         h = case_screw_hole_diameter - case_screw_hole_thread_diameter); // Hole for the screw thread
                 // Cylinder hole from back to insert - tube
+                color(case_color)
                 translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth + (case_screw_hole_diameter - case_screw_hole_thread_diameter) - 0.01]) // Solid border around the screw hole
                 cylinder(d = case_screw_hole_diameter,
                         h = hole_depth - (case_screw_hole_diameter - case_screw_hole_thread_diameter) + 0.11); // Hole for the screw thread
             } else {
                 // Cylinder hole from back to insert
+                color(case_color)
                 translate([c[0], c[1], case_screw_hole_insert_depth + case_screw_hole_floor_depth]) // Solid border around the screw hole
                 cylinder(d2 = case_screw_hole_diameter,
                         d1 = case_screw_hole_thread_diameter,
@@ -667,6 +718,7 @@ module case() {
             }
             
             // Cylinder hole from front to insert
+            color(case_color)
             translate([c[0], c[1], - 0.11]) // Solid border around the screw hole
             cylinder(d = case_screw_hole_diameter,
                      h = case_screw_hole_insert_depth + 0.11); // Hole for the screw thread
@@ -674,6 +726,7 @@ module case() {
 
         if (usb_cutout) {
             // Cutout into box
+            color(case_color)
             cubeWithLeftRightGapBridge(
                 loc=[
                     (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
@@ -691,6 +744,7 @@ module case() {
 
             // Hole into what's remaining
             if (usb_cutout_hole_position == "left" || usb_cutout_hole_position == "right") {
+                color(case_color)
                 translate([
                     (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11
                     + (usb_cutout_hole_position == "right" ? usb_cutout_box_width + usb_cutout_box_wall_thickness : 0), 
@@ -703,6 +757,7 @@ module case() {
                     usb_cutout_hole_height
                 ]);
             } else if (usb_cutout_hole_position == "top" || usb_cutout_hole_position == "bottom") {
+                color(case_color)
                 translate([
                     (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
                     (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 
@@ -715,6 +770,7 @@ module case() {
                     usb_cutout_hole_height
                 ]);
             } else if (usb_cutout_hole_position == "back") {
+                color(case_color)
                 translate([
                     (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
                     (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness - usb_cutout_box_wall_thickness - 0.11 + (usb_cutout_box_height - usb_cutout_hole_height) / 2 + usb_cutout_box_wall_thickness,
@@ -730,6 +786,7 @@ module case() {
         }
 
         if (hanging_hole) {
+            color(case_color)
             cubeWithAngledTopBottom(
                 loc=[
                     hanging_hole_x,
@@ -749,6 +806,7 @@ module case() {
             );
 
             // Big cyclinter hole
+            color(case_color)
             translate([
                 hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
                     ? frame_full_width / 2
@@ -766,6 +824,7 @@ module case() {
             cylinder(d = hanging_hole_large_diameter, h = back_depth + 0.21);
 
             // Small cyclinter hole
+            color(case_color)
             translate([
                 hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
                     ? frame_full_width / 2
@@ -783,6 +842,7 @@ module case() {
             cylinder(d = hanging_hole_small_diameter, h = back_depth + 0.21);
 
             // Box connecitng the two
+            color(case_color)
             translate([
                 hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
                     ? frame_full_width / 2 - hanging_hole_small_diameter / 2
@@ -804,9 +864,11 @@ module case() {
         }
 
         if (rear_cooling) {
+            color(case_color)
             rearCooling();
         }
 
+        color(case_color)
         sideButtonHoles();
     }
 }
@@ -857,6 +919,7 @@ module caseWithKickstand() {
             // Protective box around the kickstand legs
             for (x = leg_x_starts_full) {
                 // Long base leg
+                color(case_color)
                 cubeWithAngledTopBottom(
                     loc=[
                         x, 
@@ -870,6 +933,7 @@ module caseWithKickstand() {
             }
     
             // Protective box around the leg bridge
+            color(case_color)
             cubeWithAngledTopBottom(
                 loc=[
                     leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness * 2, 
@@ -888,6 +952,7 @@ module caseWithKickstand() {
         // Now the holes
         for (x = leg_x_starts_hole) {
             // Top thicker part - top extra cavity
+            color(case_color)
             cubeWithAngledTopBottom(
                 loc=[
                     x,
@@ -902,6 +967,7 @@ module caseWithKickstand() {
                 top=true
             );
             // Long base leg
+            color(case_color)
             cubeWithLeftRightGapBridge(
                 loc=[
                     x,
@@ -919,6 +985,7 @@ module caseWithKickstand() {
         }
 
         // Leg bridge hole
+        color(case_color)
         cubeWithAngledTopBottom(
             loc=[
                 leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness - 0.11, 
@@ -935,6 +1002,7 @@ module caseWithKickstand() {
         );
 
         if (sd_card_in_leg) {
+            color(case_color)
             translate([sd_card_x_position, sd_card_y_position, 0])
             rotate([0, 0, sd_card_in_leg_side_side == "left" ? 90 : -90])
             sdCardAdapterCutout();
@@ -947,11 +1015,13 @@ module caseWithKickstand() {
             // Legs
             for (index=[0:1]) {
                 // Render the leg's top cylinder over the hinge
+                color(kickstand_color)
                 translate([leg_x_starts_leg[index], hinge_start[1], hinge_start[2]])
                 rotate([90, 0, 90])
                 cylinder(d = hinge_real_depth, h = kickstand_leg_width);
 
                 // Render the large leg top
+                color(kickstand_color)
                 translate([leg_x_starts_leg[index], hinge_start[1], hinge_start[2]])
                 rotate([kickstand_rotation, 0, 0])
                 cubeWithAngledTopBottom(
@@ -969,6 +1039,7 @@ module caseWithKickstand() {
 
                 // Render the large leg
                 difference() {
+                    color(kickstand_color)
                     translate([leg_x_starts_leg[index], hinge_start[1], hinge_start[2]])
                     rotate([kickstand_rotation, 0, 0])
                     cubeWithAngledTopBottom(
@@ -985,14 +1056,17 @@ module caseWithKickstand() {
                         bottom=true
                     );
                     if (kickstand_inner_snap) {
+                        color(kickstand_color)
                         translate([leg_x_starts_leg[index] + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? kickstand_leg_width : 0), hinge_start[1], hinge_start[2] - kickstand_gap_thickness])
                         rotate([kickstand_rotation, 0, 0])
+                        color(kickstand_color)
                         translate([0, kickstand_inner_snap_height_percentage / 100 * (kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth), 0])
                         sphere(d = kickstand_inner_snap_radius_hole * 2);
                     }
                 }
             }
             // Render the leg bridge
+            color(kickstand_color)
             translate([0, hinge_start[1], hinge_start[2]])
             rotate([kickstand_rotation, 0, 0])
             cubeWithAngledTopBottom(
@@ -1011,6 +1085,7 @@ module caseWithKickstand() {
             );
 
             if (sd_card_in_leg) {
+                color(case_color)
                 translate([sd_card_x_position, sd_card_y_position, 0])
                 rotate([0, 0, sd_card_in_leg_side_side == "left" ? 90 : -90])
                 sdCardAdapterBase();
@@ -1018,6 +1093,7 @@ module caseWithKickstand() {
         }
 
         // Render an empty cylinder inside the top cylinder, where the hinge will go through
+        color(kickstand_color)
         translate([leg_x_starts_leg[0] - 0.11, hinge_start[1], hinge_start[2]])
         rotate([90, 0, 90])
         cylinder(d = kickstand_hinge_diameter + kickstand_hinge_cylinder_gap * 2, h = kickstand_width + 0.22);
@@ -1025,17 +1101,20 @@ module caseWithKickstand() {
 
     for (index=[0:1]) {
         // Render a cylinder as a hinge
+        color(case_color)
         translate([leg_x_starts_full[index], hinge_start[1], hinge_start[2]])
         rotate([90, 0, 90])
         cylinder(d = kickstand_hinge_diameter, h = kickstand_leg_full_width - 0.22);
 
         // Render the snaps for the legs
         if (kickstand_inner_snap) {
+            color(case_color)
             translate([
                 leg_x_starts_leg[index] + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? kickstand_leg_width : 0) + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? kickstand_inner_snap_gap : - kickstand_inner_snap_gap), 
                 hinge_start[1] + kickstand_inner_snap_height_percentage / 100 * (kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth), 
                 hinge_start[2] - kickstand_gap_thickness
             ])
+            color(kickstand_color)
             intersection() {
                 sphere(d = kickstand_inner_snap_radius_ball * 2);
                 translate([-kickstand_inner_snap_radius_hole * 2 + (index == (kickstand_inner_snap_reverse ? 1 : 0) ? 0 : +kickstand_inner_snap_radius_hole * 2), -kickstand_inner_snap_radius_hole * 2, -kickstand_inner_snap_radius_hole * 2])
@@ -1453,6 +1532,7 @@ module sideButtons() {
 difference() {
     union() {
         // Cover panel
+        color(panel_cover_color)
         rotate(
             view_mode == "print_vertical" 
             ? [180, 180, 180]
