@@ -2,27 +2,32 @@
 include <case1.scad>;
 
 /* [View settings] */
-view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
+view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
 
 /* [Case depth] */
-case_depth = 6.0;
+case_depth = 9.0;
 
 /* [Panel dimensions] */
-panel_width  = 284.49;
-panel_height = 208.81;
+panel_width  = 285.09;
+panel_height = 209.01;
 
-panel_bezel_left   = 3.3;
-panel_bezel_right  = 11.7;
-panel_bezel_top    = 3.1;
-panel_bezel_bottom = 3.1;
+panel_bezel_left   = 3.8;
+panel_bezel_right  = 11.8;
+panel_bezel_top    = 3.2;
+panel_bezel_bottom = 3.2;
 
 /* [Border and inner padding] */
-panel_border_left   = 16.0;
-panel_border_right  = 7.6;
-panel_border_top    = 16.2;
-panel_border_bottom = 16.2;
+panel_border_left   = 15.5;
+panel_border_right  = 7.5;
+panel_border_top    = 16.1;
+panel_border_bottom = 16.1;
 
 case_inner_padding_right = 6;
+
+/* [Thick border] */
+thick_border = false; // Thick border, does not support side buttons
+thick_border_width = 12.0;
+thick_border_extra_depth = 15.0;
 
 /* [Cable gap] */
 panel_cable_gap_right = 142;
