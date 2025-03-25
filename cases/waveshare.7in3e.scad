@@ -2,7 +2,7 @@
 include <case1.scad>;
 
 /* [View Settings] */
-view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked]
+view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
 
 /* [Case depth] */
 case_depth = 6.0;
