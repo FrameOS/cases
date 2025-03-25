@@ -2,7 +2,7 @@
 
 /* [View settings] */
 
-view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked]
+view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked, exploded, only_case, only_thick_border, only_panel_cover]
 
 // Shrinkage adjustment when printing vertically. By default 0.4mm of shrinkage for every 100mm of print height.
 vertical_print_scale = 1.004;
@@ -56,7 +56,7 @@ case_depth = 10.0;
 back_depth = 1.2;
 
 /* [Thick border] */
-thick_border = false;
+thick_border = false; // Thick border, does not support side buttons
 thick_border_width = 12.0;
 thick_border_extra_depth = 15.0;
 
@@ -680,7 +680,7 @@ module case() {
             color(case_color)
             caseBody();
 
-            if (thick_border) {
+            if (thick_border && view_mode != "only_case") {
                 color(thick_border_color)
                 caseThickBorder();
             }
@@ -1532,49 +1532,62 @@ module sideButtons() {
 difference() {
     union() {
         // Cover panel
-        color(panel_cover_color)
-        rotate(
-            view_mode == "print_vertical" 
-            ? [180, 180, 180]
-            : view_mode == "print_horizontal" 
-            ? frame_full_width > frame_full_height
-              ? [0, 0, 180]
-              : [0, 0, 0]
-            : [0, 180, 0])
-        translate(
-            view_mode == "print_vertical" 
-            ? [-frame_full_width/2, -frame_full_height - print_gap, 0]
-            : view_mode == "print_horizontal" 
+        if (view_mode != "only_case" && view_mode != "only_thick_border" && view_mode != "stacked_case") {
+            color(panel_cover_color)
+            rotate(
+                view_mode == "print_vertical" 
+                ? [180, 180, 180]
+                : view_mode == "print_horizontal" || view_mode == "only_panel_cover"
                 ? frame_full_width > frame_full_height
-                  ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
-                  : [frame_full_width/2+print_gap, -frame_full_height/2, -(case_depth + back_depth)]
-                : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + debug_gap)])  // stacked
-        panel_cover();
+                ? [0, 0, 180]
+                : [0, 0, 0]
+                : [0, 180, 0])
+            translate(
+                view_mode == "only_panel_cover"
+                ? [-frame_full_width/2, -frame_full_height / 2, 0]
+                : view_mode == "print_vertical" 
+                ? [-frame_full_width/2, -frame_full_height - print_gap, 0]
+                : view_mode == "print_horizontal"
+                    ? frame_full_width > frame_full_height
+                    ? [-frame_full_width/2, +frame_full_height/2 + print_gap, -(case_depth + back_depth)] 
+                    : [frame_full_width/2+print_gap, -frame_full_height/2, -(case_depth + back_depth)]
+                : [-frame_full_width/2, -frame_full_height/2, - (panel_cover_depth + panel_depth + (view_mode == "stacked" ? 0 : debug_gap))])  // stacked
+            panel_cover();
+        }
 
-        // Case body
-        rotate(
-            view_mode == "print_vertical" 
-            ? [90, 180, 180] 
-            : [0, 180, 0]
-        )
-        translate(
-            view_mode == "print_vertical" 
-            ? [-frame_full_width/2, -frame_full_height * vertical_print_scale, 0] 
-            : [-frame_full_width/2, -frame_full_height/2, 0]
-        )
-        scale([1, view_mode == "print_vertical" ? vertical_print_scale : 1, 1])
-        if (kickstand) {
-            caseWithKickstand();
-        } else {
-            case();
-        };
+        if (view_mode != "only_panel_cover") {
+            // Case body
+            rotate(
+                view_mode == "print_vertical" 
+                ? [90, 180, 180] 
+                : [0, 180, 0]
+            )
+            translate(
+                view_mode == "print_vertical" 
+                ? [-frame_full_width/2, -frame_full_height * vertical_print_scale, 0] 
+                : [-frame_full_width/2, -frame_full_height/2, 0]
+            )
+            scale([1, view_mode == "print_vertical" ? vertical_print_scale : 1, 1])
+            if (view_mode == "only_thick_border") {
+                color(thick_border_color)
+                caseThickBorder();
+            } else { 
+                if (kickstand) {
+                    caseWithKickstand();
+                } else {
+                    case();
+                };
+            }
 
-        translate([
-            frame_full_width / 2 + print_gap, 
-            - frame_full_height / 2, 
-            view_mode == "print_vertical" ? 0 : - case_depth - back_depth
-        ])
-        sideButtons();
+            if (view_mode != "only_thick_border") {
+                translate([
+                    frame_full_width / 2 + print_gap, 
+                    - frame_full_height / 2, 
+                    view_mode == "print_vertical" ? 0 : - case_depth - back_depth
+                ])
+                sideButtons();
+            }
+        }
     }
 
     // cut off half
