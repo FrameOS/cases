@@ -40,8 +40,8 @@ case_inner_padding_bottom = 4;
 /* [Case dimensions] */
 
 // How round to make the case
-fillet_radius = 0;
-// fillet_radius = 2.5;
+// fillet_radius = 0;
+fillet_radius = 2.5;
 
 // Panel cover thickness
 panel_cover_depth = 1.6;
