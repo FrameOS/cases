@@ -195,6 +195,10 @@ sd_card_in_leg_side = "left"; // [left, right]
 sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 75.5;
 
+sd_card_in_usb_cutout = false;
+sd_card_in_usb_cutout_side = "right"; // [left, right]
+sd_card_in_usb_cutout_y_percentage = 75.5;
+
 /* [Rear cooling] */
 rear_cooling = false;
 rear_cooling_x_start_percentage = 6.1;
@@ -280,6 +284,14 @@ hanging_hole_y = hanging_hole_edge == "top"
                     : hanging_hole_edge == "bottom"
                         ? frame_full_height - hanging_hole_offset - hanging_hole_box_height
                         : (frame_full_height - hanging_hole_box_width) / 2;
+
+usb_cutout_x = (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100;
+usb_cutout_y = (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100;
+
+usb_sd_card_x_position = (sd_card_in_usb_cutout_side == "left" ? usb_cutout_x + 0.11 : usb_cutout_x - 0.11) + 
+        (sd_card_in_usb_cutout_side == "left" ? 0 : usb_cutout_box_width);
+usb_sd_card_y_position = usb_cutout_y + 12 + sd_card_in_usb_cutout_y_percentage / 100 * (usb_cutout_box_height -24);
+
 
 /*****************************************************************************/
 /*                 Utility: Corner Screw Hole Positions                      */
@@ -638,11 +650,11 @@ module case() {
                 color(case_color)
                 cubeWithAngledTopBottom(
                     loc=[
-                        (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100, 
-                        (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100,
+                        usb_cutout_x, 
+                        usb_cutout_y,
                         back_depth + case_depth - (usb_cutout_box_depth + usb_cutout_back_wall_thickness),
                     ], 
-                    size =[
+                    size=[
                         usb_cutout_box_width + usb_cutout_box_wall_thickness * 2, 
                         usb_cutout_box_height + usb_cutout_box_wall_thickness * 2,
                         usb_cutout_box_depth + usb_cutout_back_wall_thickness
@@ -650,6 +662,13 @@ module case() {
                     top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top") || usb_cutout_hole_position == "back",
                     bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom") || usb_cutout_hole_position == "back"
                 );
+
+                if (sd_card_in_usb_cutout) {
+                    color(case_color)
+                    translate([usb_sd_card_x_position, usb_sd_card_y_position, 0])
+                    rotate([0, 0, sd_card_in_usb_cutout_side == "left" ? 90 : -90])
+                    sdCardAdapterBase();
+                }
             }
             if (hanging_hole) {
                 color(case_color)
@@ -729,8 +748,8 @@ module case() {
             color(case_color)
             cubeWithLeftRightGapBridge(
                 loc=[
-                    (frame_full_width - usb_cutout_box_width - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_x_percentage / 100 + usb_cutout_box_wall_thickness, 
-                    (frame_full_height - usb_cutout_box_height - usb_cutout_box_wall_thickness * 2) * usb_cutout_offset_y_percentage / 100 + usb_cutout_box_wall_thickness,
+                    usb_cutout_x + usb_cutout_box_wall_thickness, 
+                    usb_cutout_y + usb_cutout_box_wall_thickness,
                     back_depth + case_depth - usb_cutout_box_depth,
                 ], 
                 size=[
@@ -741,6 +760,13 @@ module case() {
                 top=(view_mode=="print_vertical" && usb_cutout_hole_position != "top") || usb_cutout_hole_position == "back",
                 bottom=(view_mode=="print_vertical" && usb_cutout_hole_position != "bottom") || usb_cutout_hole_position == "back"
             );
+
+            if (sd_card_in_usb_cutout) {
+                color(case_color)
+                translate([usb_sd_card_x_position + usb_cutout_box_wall_thickness, usb_sd_card_y_position, 0])
+                rotate([0, 0, sd_card_in_usb_cutout_side == "left" ? 90 : -90])
+                sdCardAdapterCutout();
+            }
 
             // Hole into what's remaining
             if (usb_cutout_hole_position == "left" || usb_cutout_hole_position == "right") {
@@ -781,7 +807,6 @@ module case() {
                     usb_cutout_hole_height,
                     usb_cutout_back_wall_thickness + 0.22, 
                 ]);
-
             }
         }
 

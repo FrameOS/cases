@@ -67,33 +67,37 @@ usb_cutout_box_depth           = 6.5;
 
 // Horizontal hole
 usb_cutout_offset_x_percentage = 50;
-usb_cutout_offset_y_percentage = 60;
+usb_cutout_offset_y_percentage = 50;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 55;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 
 /* [Hanging hole] */
 hanging_hole = true;
-hanging_hole_offset = 70;
+hanging_hole_offset = 50;
 
 /* [SD card adapter cutout] */
-sd_card_in_leg = true;
+sd_card_in_leg = false;
 sd_card_in_leg_side = "left"; // [left, right]
 sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 82.0;
+
+sd_card_in_usb_cutout = true;
+sd_card_in_usb_cutout_side = "left"; // [left, right]
+sd_card_in_usb_cutout_y_percentage = 80;
 
 /* [Rear cooling] */
 rear_cooling = true;
 rear_cooling_x_start_percentage = 41.2;
 rear_cooling_x_end_percentage = 58;
-rear_cooling_y_start_percentage = 13.6;
-rear_cooling_y_end_percentage = 21;
+rear_cooling_y_start_percentage = 73.6;
+rear_cooling_y_end_percentage = 81;
 
 /* [Raspberry Pi Zero Pinholes] */
 pi_pinholes = true;
 pi_pinholes_ordientation = "horizontal"; // [horizontal, vertical]
 pi_pinholes_x_percentage = 40;
-pi_pinholes_y_percentage = 12;
+pi_pinholes_y_percentage = 72;
 
 /* [Side buttons] */
 side_buttons_left = [];
