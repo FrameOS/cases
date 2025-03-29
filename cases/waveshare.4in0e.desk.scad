@@ -59,7 +59,10 @@ usb_cutout_offset_y_percentage = 80;
 usb_cutout_box_width = 17;
 usb_cutout_box_height = 11;
 usb_cutout_box_depth           = 2.2;
-usb_cutout_box_wall_thickness  = 1.2;
+usb_cutout_left_wall_thickness = 1.2;
+usb_cutout_right_wall_thickness = 1.2;
+usb_cutout_top_wall_thickness = 1.2;
+usb_cutout_bottom_wall_thickness = 1.2;
 usb_cutout_hole_height         = 5.8;
 
 /* [Hanging hole] */
