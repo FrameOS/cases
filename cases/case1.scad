@@ -172,7 +172,7 @@ usb_cutout_bottom_wall_thickness = 1.4;
 usb_cutout_back_wall_thickness = 0.8;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 usb_cutout_hole_width = 14;
-// usb_cutout_hole_heig/ht = 6.0;
+usb_cutout_hole_height = 6.0;
 
 // Tiny USB-C
 // usb_cutout_hole_width = 9.1;

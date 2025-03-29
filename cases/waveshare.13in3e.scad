@@ -5,7 +5,7 @@ include <case1.scad>;
 view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
 
 /* [Case depth] */
-case_depth = 9.0;
+case_depth = 6.0;
 
 /* [Panel dimensions] */
 panel_width  = 285.09;
