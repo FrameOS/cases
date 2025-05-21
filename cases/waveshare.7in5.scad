@@ -58,6 +58,12 @@ kickstand_leg_bridge_height             = 6.5;
 kickstand_leg_bridge_offset_percentage  = 0;
 kickstand_depth                         = 6.7;
 
+/* [Raspberry Pi Zero Pinholes] */
+pi_pinholes = false;
+pi_pinholes_orientation = "vertical"; // [horizontal, vertical]
+pi_pinholes_x_percentage = 6.2;
+pi_pinholes_y_percentage = 29;
+
 /* [USB cutout] */
 usb_cutout = true;
 usb_cutout_offset_x_percentage = 92;

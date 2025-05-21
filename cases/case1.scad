@@ -39,8 +39,7 @@ case_inner_padding_bottom = 4;
 
 /* [Case dimensions] */
 
-// How round to make the case
-// fillet_radius = 0;
+// How round to make the case. Disabled if thick_border=true
 fillet_radius = 2.5;
 
 // Panel cover thickness
@@ -167,17 +166,17 @@ usb_cutout_box_height = 50;
 usb_cutout_box_depth = 7;
 usb_cutout_left_wall_thickness = 1.4;
 usb_cutout_right_wall_thickness = 1.4;
-usb_cutout_top_wall_thickness = 1.4;
 usb_cutout_bottom_wall_thickness = 1.4;
 usb_cutout_back_wall_thickness = 0.8;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
-usb_cutout_hole_width = 14;
-usb_cutout_hole_height = 6.0;
-
+// Larger USB-C
+// usb_cutout_hole_width = 14;
+// usb_cutout_hole_height = 6.0;
+// usb_cutout_top_wall_thickness = 1.4;
 // Tiny USB-C
-// usb_cutout_hole_width = 9.1;
-// usb_cutout_hole_height = 3.2;
-// usb_cutout_top_wall_thickness = 4.0;
+usb_cutout_hole_width = 9.1;
+usb_cutout_hole_height = 3.2;
+usb_cutout_top_wall_thickness = 4.0;
 
 /* [Hanging hole] */
 
@@ -214,7 +213,9 @@ rear_cooling_offset = 5;
 
 /* [Raspberry Pi Zero Pinholes] */
 pi_pinholes = false;
-pi_pinholes_ordientation = "vertical"; // [horizontal, vertical]
+pi_pinholes_cooling = true;
+pi_pinholes_cooling_gap = 5.7;
+pi_pinholes_orientation = "vertical"; // [horizontal, vertical]
 pi_pinholes_x_percentage = 5.5;
 pi_pinholes_y_percentage = 15;
 pi_pinholes_diameter = 2.5;
@@ -267,6 +268,8 @@ frame_full_depth = panel_depth
                  + panel_cover_depth
                  + case_depth
                  + back_depth;
+
+fillet_radius_in_use = thick_border ? 0 : fillet_radius;
 
 kickstand_height = frame_full_height * kickstand_height_percentage / 100;
 kickstand_full_width = kickstand_width + 2 * kickstand_wall_thickness + 2 * kickstand_gap_thickness;
@@ -893,6 +896,11 @@ module case() {
             rearCooling();
         }
 
+        if (pi_pinholes && pi_pinholes_cooling) {
+            color(case_color)
+            piPinholesCooling();
+        }
+
         color(case_color)
         sideButtonHoles();
     }
@@ -1154,7 +1162,7 @@ module caseWithKickstand() {
 /*****************************************************************************/
 
 
-module filletBox(x, y, z, r = fillet_radius, fn=64) {
+module filletBox(x, y, z, r = fillet_radius_in_use, fn=64) {
     // Optional sanity check (warn if the fillet is too large):
     if (x < 2*r || y < 2*r || z < 2*r) {
         echo("WARNING: fillet radius is too large for box dimensions!");
@@ -1173,14 +1181,14 @@ module filletBox(x, y, z, r = fillet_radius, fn=64) {
     }
 }
 
-module filletBoxTop(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxTop(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         filletBox(x, y, z * 2, r, fn);
     }
 }
 
-module filletBoxMiddle(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxMiddle(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         translate([0, 0, -z])
@@ -1188,7 +1196,7 @@ module filletBoxMiddle(x, y, z, r = fillet_radius, fn=64) {
     }
 }
 
-module filletBoxBottom(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxBottom(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         translate([0, 0, -z])
@@ -1196,14 +1204,14 @@ module filletBoxBottom(x, y, z, r = fillet_radius, fn=64) {
     }
 }
 
-module filletBoxLeft(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxLeft(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         filletBox(x * 2, y, z, r, fn);
     }
 }
 
-module filletBoxRight(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxRight(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         translate([-x, 0, 0])
@@ -1211,14 +1219,14 @@ module filletBoxRight(x, y, z, r = fillet_radius, fn=64) {
     }
 }
 
-module filletBoxUp(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxUp(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         filletBox(x, y * 2, z, r, fn);
     }
 }
 
-module filletBoxDown(x, y, z, r = fillet_radius, fn=64) {
+module filletBoxDown(x, y, z, r = fillet_radius_in_use, fn=64) {
     intersection() {
         cube([x, y, z]);
         translate([0, -y, 0])
@@ -1338,6 +1346,27 @@ module sdCardAdapterBase() {
     }
 }
 
+module coolingHoles(x_start, x_end, y_start, y_end, gap, radius = rear_cooling_radius, skip_corners = false) {
+    let (
+        x_extra = (x_end - x_start) % gap / 2,
+        y_extra = (y_end - y_start) % gap / 2
+    ) {
+        for (x = [x_start : gap : x_end]) {
+            for (y = [y_start : gap : y_end]) {
+                if (
+                    !skip_corners || !(
+                        ((abs(x - x_start) < gap/2) || (abs(x - x_end) < gap/2)) &&
+                        ((abs(y - y_start) < gap/2) || (abs(y - y_end) < gap/2))
+                    )
+                ) {
+                    translate([x + x_extra, y + y_extra, -0.01 + case_depth])
+                    cylinder(d = radius, h = back_depth + 0.12);
+                }
+            }
+        }
+    }
+}
+
 // Draw tiny holes into the back panel for cooling
 module rearCooling() {
     rear_cooling_x_start = rear_cooling_x_start_percentage / 100 * frame_full_width;
@@ -1345,34 +1374,50 @@ module rearCooling() {
     rear_cooling_y_start = rear_cooling_y_start_percentage / 100 * frame_full_height;
     rear_cooling_y_end = rear_cooling_y_end_percentage / 100 * frame_full_height;
 
-    for (x = [rear_cooling_x_start : rear_cooling_gap : rear_cooling_x_end]) {
-        for (y = [rear_cooling_y_start : rear_cooling_gap : rear_cooling_y_end]) {
-            translate([x, y, -0.11])
-            cylinder(d = rear_cooling_radius, h = case_depth + back_depth + 0.22);
+    coolingHoles(
+        rear_cooling_x_start, rear_cooling_x_end,
+        rear_cooling_y_start, rear_cooling_y_end,
+        rear_cooling_gap
+    );
+}
+
+module piPinholes() {
+    let (
+        width = pi_pinholes_orientation == "vertical" ? pi_pinholes_height : pi_pinholes_width,
+        height = pi_pinholes_orientation == "vertical" ? pi_pinholes_width : pi_pinholes_height
+    ) {
+        pin_holes_x = pi_pinholes_x_percentage / 100 * (frame_full_width - width);
+        pin_holes_y = pi_pinholes_y_percentage / 100 * (frame_full_height - height);
+
+        pin_hole_locations = [
+            [pin_holes_x, pin_holes_y],
+            [pin_holes_x + width, pin_holes_y],
+            [pin_holes_x, pin_holes_y + height],
+            [pin_holes_x + width, pin_holes_y + height]
+        ];
+        for (loc = pin_hole_locations) {
+            translate([loc[0], loc[1], -0.11])
+            cylinder(d = pi_pinholes_diameter, h = case_depth + 0.22);
+            translate([loc[0], loc[1], case_depth - pi_pinholes_spacer_height - 0.11])
+            cylinder(d = pi_pinholes_spacer, h = pi_pinholes_spacer_height + 0.22);
         }
     }
 }
 
-module piPinholes() {
-    pin_holes_x = pi_pinholes_x_percentage / 100 * frame_full_width;
-    pin_holes_y = pi_pinholes_y_percentage / 100 * frame_full_height;
+module piPinholesCooling() {
+    let (
+        width = (pi_pinholes_orientation == "vertical" ? pi_pinholes_height : pi_pinholes_width),
+        height = (pi_pinholes_orientation == "vertical" ? pi_pinholes_width : pi_pinholes_height)
+    ) {
+        pin_holes_x = pi_pinholes_x_percentage / 100 * (frame_full_width - width);
+        pin_holes_y = pi_pinholes_y_percentage / 100 * (frame_full_height - height);
 
-    pin_hole_locations = pi_pinholes_ordientation == "horizontal" ? [
-        [pin_holes_x, pin_holes_y],
-        [pin_holes_x + pi_pinholes_width, pin_holes_y],
-        [pin_holes_x, pin_holes_y + pi_pinholes_height],
-        [pin_holes_x + pi_pinholes_width, pin_holes_y + pi_pinholes_height]
-    ] : [
-        [pin_holes_x, pin_holes_y],
-        [pin_holes_x + pi_pinholes_height, pin_holes_y],
-        [pin_holes_x, pin_holes_y + pi_pinholes_width],
-        [pin_holes_x + pi_pinholes_height, pin_holes_y + pi_pinholes_width]
-    ];
-    for (loc = pin_hole_locations) {
-        translate([loc[0], loc[1], -0.11])
-        cylinder(d = pi_pinholes_diameter, h = case_depth + 0.22);
-        translate([loc[0], loc[1], case_depth - pi_pinholes_spacer_height - 0.11])
-        cylinder(d = pi_pinholes_spacer, h = pi_pinholes_spacer_height + 0.22);
+        coolingHoles(
+            pin_holes_x, pin_holes_x + width,
+            pin_holes_y, pin_holes_y + height,
+            pi_pinholes_cooling_gap,
+            skip_corners=true
+        );
     }
 }
 
@@ -1388,7 +1433,7 @@ module sideButtonHoles() {
             panel_border_left + case_inner_padding_left + side_button_base + side_button_extrude,
             side_button_width + side_button_hole_gap * 2,
             side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius)
+            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
         );
     }
 
@@ -1403,7 +1448,7 @@ module sideButtonHoles() {
             panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
             side_button_width + side_button_hole_gap * 2,
             side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius)
+            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
         );
     }
 
@@ -1418,7 +1463,7 @@ module sideButtonHoles() {
             side_button_width + side_button_hole_gap * 2,
             panel_border_top + case_inner_padding_top + side_button_base + side_button_extrude,
             side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius)
+            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
         );
     }
 
@@ -1433,7 +1478,7 @@ module sideButtonHoles() {
             side_button_width + side_button_hole_gap * 2,
             panel_border_bottom + case_inner_padding_bottom + side_button_base + side_button_extrude,
             side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius)
+            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
         );
     }
 }
@@ -1451,7 +1496,7 @@ module sideButtons() {
                 side_button_width,
                 side_button_height,
                 side_button_base + side_button_extrude + panel_border_left + case_inner_padding_left,
-                min(side_button_height / 2 - 0.01, fillet_radius)
+                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
             );
 
             translate([
@@ -1478,7 +1523,7 @@ module sideButtons() {
                 side_button_width,
                 side_button_height,
                 side_button_base + side_button_extrude + panel_border_right + case_inner_padding_right,
-                min(side_button_height / 2 - 0.01, fillet_radius)
+                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
             );
 
             translate([
@@ -1505,7 +1550,7 @@ module sideButtons() {
                 side_button_width,
                 side_button_height,
                 side_button_base + side_button_extrude + panel_border_top + case_inner_padding_top,
-                min(side_button_height / 2 - 0.01, fillet_radius)
+                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
             );
 
             translate([
@@ -1532,7 +1577,7 @@ module sideButtons() {
                 side_button_width,
                 side_button_height,
                 side_button_base + side_button_extrude + panel_border_bottom + case_inner_padding_bottom,
-                min(side_button_height / 2 - 0.01, fillet_radius)
+                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
             );
 
             translate([
