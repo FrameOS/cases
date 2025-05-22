@@ -231,10 +231,11 @@ side_buttons_top = [];
 side_buttons_bottom = [];
 side_button_width = 9.2;
 side_button_height = 3.2;
-side_button_extrude = 1.5;
-side_button_base = 1;
-side_button_base_border = 0.8;
-side_button_hole_gap = 0.3;
+side_button_extrude = 1.5; // How much it comes out of the case
+side_button_base = 1; // Height of square rectangle below the button
+side_button_base_border = 0.8; // Extra around width and height
+side_button_base_inner = 1.0; // How much does the button base go inside the case body
+side_button_hole_gap = 0.3; // How much more to carve out of the hole
 
 /* [Debug] */
 // Gap between STL parts for visual debugging
@@ -1422,174 +1423,233 @@ module piPinholesCooling() {
 }
 
 module sideButtonHoles() {
-    // side buttons left
-    for (side_button = side_buttons_left) {
-        translate([
-            -side_button_extrude,
-            side_button * (frame_full_height - side_button_width) / 100 - side_button_hole_gap,
-            (case_depth - side_button_height) / 2 - side_button_hole_gap
-        ])
-        filletBoxLeft(
-            panel_border_left + case_inner_padding_left + side_button_base + side_button_extrude,
-            side_button_width + side_button_hole_gap * 2,
-            side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-        );
-    }
+    union() {
+        // side buttons left
+        for (side_button = side_buttons_left) {
+            translate([
+                -side_button_extrude,
+                side_button * (frame_full_height - side_button_width) - side_button_hole_gap,
+                (case_depth - side_button_height) / 2 - side_button_hole_gap
+            ])
+            filletBoxLeft(
+                panel_border_left + case_inner_padding_left + side_button_base + side_button_extrude,
+                side_button_width + side_button_hole_gap * 2,
+                side_button_height + side_button_hole_gap * 2,
+                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                fn=12
+            );
+            if (side_button_base_inner > 0) {
+                translate([
+                    panel_border_left + case_inner_padding_left - side_button_base_inner - 0.01,
+                    side_button * (frame_full_height - side_button_width) - side_button_base_border - side_button_hole_gap,
+                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                ])
+                cube([
+                    side_button_base + side_button_base_inner + 0.02,
+                    side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                ]);
+            }
+        }
 
-    // side buttons right
-    for (side_button = side_buttons_right) {
-        translate([
-            frame_full_width - panel_border_right - case_inner_padding_right - side_button_base,
-            side_button * (frame_full_height - side_button_width) / 100 - side_button_hole_gap, 
-            (case_depth - side_button_height) / 2 - side_button_hole_gap
-        ])
-        filletBoxRight(
-            panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
-            side_button_width + side_button_hole_gap * 2,
-            side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-        );
-    }
+        // side buttons right
+        for (side_button = side_buttons_right) {
+            translate([
+                frame_full_width - panel_border_right - case_inner_padding_right - side_button_base,
+                side_button * (frame_full_height - side_button_width) - side_button_hole_gap, 
+                (case_depth - side_button_height) / 2 - side_button_hole_gap
+            ])
+            filletBoxRight(
+                panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
+                side_button_width + side_button_hole_gap * 2,
+                side_button_height + side_button_hole_gap * 2,
+                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                fn=12
+            );
+            if (side_button_base_inner > 0) {
+                translate([
+                    frame_full_width - panel_border_right - case_inner_padding_right - side_button_base - 0.01, 
+                    side_button * (frame_full_height - side_button_width) - side_button_base_border - side_button_hole_gap,
+                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                ])
+                cube([
+                    side_button_base + side_button_base_inner + 0.02,
+                    side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                ]);
+            }
+        }
 
-    // side buttons top
-    for (side_button = side_buttons_top) {
-        translate([
-            side_button * (frame_full_width - side_button_width) / 100 - side_button_hole_gap, 
-            -side_button_extrude,
-            (case_depth - side_button_height) / 2 - side_button_hole_gap
-        ])
-        filletBoxUp(
-            side_button_width + side_button_hole_gap * 2,
-            panel_border_top + case_inner_padding_top + side_button_base + side_button_extrude,
-            side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-        );
-    }
+        // side buttons top
+        for (side_button = side_buttons_top) {
+            translate([
+                side_button * (frame_full_width - side_button_width) - side_button_hole_gap, 
+                -side_button_extrude,
+                (case_depth - side_button_height) / 2 - side_button_hole_gap
+            ])
+            filletBoxUp(
+                side_button_width + side_button_hole_gap * 2,
+                panel_border_top + case_inner_padding_top + side_button_base + side_button_extrude - side_button_base_inner,
+                side_button_height + side_button_hole_gap * 2,
+                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                fn=12
+            );
+            if (side_button_base_inner > 0) {
+                translate([
+                    side_button * (frame_full_width - side_button_width) - side_button_base_border - side_button_hole_gap, 
+                    panel_border_top + case_inner_padding_top - side_button_base_inner - 0.01,
+                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                ])
+                cube([
+                    side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    side_button_base + side_button_base_inner,
+                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                ]);
+            }
+        }
 
-    // side buttons bottom
-    for (side_button = side_buttons_bottom) {
-        translate([
-            side_button * (frame_full_width - side_button_width) / 100 - side_button_hole_gap, 
-            frame_full_height - panel_border_bottom - case_inner_padding_bottom - side_button_base,
-            (case_depth - side_button_height) / 2 - side_button_hole_gap
-        ])
-        filletBoxDown(
-            side_button_width + side_button_hole_gap * 2,
-            panel_border_bottom + case_inner_padding_bottom + side_button_base + side_button_extrude,
-            side_button_height + side_button_hole_gap * 2,
-            min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-        );
+        // side buttons bottom
+        for (side_button = side_buttons_bottom) {
+            translate([
+                side_button * (frame_full_width - side_button_width) - side_button_hole_gap, 
+                frame_full_height - panel_border_bottom - case_inner_padding_bottom - side_button_base,
+                (case_depth - side_button_height) / 2 - side_button_hole_gap
+            ])
+            filletBoxDown(
+                side_button_width + side_button_hole_gap * 2,
+                panel_border_bottom + case_inner_padding_bottom + side_button_base + side_button_extrude - side_button_base_inner,
+                side_button_height + side_button_hole_gap * 2,
+                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                fn=12
+            );
+            if (side_button_base_inner > 0) {
+                translate([
+                    side_button * (frame_full_width - side_button_width) - side_button_base_border - side_button_hole_gap, 
+                    frame_full_height - panel_border_bottom - case_inner_padding_bottom - side_button_base - 0.01,
+                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                ])
+                cube([
+                    side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    side_button_base + side_button_base_inner,
+                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                ]);
+            }
+        }
     }
 }
 
-
 module sideButtons() {
-    if (side_buttons_left) {
-        for (idx = [ 0 : len(side_buttons_left) - 1 ] ) {
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2),
-                0,
-                0
-            ])
-            filletBoxBottom(
-                side_button_width,
-                side_button_height,
-                side_button_base + side_button_extrude + panel_border_left + case_inner_padding_left,
-                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-            );
+    union() {
+        if (side_buttons_left) {
+            for (idx = [ 0 : len(side_buttons_left) - 1 ] ) {
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2),
+                    0,
+                    0
+                ])
+                filletBoxBottom(
+                    side_button_width,
+                    side_button_height,
+                    side_button_base + side_button_extrude + panel_border_left + case_inner_padding_left - side_button_base_inner,
+                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    fn=12
+                );
 
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                -side_button_base_border,
-                0
-            ])
-            cube([
-                side_button_width + side_button_base_border * 2,
-                side_button_height + side_button_base_border * 2,
-                side_button_base
-            ]);
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    -side_button_base_border,
+                    0
+                ])
+                cube([
+                    side_button_width + side_button_base_border * 2,
+                    side_button_height + side_button_base_border * 2,
+                    side_button_base
+                ]);
+            }
         }
-    }
 
-    if (side_buttons_right) {
-        for (idx = [ 0 : len(side_buttons_right) - 1 ] ) {
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2),
-                side_button_height + side_button_extrude * 2 + 2,
-                0
-            ])
-            filletBoxBottom(
-                side_button_width,
-                side_button_height,
-                side_button_base + side_button_extrude + panel_border_right + case_inner_padding_right,
-                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-            );
+        if (side_buttons_right) {
+            for (idx = [ 0 : len(side_buttons_right) - 1 ] ) {
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2),
+                    side_button_height + side_button_extrude * 2 + 2,
+                    0
+                ])
+                filletBoxBottom(
+                    side_button_width,
+                    side_button_height,
+                    side_button_base + side_button_extrude + panel_border_right + case_inner_padding_right - side_button_base_inner,
+                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    fn=12
+                );
 
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                side_button_height + side_button_extrude * 2 + 2 -side_button_base_border,
-                0
-            ])
-            cube([
-                side_button_width + side_button_base_border * 2,
-                side_button_height + side_button_base_border * 2,
-                side_button_base
-            ]);
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    side_button_height + side_button_extrude * 2 + 2 -side_button_base_border,
+                    0
+                ])
+                cube([
+                    side_button_width + side_button_base_border * 2,
+                    side_button_height + side_button_base_border * 2,
+                    side_button_base
+                ]);
+            }
         }
-    }
 
-    if (side_buttons_top) {
-        for (idx = [ 0 : len(side_buttons_top) - 1 ] ) {
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2),
-                (side_button_height + side_button_extrude * 2 + 2) * 2,
-                0
-            ])
-            filletBoxBottom(
-                side_button_width,
-                side_button_height,
-                side_button_base + side_button_extrude + panel_border_top + case_inner_padding_top,
-                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-            );
+        if (side_buttons_top) {
+            for (idx = [ 0 : len(side_buttons_top) - 1 ] ) {
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2),
+                    (side_button_height + side_button_extrude * 2 + 2) * 2,
+                    0
+                ])
+                filletBoxBottom(
+                    side_button_width,
+                    side_button_height,
+                    side_button_base + side_button_extrude + panel_border_top + case_inner_padding_top - side_button_base_inner,
+                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    fn=12
+                );
 
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                (side_button_height + side_button_extrude * 2 + 2) * 2 -side_button_base_border,
-                0
-            ])
-            cube([
-                side_button_width + side_button_base_border * 2,
-                side_button_height + side_button_base_border * 2,
-                side_button_base
-            ]);
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    (side_button_height + side_button_extrude * 2 + 2) * 2 -side_button_base_border,
+                    0
+                ])
+                cube([
+                    side_button_width + side_button_base_border * 2,
+                    side_button_height + side_button_base_border * 2,
+                    side_button_base
+                ]);
+            }
         }
-    }
 
-    if (side_buttons_bottom) {
-        for (idx = [ 0 : len(side_buttons_bottom) - 1 ] ) {
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2),
-                (side_button_height + side_button_extrude * 2 + 2) * 3,
-                0
-            ])
-            filletBoxBottom(
-                side_button_width,
-                side_button_height,
-                side_button_base + side_button_extrude + panel_border_bottom + case_inner_padding_bottom,
-                min(side_button_height / 2 - 0.01, fillet_radius_in_use)
-            );
+        if (side_buttons_bottom) {
+            for (idx = [ 0 : len(side_buttons_bottom) - 1 ] ) {
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2),
+                    (side_button_height + side_button_extrude * 2 + 2) * 3,
+                    0
+                ])
+                filletBoxBottom(
+                    side_button_width,
+                    side_button_height,
+                    side_button_base + side_button_extrude + panel_border_bottom + case_inner_padding_bottom - side_button_base_inner,
+                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    fn=12
+                );
 
-            translate([
-                idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                (side_button_height + side_button_extrude * 2 + 2) * 3 -side_button_base_border,
-                0
-            ])
-            cube([
-                side_button_width + side_button_base_border * 2,
-                side_button_height + side_button_base_border * 2,
-                side_button_base
-            ]);
+                translate([
+                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    (side_button_height + side_button_extrude * 2 + 2) * 3 -side_button_base_border,
+                    0
+                ])
+                cube([
+                    side_button_width + side_button_base_border * 2,
+                    side_button_height + side_button_base_border * 2,
+                    side_button_base
+                ]);
+            }
         }
     }
 }
