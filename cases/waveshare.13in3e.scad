@@ -25,7 +25,7 @@ panel_border_bottom = 16.1;
 case_inner_padding_right = 6;
 
 /* [Thick border] */
-thick_border = false; // Thick border, does not support side buttons
+thick_border = false;
 thick_border_width = 12.0;
 thick_border_extra_depth = 15.0;
 

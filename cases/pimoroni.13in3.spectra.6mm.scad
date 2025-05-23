@@ -31,7 +31,7 @@ case_inner_padding_top = 4;
 case_inner_padding_bottom = 4;
 
 /* [Thick border] */
-thick_border = false; // Thick border, does not support side buttons
+thick_border = true;
 thick_border_width = 12.0;
 thick_border_extra_depth = 15.0;
 
@@ -99,7 +99,7 @@ pi_pinholes_x_percentage = 50;
 pi_pinholes_y_percentage = 70;
 
 /* [Side buttons] */
-side_buttons_left = [0.192, 0.398, 0.602, 0.808];
+side_buttons_left = []; //[0.192, 0.398, 0.602, 0.808];
 side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
