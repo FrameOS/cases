@@ -1,4 +1,4 @@
-// Minimal overrides for Pimoroni 13.3" 2025 SPECTRA
+// Minimal overrides for Pimoroni 7.3" 2025 SPECTRA
 include <case1.scad>;
 
 /* [View settings] */
@@ -11,19 +11,19 @@ case_depth = 12.0; // pi zero 12mm; board imposed minimum 5mm;
 back_depth = 1.2;
 
 /* [Panel dimensions] */
-panel_width  = 297.0;
-panel_height = 210.0;
+panel_width  = 174.0;
+panel_height = 123.0;
 
-panel_bezel_left   = 9.5;
-panel_bezel_right  = 17.5;
-panel_bezel_top    = 3.5;
-panel_bezel_bottom = 3.5;
+panel_bezel_left   = 7;
+panel_bezel_right  = 7;
+panel_bezel_top    = 10;
+panel_bezel_bottom = 17;
 
 /* [Border and inner padding] */
-panel_border_right  = 4;
-panel_border_left   = panel_bezel_right + 4 - panel_bezel_left;
-panel_border_top    = panel_bezel_right + 4 - panel_bezel_top;
-panel_border_bottom = panel_bezel_right + 4 - panel_bezel_bottom;
+panel_border_right  = 8;
+panel_border_left   = 8;
+panel_border_top    = 4;
+panel_border_bottom = 4;
 
 case_inner_padding_left = 0; // no padding where the buttons are
 case_inner_padding_right = 6;
@@ -44,9 +44,9 @@ screw_offset_right  = 4.6;
 screw_offset_top    = 4.6;
 screw_offset_bottom = 4.6;
 
-extra_screws_top    = [0.333, 0.667, 0, 0];
-extra_screws_bottom = [0.36, 0.64, 0, 0];
-extra_screws_left   = [0.333, 0.667, 0, 0, 0];
+extra_screws_top    = [0, 0, 0, 0, 0];
+extra_screws_bottom = [0, 0, 0, 0, 0];
+extra_screws_left   = [0, 0, 0, 0, 0];
 extra_screws_right  = [0, 0, 0, 0, 0];
 
 /* [Center support] */
@@ -72,7 +72,7 @@ usb_cutout_box_height = 55;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 
 /* [Hanging hole] */
-hanging_hole = true;
+hanging_hole = false;
 hanging_hole_offset = 50;
 
 /* [SD card adapter cutout] */
@@ -99,7 +99,7 @@ pi_pinholes_x_percentage = 50;
 pi_pinholes_y_percentage = 85;
 
 /* [Side buttons] */
-side_buttons_left = [0.192, 0.398, 0.602, 0.808];
+side_buttons_left = [0.1789, 0.374, 0.5748, 0.7675];
 side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
