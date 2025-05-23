@@ -64,7 +64,7 @@ kickstand_depth = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_box_depth           = 9.5;
+usb_cutout_box_depth           = 7;
 usb_cutout_offset_x_percentage = 30;
 usb_cutout_offset_y_percentage = 50;
 usb_cutout_box_width = 20;
@@ -104,7 +104,7 @@ side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
 side_button_base = 2.0;
-side_button_base_border = 3.8; // adjust if setting the case depth
+side_button_base_border = 5; // adjust if setting the case depth
 side_button_base_inner = 2.2;
 
 /* [Debug] */
