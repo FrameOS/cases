@@ -7,7 +7,7 @@ view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, sta
 /* [Case depth] */
 panel_cover_depth = 1.6;
 panel_depth  = 3.0;
-case_depth = 12.0; // pi zero 12mm; board imposed minimum 5mm;
+case_depth = 6.0; // pi zero 12mm; board imposed minimum 5.5mm;
 back_depth = 1.2;
 
 /* [Panel dimensions] */
@@ -86,17 +86,17 @@ sd_card_in_usb_cutout_side = "left"; // [left, right]
 sd_card_in_usb_cutout_y_percentage = 80;
 
 /* [Rear cooling] */
-rear_cooling = true;
+rear_cooling = false;
 rear_cooling_x_start_percentage = 44;
 rear_cooling_x_end_percentage = 65;
 rear_cooling_y_start_percentage = 30;
 rear_cooling_y_end_percentage = 60;
 
 /* [Raspberry Pi Zero Pinholes] */
-pi_pinholes = false;
+pi_pinholes = true;
 pi_pinholes_orientation = "horizontal"; // [horizontal, vertical]
 pi_pinholes_x_percentage = 50;
-pi_pinholes_y_percentage = 85;
+pi_pinholes_y_percentage = 70;
 
 /* [Side buttons] */
 side_buttons_left = [0.192, 0.398, 0.602, 0.808];

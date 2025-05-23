@@ -54,8 +54,8 @@ case_center_support_vertical   = false;
 case_center_support_horizontal = false;
 
 /* [Kickstand] */
-kickstand = false;
-kickstand_width = 115;
+kickstand = true;
+kickstand_width = 165;
 kickstand_height_percentage = 74;
 kickstand_leg_bridge_offset_percentage = 14;
 kickstand_hinge_top_extra_leverage = 5;
@@ -65,7 +65,7 @@ kickstand_depth = 6.7;
 /* [USB cutout] */
 usb_cutout = true;
 usb_cutout_box_depth           = 7;
-usb_cutout_offset_x_percentage = 30;
+usb_cutout_offset_x_percentage = 34;
 usb_cutout_offset_y_percentage = 50;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 55;
@@ -87,8 +87,8 @@ sd_card_in_usb_cutout_y_percentage = 80;
 
 /* [Rear cooling] */
 rear_cooling = true;
-rear_cooling_x_start_percentage = 44;
-rear_cooling_x_end_percentage = 65;
+rear_cooling_x_start_percentage = 50;
+rear_cooling_x_end_percentage = 80;
 rear_cooling_y_start_percentage = 30;
 rear_cooling_y_end_percentage = 60;
 
@@ -105,7 +105,7 @@ side_buttons_top = [];
 side_buttons_bottom = [];
 side_button_base = 2.0;
 side_button_base_border = 5; // adjust if setting the case depth
-side_button_base_inner = 2.2;
+side_button_base_inner = 2.5;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
