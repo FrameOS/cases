@@ -176,7 +176,7 @@ usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 // Tiny USB-C
 usb_cutout_hole_width = 9.1;
 usb_cutout_hole_height = 3.2;
-usb_cutout_top_wall_thickness = 4.0;
+usb_cutout_top_wall_thickness = 5.0;
 
 /* [Hanging hole] */
 
@@ -1543,7 +1543,7 @@ module sideButtons() {
         if (side_buttons_left) {
             for (idx = [ 0 : len(side_buttons_left) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2),
                     0,
                     0
                 ])
@@ -1556,7 +1556,7 @@ module sideButtons() {
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2) -side_button_base_border, 
                     -side_button_base_border,
                     0
                 ])
@@ -1571,8 +1571,8 @@ module sideButtons() {
         if (side_buttons_right) {
             for (idx = [ 0 : len(side_buttons_right) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    side_button_height + side_button_extrude * 2 + 2,
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2),
+                    side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2,
                     0
                 ])
                 filletBoxBottom(
@@ -1584,8 +1584,8 @@ module sideButtons() {
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    side_button_height + side_button_extrude * 2 + 2 -side_button_base_border,
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2 -side_button_base_border,
                     0
                 ])
                 cube([
@@ -1599,8 +1599,8 @@ module sideButtons() {
         if (side_buttons_top) {
             for (idx = [ 0 : len(side_buttons_top) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    (side_button_height + side_button_extrude * 2 + 2) * 2,
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2),
+                    (side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2) * 2,
                     0
                 ])
                 filletBoxBottom(
@@ -1612,8 +1612,8 @@ module sideButtons() {
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    (side_button_height + side_button_extrude * 2 + 2) * 2 -side_button_base_border,
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    (side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2) * 2 -side_button_base_border,
                     0
                 ])
                 cube([
@@ -1627,8 +1627,8 @@ module sideButtons() {
         if (side_buttons_bottom) {
             for (idx = [ 0 : len(side_buttons_bottom) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    (side_button_height + side_button_extrude * 2 + 2) * 3,
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2),
+                    (side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2) * 3,
                     0
                 ])
                 filletBoxBottom(
@@ -1640,8 +1640,8 @@ module sideButtons() {
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    (side_button_height + side_button_extrude * 2 + 2) * 3 -side_button_base_border,
+                    idx * (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2) -side_button_base_border, 
+                    (side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2) * 3 -side_button_base_border,
                     0
                 ])
                 cube([
