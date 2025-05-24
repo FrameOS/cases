@@ -20,13 +20,13 @@ panel_bezel_top    = 10;
 panel_bezel_bottom = 17;
 
 /* [Border and inner padding] */
-panel_border_right  = 8;
-panel_border_left   = 8;
-panel_border_top    = 4;
-panel_border_bottom = 4;
+panel_border_right  = 7.5;
+panel_border_left   = 7.5;
+panel_border_top    = 4.5;
+panel_border_bottom = 3.5;
 
 case_inner_padding_left = 0; // no padding where the buttons are
-case_inner_padding_right = 6;
+case_inner_padding_right = 0.5; // very little padding on that edge
 case_inner_padding_top = 4;
 case_inner_padding_bottom = 4;
 
@@ -55,7 +55,7 @@ case_center_support_horizontal = false;
 
 /* [Kickstand] */
 kickstand = true;
-kickstand_width = 165;
+kickstand_width = 150;
 kickstand_height_percentage = 74;
 kickstand_leg_bridge_offset_percentage = 14;
 kickstand_hinge_top_extra_leverage = 5;
@@ -65,7 +65,7 @@ kickstand_depth = 6.7;
 /* [USB cutout] */
 usb_cutout = true;
 usb_cutout_box_depth           = 7;
-usb_cutout_offset_x_percentage = 34;
+usb_cutout_offset_x_percentage = 37.5;
 usb_cutout_offset_y_percentage = 50;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 55;
@@ -99,10 +99,12 @@ pi_pinholes_x_percentage = 50;
 pi_pinholes_y_percentage = 85;
 
 /* [Side buttons] */
-side_buttons_left = [0.1789, 0.374, 0.5748, 0.7675];
+side_buttons_left = [0.2023, 0.3855, 0.5740, 0.7550];
 side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
+side_button_width = 9.2;
+side_button_height = 5.2;
 side_button_base = 2.0;
 side_button_base_border = 5; // adjust if setting the case depth
 side_button_base_inner = 2.5;
