@@ -66,8 +66,10 @@ usb_cutout_bottom_wall_thickness = 1.2;
 usb_cutout_hole_height         = 5.8;
 
 /* [Hanging hole] */
-hanging_hole = false;
-hanging_hole_offset = 4;
+// [ [top, bottom, left, right], offset_percentage ]
+hanging_holes = [
+    // ["top", 10],
+];
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]

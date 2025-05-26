@@ -72,8 +72,10 @@ usb_cutout_box_height = 55;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 
 /* [Hanging hole] */
-hanging_hole = false;
-hanging_hole_offset = 50;
+// [ [top, bottom, left, right], offset_percentage ]
+hanging_holes = [
+    // ["top", 20],
+];
 
 /* [SD card adapter cutout] */
 sd_card_in_leg = false;
@@ -99,7 +101,7 @@ pi_pinholes_x_percentage = 50;
 pi_pinholes_y_percentage = 85;
 
 /* [Side buttons] */
-side_buttons_left = [0.2023, 0.3855, 0.5740, 0.7550];
+side_buttons_left = [];//[0.2023, 0.3855, 0.5740, 0.7550];
 side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
