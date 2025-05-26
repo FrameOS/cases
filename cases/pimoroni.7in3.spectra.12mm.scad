@@ -55,7 +55,7 @@ case_center_support_horizontal = false;
 
 /* [Kickstand] */
 kickstand = true;
-kickstand_width = 150;
+kickstand_width = 153;
 kickstand_height_percentage = 74;
 kickstand_leg_bridge_offset_percentage = 14;
 kickstand_hinge_top_extra_leverage = 5;
@@ -108,6 +108,7 @@ side_button_height = 5.2;
 side_button_base = 2.0;
 side_button_base_border = 5; // adjust if setting the case depth
 side_button_base_inner = 2.5;
+side_button_fillet_radius = 1.5;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
