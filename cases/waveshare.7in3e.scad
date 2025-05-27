@@ -68,8 +68,10 @@ usb_cutout_box_depth           = 6.4;
 // usb_cutout_hole_width          = 14;
 
 /* [Hanging hole] */
-hanging_hole = true;
-hanging_hole_offset = 7;
+// [ [top, bottom, left, right], offset_percentage ]
+hanging_holes = [
+    ["top", 9],
+];
 
 /* [SD card adapter cutout] */
 sd_card_in_leg = true;

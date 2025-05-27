@@ -55,7 +55,7 @@ case_depth = 10.0;
 back_depth = 1.2;
 
 /* [Thick border] */
-thick_border = false; // Thick border, does not support side buttons
+thick_border = false;
 thick_border_width = 12.0;
 thick_border_extra_depth = 15.0;
 
@@ -176,15 +176,18 @@ usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 // Tiny USB-C
 usb_cutout_hole_width = 9.1;
 usb_cutout_hole_height = 3.2;
-usb_cutout_top_wall_thickness = 4.0;
+usb_cutout_top_wall_thickness = 5.0;
 
 /* [Hanging hole] */
-
-hanging_hole = true;
-hanging_hole_edge = "top"; // [top, bottom, left, right]
+// [ [top, bottom, left, right], offset_percentage ]
+hanging_holes = [
+    // ["top", 18],
+    // ["left", 18],
+    // ["right", 18],
+    // ["bottom", 18]
+];
 hanging_hole_large_diameter = 8;
 hanging_hole_small_diameter = 3;
-hanging_hole_offset_percentage = 18;
 hanging_hole_box_width = 12;
 hanging_hole_box_height = 16;
 hanging_hole_depth = 7;
@@ -233,9 +236,10 @@ side_button_width = 9.2;
 side_button_height = 3.2;
 side_button_extrude = 1.5; // How much it comes out of the case
 side_button_base = 1; // Height of square rectangle below the button
-side_button_base_border = 0.8; // Extra around width and height
+side_button_base_border = 1; // Extra around width and height
 side_button_base_inner = 1.0; // How much does the button base go inside the case body
 side_button_hole_gap = 0.3; // How much more to carve out of the hole
+side_button_fillet_radius = 1.0; // Radius of the fillet on the button
 
 /* [Debug] */
 // Gap between STL parts for visual debugging
@@ -277,21 +281,6 @@ kickstand_full_width = kickstand_width + 2 * kickstand_wall_thickness + 2 * kick
 kickstand_leg_full_width = kickstand_leg_width + 2 * kickstand_wall_thickness + 2 * kickstand_gap_thickness;
 kickstand_leg_bridge_offset = kickstand_leg_bridge_offset_percentage * (kickstand_height - 2 * kickstand_leg_bridge_height) / 100;
 
-hanging_hole_offset = hanging_hole_offset_percentage * 
-                      (hanging_hole_edge == "left" || hanging_hole_edge == "right" 
-                      ? frame_full_width - hanging_hole_box_height 
-                      : frame_full_height - hanging_hole_box_height) / 100;
-hanging_hole_x = hanging_hole_edge == "left" 
-                    ? hanging_hole_offset
-                    : hanging_hole_edge == "right"
-                        ? frame_full_width - hanging_hole_offset - hanging_hole_box_height
-                        : (frame_full_width - hanging_hole_box_width) / 2;
-hanging_hole_y = hanging_hole_edge == "top"
-                    ? hanging_hole_offset
-                    : hanging_hole_edge == "bottom"
-                        ? frame_full_height - hanging_hole_offset - hanging_hole_box_height
-                        : (frame_full_height - hanging_hole_box_width) / 2;
-
 usb_cutout_x = (frame_full_width - usb_cutout_box_width - usb_cutout_left_wall_thickness - usb_cutout_right_wall_thickness) * usb_cutout_offset_x_percentage / 100;
 usb_cutout_y = (frame_full_height - usb_cutout_box_height - usb_cutout_top_wall_thickness - usb_cutout_bottom_wall_thickness) * usb_cutout_offset_y_percentage / 100;
 
@@ -331,6 +320,23 @@ screw_positions = [
             screw_offset_bottom + s * (frame_full_height - screw_offset_bottom - screw_offset_top) ]
 ];
 
+function hanging_hole_position(edge, offset_percentage) = 
+    let (
+        offset = offset_percentage * (edge == "left" || edge == "right" 
+            ? frame_full_width - hanging_hole_box_height 
+            : frame_full_height - hanging_hole_box_height) / 100
+    ) [
+        edge == "left" 
+            ? offset
+            : edge == "right"
+                ? frame_full_width - offset - hanging_hole_box_height
+                : (frame_full_width - hanging_hole_box_width) / 2,
+        edge == "top"
+            ? offset
+            : edge == "bottom"
+                ? frame_full_height - offset - hanging_hole_box_height
+                : (frame_full_height - hanging_hole_box_width) / 2
+    ];
 
 /*****************************************************************************/
 /*                            Panel cover                                    */
@@ -529,6 +535,8 @@ module caseThickBorder () {
             frame_full_height,
             case_depth + back_depth + thick_border_extra_depth + 22
         ]);
+
+        sideButtonHoles();
     }
 }
 
@@ -676,25 +684,33 @@ module case() {
                     sdCardAdapterBase();
                 }
             }
-            if (hanging_hole) {
-                color(case_color)
-                cubeWithAngledTopBottom(
-                    loc=[
-                        hanging_hole_x - hanging_hole_wall_thickness,
-                        hanging_hole_y - hanging_hole_wall_thickness,
-                        back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth)
-                    ],
-                    size=[
-                        hanging_hole_edge == "top" || hanging_hole_edge == "bottom" 
-                            ? hanging_hole_box_width + hanging_hole_wall_thickness * 2
-                            : hanging_hole_box_height + hanging_hole_wall_thickness * 2, 
-                        hanging_hole_edge == "top" || hanging_hole_edge == "bottom" 
-                            ? hanging_hole_box_height + hanging_hole_wall_thickness * 2
-                            : hanging_hole_box_width + hanging_hole_wall_thickness * 2, 
-                        min(back_depth + case_depth, hanging_hole_depth)
-                    ],
-                    bottom=(view_mode == "print_vertical")
-                );
+            for (h = hanging_holes) {
+                let (
+                    hanging_hole_edge = h[0],
+                    hanging_hole_offset_percentage = h[1],
+                    hanging_hole_pos = hanging_hole_position(hanging_hole_edge, hanging_hole_offset_percentage),
+                    hanging_hole_x = hanging_hole_pos[0],
+                    hanging_hole_y = hanging_hole_pos[1]
+                ) {
+                    color(case_color)
+                    cubeWithAngledTopBottom(
+                        loc=[
+                            hanging_hole_x - hanging_hole_wall_thickness,
+                            hanging_hole_y - hanging_hole_wall_thickness,
+                            back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth)
+                        ],
+                        size=[
+                            hanging_hole_edge == "top" || hanging_hole_edge == "bottom" 
+                                ? hanging_hole_box_width + hanging_hole_wall_thickness * 2
+                                : hanging_hole_box_height + hanging_hole_wall_thickness * 2, 
+                            hanging_hole_edge == "top" || hanging_hole_edge == "bottom" 
+                                ? hanging_hole_box_height + hanging_hole_wall_thickness * 2
+                                : hanging_hole_box_width + hanging_hole_wall_thickness * 2, 
+                            min(back_depth + case_depth, hanging_hole_depth)
+                        ],
+                        bottom=(view_mode == "print_vertical")
+                    );
+                }
             }
             if (pi_pinholes) {
                 color(case_color)
@@ -814,82 +830,90 @@ module case() {
             }
         }
 
-        if (hanging_hole) {
-            color(case_color)
-            cubeWithAngledTopBottom(
-                loc=[
-                    hanging_hole_x,
-                    hanging_hole_y,
-                    back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth) + hanging_hole_wall_thickness
-                ],
-                size=[
-                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
-                        ? hanging_hole_box_width
-                        : hanging_hole_box_height,
-                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
-                        ? hanging_hole_box_height
-                        : hanging_hole_box_width,
-                    min(back_depth + case_depth, hanging_hole_depth) - hanging_hole_wall_thickness * 2
-                ],
-                bottom=(view_mode == "print_vertical")
-            );
+        for (h = hanging_holes) {
+            let (
+                hanging_hole_edge = h[0],
+                hanging_hole_offset_percentage = h[1],
+                hanging_hole_pos = hanging_hole_position(hanging_hole_edge, hanging_hole_offset_percentage),
+                hanging_hole_x = hanging_hole_pos[0],
+                hanging_hole_y = hanging_hole_pos[1]
+            ) {
+                color(case_color)
+                cubeWithAngledTopBottom(
+                    loc=[
+                        hanging_hole_x,
+                        hanging_hole_y,
+                        back_depth + case_depth - min(back_depth + case_depth, hanging_hole_depth) + hanging_hole_wall_thickness
+                    ],
+                    size=[
+                        hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                            ? hanging_hole_box_width
+                            : hanging_hole_box_height,
+                        hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                            ? hanging_hole_box_height
+                            : hanging_hole_box_width,
+                        min(back_depth + case_depth, hanging_hole_depth) - hanging_hole_wall_thickness * 2
+                    ],
+                    bottom=(view_mode == "print_vertical")
+                );
 
-            // Big cyclinter hole
-            color(case_color)
-            translate([
-                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
-                    ? frame_full_width / 2
-                    : hanging_hole_edge == "left"
-                        ? hanging_hole_x + hanging_hole_box_height * 0.75
+                // Big cyclinter hole
+                color(case_color)
+                translate([
+                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                        ? frame_full_width / 2
+                        : hanging_hole_edge == "left"
+                            ? hanging_hole_x + hanging_hole_box_height * 0.75
+                            : hanging_hole_x + hanging_hole_box_height * 0.25,
+                    hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                        ? frame_full_height / 2
+                        : hanging_hole_edge == "top" 
+                            ? hanging_hole_y + hanging_hole_box_height * 0.75
+                            : hanging_hole_y + hanging_hole_box_height * 0.25,
+                    case_depth - 0.11
+                ])
+                rotate([0, 0, 90])
+                cylinder(d = hanging_hole_large_diameter, h = back_depth + 0.21);
+
+                // Small cyclinter hole
+                color(case_color)
+                translate([
+                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                        ? frame_full_width / 2
+                        : hanging_hole_edge == "left"
+                            ? hanging_hole_x + hanging_hole_box_height * 0.25
+                            : hanging_hole_x + hanging_hole_box_height * 0.75,
+                    hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                        ? frame_full_height / 2
+                        : hanging_hole_edge == "top" 
+                            ? hanging_hole_y + hanging_hole_box_height * 0.25
+                            : hanging_hole_y + hanging_hole_box_height * 0.75,
+                    case_depth - 0.11
+                ])
+                rotate([0, 0, 90])
+                cylinder(d = hanging_hole_small_diameter, h = back_depth + 0.21);
+
+                // Box connecitng the two
+                color(case_color)
+                translate([
+                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                        ? frame_full_width / 2 - hanging_hole_small_diameter / 2
                         : hanging_hole_x + hanging_hole_box_height * 0.25,
-                hanging_hole_edge == "left" || hanging_hole_edge == "right"
-                    ? frame_full_height / 2
-                    : hanging_hole_edge == "top" 
-                        ? hanging_hole_y + hanging_hole_box_height * 0.75
+                    hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                        ? frame_full_height / 2 - hanging_hole_small_diameter / 2
                         : hanging_hole_y + hanging_hole_box_height * 0.25,
-                case_depth - 0.11
-            ])
-            rotate([0, 0, 90])
-            cylinder(d = hanging_hole_large_diameter, h = back_depth + 0.21);
-
-            // Small cyclinter hole
-            color(case_color)
-            translate([
-                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
-                    ? frame_full_width / 2
-                    : hanging_hole_edge == "left"
-                        ? hanging_hole_x + hanging_hole_box_height * 0.25
-                        : hanging_hole_x + hanging_hole_box_height * 0.75,
-                hanging_hole_edge == "left" || hanging_hole_edge == "right"
-                    ? frame_full_height / 2
-                    : hanging_hole_edge == "top" 
-                        ? hanging_hole_y + hanging_hole_box_height * 0.25
-                        : hanging_hole_y + hanging_hole_box_height * 0.75,
-                case_depth - 0.11
-            ])
-            rotate([0, 0, 90])
-            cylinder(d = hanging_hole_small_diameter, h = back_depth + 0.21);
-
-            // Box connecitng the two
-            color(case_color)
-            translate([
-                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
-                    ? frame_full_width / 2 - hanging_hole_small_diameter / 2
-                    : hanging_hole_x + hanging_hole_box_height * 0.25,
-                hanging_hole_edge == "left" || hanging_hole_edge == "right"
-                    ? frame_full_height / 2 - hanging_hole_small_diameter / 2
-                    : hanging_hole_y + hanging_hole_box_height * 0.25,
-                case_depth - 0.11
-            ])
-            cube([
-                hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
-                    ? hanging_hole_small_diameter
-                    : hanging_hole_large_diameter,
-                hanging_hole_edge == "left" || hanging_hole_edge == "right"
-                    ? hanging_hole_small_diameter
-                    : hanging_hole_large_diameter,
-                back_depth + 0.21
-            ]);
+                    case_depth - 0.11
+                ])
+                cube([
+                    hanging_hole_edge == "top" || hanging_hole_edge == "bottom"
+                        ? hanging_hole_small_diameter
+                        : hanging_hole_large_diameter,
+                    hanging_hole_edge == "left" || hanging_hole_edge == "right"
+                        ? hanging_hole_small_diameter
+                        : hanging_hole_large_diameter,
+                    back_depth + 0.21
+                ]);
+            }
         }
 
         if (rear_cooling) {
@@ -1423,31 +1447,31 @@ module piPinholesCooling() {
 }
 
 module sideButtonHoles() {
-    union() {
+    let(thick_border_add = (thick_border ? thick_border_width : 0)) {
         // side buttons left
         for (side_button = side_buttons_left) {
             translate([
-                -side_button_extrude,
-                side_button * (frame_full_height - side_button_width) - side_button_hole_gap,
+                -side_button_extrude - thick_border_add,
+                side_button * frame_full_height - side_button_hole_gap - side_button_width / 2,
                 (case_depth - side_button_height) / 2 - side_button_hole_gap
             ])
             filletBoxLeft(
-                panel_border_left + case_inner_padding_left + side_button_base + side_button_extrude,
+                panel_border_left + case_inner_padding_left + side_button_base + side_button_extrude + thick_border_add,
                 side_button_width + side_button_hole_gap * 2,
                 side_button_height + side_button_hole_gap * 2,
-                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                 fn=12
             );
             if (side_button_base_inner > 0) {
                 translate([
                     panel_border_left + case_inner_padding_left - side_button_base_inner - 0.01,
-                    side_button * (frame_full_height - side_button_width) - side_button_base_border - side_button_hole_gap,
-                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                    side_button * frame_full_height - side_button_base_border - side_button_hole_gap - side_button_width / 2,
+                    max((case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap, -0.01)
                 ])
                 cube([
                     side_button_base + side_button_base_inner + 0.02,
                     side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
-                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    min(side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2, case_depth) + 0.01,
                 ]);
             }
         }
@@ -1455,27 +1479,27 @@ module sideButtonHoles() {
         // side buttons right
         for (side_button = side_buttons_right) {
             translate([
-                frame_full_width - panel_border_right - case_inner_padding_right - side_button_base,
-                side_button * (frame_full_height - side_button_width) - side_button_hole_gap, 
+                frame_full_width - panel_border_right - case_inner_padding_right,
+                side_button * frame_full_height - side_button_hole_gap - side_button_width / 2, 
                 (case_depth - side_button_height) / 2 - side_button_hole_gap
             ])
             filletBoxRight(
-                panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude,
+                panel_border_right + case_inner_padding_right + side_button_base + side_button_extrude + thick_border_add,
                 side_button_width + side_button_hole_gap * 2,
                 side_button_height + side_button_hole_gap * 2,
-                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                 fn=12
             );
             if (side_button_base_inner > 0) {
                 translate([
                     frame_full_width - panel_border_right - case_inner_padding_right - side_button_base - 0.01, 
-                    side_button * (frame_full_height - side_button_width) - side_button_base_border - side_button_hole_gap,
-                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                    side_button * frame_full_height - side_button_base_border - side_button_hole_gap - side_button_width / 2,
+                    max((case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap, -0.01)
                 ])
                 cube([
                     side_button_base + side_button_base_inner + 0.02,
                     side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
-                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    min(side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2, case_depth) + 0.01,
                 ]);
             }
         }
@@ -1483,27 +1507,27 @@ module sideButtonHoles() {
         // side buttons top
         for (side_button = side_buttons_top) {
             translate([
-                side_button * (frame_full_width - side_button_width) - side_button_hole_gap, 
-                -side_button_extrude,
+                side_button * frame_full_width - side_button_hole_gap - side_button_width / 2, 
+                -side_button_extrude - thick_border_add,
                 (case_depth - side_button_height) / 2 - side_button_hole_gap
             ])
             filletBoxUp(
                 side_button_width + side_button_hole_gap * 2,
-                panel_border_top + case_inner_padding_top + side_button_base + side_button_extrude - side_button_base_inner,
+                panel_border_top + case_inner_padding_top + side_button_base + side_button_extrude + thick_border_add,
                 side_button_height + side_button_hole_gap * 2,
-                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                 fn=12
             );
             if (side_button_base_inner > 0) {
                 translate([
-                    side_button * (frame_full_width - side_button_width) - side_button_base_border - side_button_hole_gap, 
+                    side_button * frame_full_width - side_button_base_border - side_button_hole_gap - side_button_width / 2, 
                     panel_border_top + case_inner_padding_top - side_button_base_inner - 0.01,
-                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                    max((case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap, -0.01)
                 ])
                 cube([
                     side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
                     side_button_base + side_button_base_inner,
-                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    min(side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2, case_depth) + 0.01,
                 ]);
             }
         }
@@ -1511,27 +1535,27 @@ module sideButtonHoles() {
         // side buttons bottom
         for (side_button = side_buttons_bottom) {
             translate([
-                side_button * (frame_full_width - side_button_width) - side_button_hole_gap, 
-                frame_full_height - panel_border_bottom - case_inner_padding_bottom - side_button_base,
+                side_button * frame_full_width - side_button_hole_gap - side_button_width / 2, 
+                frame_full_height - panel_border_bottom - case_inner_padding_bottom,
                 (case_depth - side_button_height) / 2 - side_button_hole_gap
             ])
             filletBoxDown(
                 side_button_width + side_button_hole_gap * 2,
-                panel_border_bottom + case_inner_padding_bottom + side_button_base + side_button_extrude - side_button_base_inner,
+                panel_border_bottom + case_inner_padding_bottom + side_button_base + side_button_extrude + thick_border_add + 0.01,
                 side_button_height + side_button_hole_gap * 2,
-                r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                 fn=12
             );
             if (side_button_base_inner > 0) {
                 translate([
-                    side_button * (frame_full_width - side_button_width) - side_button_base_border - side_button_hole_gap, 
+                    side_button * frame_full_width - side_button_base_border - side_button_hole_gap - side_button_width / 2, 
                     frame_full_height - panel_border_bottom - case_inner_padding_bottom - side_button_base - 0.01,
-                    (case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap
+                    max((case_depth - side_button_height) / 2 - side_button_base_border - side_button_hole_gap, -0.01)
                 ])
                 cube([
                     side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
                     side_button_base + side_button_base_inner,
-                    side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2,
+                    min(side_button_height + side_button_base_border * 2 + side_button_hole_gap * 2, case_depth) + 0.01,
                 ]);
             }
         }
@@ -1539,30 +1563,35 @@ module sideButtonHoles() {
 }
 
 module sideButtons() {
-    union() {
+    let(
+        side_button_x_offset = (side_button_width + side_button_base_border * 2 + side_button_extrude * 2 + 2),
+        side_button_y_offset = (side_button_height + side_button_base_border * 2 + side_button_extrude * 2 + 2),
+        side_button_base_height = min(side_button_height + side_button_base_border * 2, case_depth - 2 * side_button_hole_gap),
+        thick_border_add = (thick_border ? thick_border_width : 0)
+    ) {
         if (side_buttons_left) {
             for (idx = [ 0 : len(side_buttons_left) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    0,
+                    idx * side_button_x_offset,
+                    side_button_base_height / 2 - side_button_height / 2,
                     0
                 ])
                 filletBoxBottom(
                     side_button_width,
                     side_button_height,
-                    side_button_base + side_button_extrude + panel_border_left + case_inner_padding_left - side_button_base_inner,
-                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    side_button_base + side_button_extrude + panel_border_left + case_inner_padding_left - side_button_base_inner + thick_border_add,
+                    r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                     fn=12
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    -side_button_base_border,
+                    idx * side_button_x_offset - side_button_base_border, 
+                    0,
                     0
                 ])
                 cube([
                     side_button_width + side_button_base_border * 2,
-                    side_button_height + side_button_base_border * 2,
+                    side_button_base_height,
                     side_button_base
                 ]);
             }
@@ -1571,26 +1600,26 @@ module sideButtons() {
         if (side_buttons_right) {
             for (idx = [ 0 : len(side_buttons_right) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    side_button_height + side_button_extrude * 2 + 2,
+                    idx * side_button_x_offset,
+                    side_button_y_offset + side_button_base_height / 2  - side_button_height / 2,
                     0
                 ])
                 filletBoxBottom(
                     side_button_width,
                     side_button_height,
-                    side_button_base + side_button_extrude + panel_border_right + case_inner_padding_right - side_button_base_inner,
-                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    side_button_base + side_button_extrude + panel_border_right + case_inner_padding_right - side_button_base_inner + thick_border_add,
+                    r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                     fn=12
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    side_button_height + side_button_extrude * 2 + 2 -side_button_base_border,
+                    idx * side_button_x_offset - side_button_base_border, 
+                    side_button_y_offset,
                     0
                 ])
                 cube([
                     side_button_width + side_button_base_border * 2,
-                    side_button_height + side_button_base_border * 2,
+                    side_button_base_height,
                     side_button_base
                 ]);
             }
@@ -1599,26 +1628,26 @@ module sideButtons() {
         if (side_buttons_top) {
             for (idx = [ 0 : len(side_buttons_top) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    (side_button_height + side_button_extrude * 2 + 2) * 2,
+                    idx * side_button_x_offset,
+                    side_button_y_offset * 2 + side_button_base_height / 2 - side_button_height / 2,
                     0
                 ])
                 filletBoxBottom(
                     side_button_width,
                     side_button_height,
-                    side_button_base + side_button_extrude + panel_border_top + case_inner_padding_top - side_button_base_inner,
-                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    side_button_base + side_button_extrude + panel_border_top + case_inner_padding_top - side_button_base_inner + thick_border_add,
+                    r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                     fn=12
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    (side_button_height + side_button_extrude * 2 + 2) * 2 -side_button_base_border,
+                    idx * side_button_x_offset - side_button_base_border, 
+                    side_button_y_offset * 2,
                     0
                 ])
                 cube([
                     side_button_width + side_button_base_border * 2,
-                    side_button_height + side_button_base_border * 2,
+                    side_button_base_height,
                     side_button_base
                 ]);
             }
@@ -1627,26 +1656,26 @@ module sideButtons() {
         if (side_buttons_bottom) {
             for (idx = [ 0 : len(side_buttons_bottom) - 1 ] ) {
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2),
-                    (side_button_height + side_button_extrude * 2 + 2) * 3,
+                    idx * side_button_x_offset,
+                    side_button_y_offset * 3 + side_button_base_height / 2 - side_button_height / 2,
                     0
                 ])
                 filletBoxBottom(
                     side_button_width,
                     side_button_height,
-                    side_button_base + side_button_extrude + panel_border_bottom + case_inner_padding_bottom - side_button_base_inner,
-                    r=min(side_button_height / 2 - 0.01, fillet_radius_in_use),
+                    side_button_base + side_button_extrude + panel_border_bottom + case_inner_padding_bottom - side_button_base_inner + thick_border_add,
+                    r=min(side_button_height / 2 - 0.01, side_button_fillet_radius),
                     fn=12
                 );
 
                 translate([
-                    idx * (side_button_width + side_button_extrude * 2 + 2) -side_button_base_border, 
-                    (side_button_height + side_button_extrude * 2 + 2) * 3 -side_button_base_border,
+                    idx * side_button_x_offset - side_button_base_border, 
+                    side_button_y_offset * 3,
                     0
                 ])
                 cube([
                     side_button_width + side_button_base_border * 2,
-                    side_button_height + side_button_base_border * 2,
+                    side_button_base_height,
                     side_button_base
                 ]);
             }

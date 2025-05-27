@@ -1,36 +1,42 @@
-// Minimal overrides for Waveshare 13.3"E ePaper case
+// Minimal overrides for Pimoroni 13.3" 2025 SPECTRA
 include <case1.scad>;
 
 /* [View settings] */
 view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
 
 /* [Case depth] */
-case_depth = 6.0;
+panel_cover_depth = 1.6;
+panel_depth  = 3.0;
+case_depth = 6.0; // pi zero 12mm; board imposed minimum 5.5mm;
+back_depth = 1.2;
 
 /* [Panel dimensions] */
-panel_width  = 285.09;
-panel_height = 209.01;
+panel_width  = 297.0;
+panel_height = 210.0;
 
-panel_bezel_left   = 3.8;
-panel_bezel_right  = 11.8;
-panel_bezel_top    = 3.2;
-panel_bezel_bottom = 3.2;
+panel_bezel_left   = 9.5;
+panel_bezel_right  = 17.5;
+panel_bezel_top    = 3.5;
+panel_bezel_bottom = 3.5;
 
 /* [Border and inner padding] */
-panel_border_left   = 15.5;
-panel_border_right  = 7.5;
-panel_border_top    = 16.1;
-panel_border_bottom = 16.1;
+panel_border_right  = 4;
+panel_border_left   = panel_bezel_right + 4 - panel_bezel_left;
+panel_border_top    = panel_bezel_right + 4 - panel_bezel_top;
+panel_border_bottom = panel_bezel_right + 4 - panel_bezel_bottom;
 
+case_inner_padding_left = 0; // no padding where the buttons are
 case_inner_padding_right = 6;
+case_inner_padding_top = 4;
+case_inner_padding_bottom = 4;
 
 /* [Thick border] */
-thick_border = false;
+thick_border = true;
 thick_border_width = 12.0;
 thick_border_extra_depth = 15.0;
 
 /* [Cable gap] */
-panel_cable_gap_right = 142;
+// panel_cable_gap_right = 142;
 
 /* [Screws] */
 screw_offset_left   = 4.6;
@@ -41,7 +47,7 @@ screw_offset_bottom = 4.6;
 extra_screws_top    = [0.333, 0.667, 0, 0];
 extra_screws_bottom = [0.36, 0.64, 0, 0];
 extra_screws_left   = [0.333, 0.667, 0, 0, 0];
-extra_screws_right  = [0.17, 0.83, 0, 0, 0];
+extra_screws_right  = [0, 0, 0, 0, 0];
 
 /* [Center support] */
 case_center_support_vertical   = false;
@@ -58,8 +64,8 @@ kickstand_depth = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_box_depth           = 6.5;
-usb_cutout_offset_x_percentage = 50;
+usb_cutout_box_depth           = 7;
+usb_cutout_offset_x_percentage = 30;
 usb_cutout_offset_y_percentage = 50;
 usb_cutout_box_width = 20;
 usb_cutout_box_height = 55;
@@ -69,7 +75,7 @@ usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 // [ [top, bottom, left, right], offset_percentage ]
 hanging_holes = [
     ["top", 20],
-    ["left", 20],
+    ["right", 20]
 ];
 
 /* [SD card adapter cutout] */
@@ -84,22 +90,27 @@ sd_card_in_usb_cutout_y_percentage = 80;
 
 /* [Rear cooling] */
 rear_cooling = false;
-rear_cooling_x_start_percentage = 41.7;
-rear_cooling_x_end_percentage = 58;
-rear_cooling_y_start_percentage = 73.6;
-rear_cooling_y_end_percentage = 81;
+rear_cooling_x_start_percentage = 44;
+rear_cooling_x_end_percentage = 65;
+rear_cooling_y_start_percentage = 30;
+rear_cooling_y_end_percentage = 60;
 
 /* [Raspberry Pi Zero Pinholes] */
 pi_pinholes = true;
 pi_pinholes_orientation = "horizontal"; // [horizontal, vertical]
 pi_pinholes_x_percentage = 50;
-pi_pinholes_y_percentage = 85;
+pi_pinholes_y_percentage = 70;
 
 /* [Side buttons] */
-side_buttons_left = [];
+side_buttons_left = [0.192, 0.398, 0.602, 0.808];
 side_buttons_right = [];
 side_buttons_top = [];
 side_buttons_bottom = [];
+side_button_width = 9.2;
+side_button_height = 3.2;
+side_button_base = 2.0;
+side_button_base_border = 5; // adjust if setting the case depth
+side_button_base_inner = 2.2;
 
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
