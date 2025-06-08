@@ -79,7 +79,7 @@ sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 82.0;
 
 sd_card_in_usb_cutout = true;
-sd_card_in_usb_cutout_side = "left"; // [left, right]
+sd_card_in_usb_cutout_side = "right"; // [left, right]
 sd_card_in_usb_cutout_y_percentage = 80;
 
 /* [Rear cooling] */
