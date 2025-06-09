@@ -89,10 +89,11 @@ pi_pinholes_x_percentage = 6.2;
 pi_pinholes_y_percentage = 29;
 
 /* [Side buttons] */
+ // array of values 0.0 to 1.0
 side_buttons_left = [];
 side_buttons_right = [];
+// side_buttons_top = [0.9];
 side_buttons_top = [];
-// side_buttons_top = [90];
 side_buttons_bottom = [];
 
 /* [Debug] */

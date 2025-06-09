@@ -80,6 +80,13 @@ hanging_holes = [
     ["left", 18],
 ];
 
+/* [Side buttons] */
+ // array of values 0.0 to 1.0
+side_buttons_left = [];
+side_buttons_right = [];
+side_buttons_top = [];
+side_buttons_bottom = [];
+
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
 vertical_print_scale = 1.004; // 0.4mm shrinkage for every 100mm
