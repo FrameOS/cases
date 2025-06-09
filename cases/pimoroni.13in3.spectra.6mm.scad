@@ -7,8 +7,9 @@ view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, sta
 /* [Case depth] */
 panel_cover_depth = 1.6;
 panel_depth  = 3.0;
-case_depth = 6.0; // pi zero 12mm; board imposed minimum 5.5mm;
+case_depth = 6.0; // with pi zero 12mm; board minimum 5.5mm;
 back_depth = 1.2;
+fillet_radius = 2.5; // How round to make the case. Not used with thick borders.
 
 /* [Panel dimensions] */
 panel_width  = 297.0;

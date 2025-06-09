@@ -5,12 +5,15 @@ include <case1.scad>;
 view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
 
 /* [Case depth] */
+panel_cover_depth = 1.6;
+panel_depth  = 6.8;
 case_depth = 6.0;
+back_depth = 1.2;
+fillet_radius = 2.5; // How round to make the case. Not used with thick borders.
 
 /* [Panel dimensions] */
 panel_width  = 69.7;
 panel_height = 98.3;
-panel_depth  = 6.8;
 
 panel_bezel_left   = 10.5;
 panel_bezel_right  = 6.5;

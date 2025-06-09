@@ -7,15 +7,20 @@ view_mode="print_vertical"; // [print_vertical, print_horizontal, stacked, explo
 // Shrinkage adjustment when printing vertically. By default 0.4mm of shrinkage for every 100mm of print height.
 vertical_print_scale = 1.004;
 
+/* [Case depth] */
+
+panel_cover_depth = 1.6; // Panel cover thickness
+panel_depth  = 1.2; // Thickness of the eInk panel as measured
+case_depth = 10.0; // Total inside compartment thickness
+back_depth = 1.2; // Back plate thickness 
+fillet_radius = 2.5; // How round to make the case. Not used with thick borders.
+
 /* [Panel dimensions] */
 
-// Physical width of the eInk panel (mm)
-panel_width  = 284.49;
-// Physical height of the eInk panel (mm)
-panel_height = 208.81;
+panel_width  = 284.49; // Physical width of the eInk panel (mm)
+panel_height = 208.81; // Physical height of the eInk panel (mm)
 
-// Clearance around the eInk panel (mm)
-clearance = 0.3;
+clearance = 0.3; // Clearance around the eInk panel (mm)
 
 // Dimensions of the bezel on the eInk panel. This part will be covered by the panel cover.
 panel_bezel_left   = 11.7;
@@ -36,23 +41,6 @@ case_inner_padding_left = 4;
 case_inner_padding_right = 4;
 case_inner_padding_top = 4;
 case_inner_padding_bottom = 4;
-
-/* [Case dimensions] */
-
-// How round to make the case. Disabled if thick_border=true
-fillet_radius = 2.5;
-
-// Panel cover thickness
-panel_cover_depth = 1.6;
-
-// Thickness of the eInk panel as measured
-panel_depth  = 1.2;
-
-// Total inside compartment thickness
-case_depth = 10.0;
-
-// Back plate thickness 
-back_depth = 1.2;
 
 /* [Thick border] */
 thick_border = false;
@@ -89,20 +77,16 @@ screw_offset_right  = 5.0;
 screw_offset_top    = 5.0;
 screw_offset_bottom = 5.0;
 
-// Extra screws on the top side (0.0 to 1.0)
-extra_screws_top = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the bottom side (0.0 to 1.0)
-extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the left side (0.0 to 1.0)
-extra_screws_left = [0, 0, 0, 0, 0]; // [0.0:0.05:1.0]
-// Extra screws on the right side (0.0 to 1.0)
-extra_screws_right = [0.5, 0, 0, 0, 0]; // [0.0:0.05:1.0]
+extra_screws_top = [0.48, 0.52, 0, 0, 0]; // Extra screws on the top (0.0 to 1.0)
+extra_screws_bottom = [0.48, 0.52, 0, 0, 0]; // Extra screws on the bottom (0.0 to 1.0)
+extra_screws_left = [0, 0, 0, 0, 0]; // Extra screws on the left (0.0 to 1.0)
+extra_screws_right = [0.5, 0, 0, 0, 0]; // Extra screws on the right (0.0 to 1.0)
 
-// Hole made into layer 1.2
+// Hole made into panel cover
 panel_screw_insert_diameter = 3.45;
 panel_screw_insert_depth = 2.0;
 
-// Cylindrical hole inserted into layers 2.1 and 2.2
+// Cylindrical hole inserted into case
 case_screw_hole_diameter        = 4.5;
 case_screw_hole_thread_diameter = 2.0; // Hole for the screw thread that goes all the way through
 case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
