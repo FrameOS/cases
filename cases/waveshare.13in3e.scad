@@ -21,10 +21,11 @@ panel_bezel_top    = 3.2;
 panel_bezel_bottom = 3.2;
 
 /* [Border and inner padding] */
-panel_border_left   = 15.5;
-panel_border_right  = 7.5;
-panel_border_top    = 16.1;
-panel_border_bottom = 16.1;
+// Add +12 to get thte largest size you can print on a Prusa XL
+panel_border_left   = 15.5 + 0;
+panel_border_right  =  7.5 + 0;
+panel_border_top    = 16.1 + 0;
+panel_border_bottom = 16.1 + 0;
 
 case_inner_padding_left = 4;
 case_inner_padding_right = 6;
