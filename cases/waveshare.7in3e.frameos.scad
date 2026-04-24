@@ -89,6 +89,15 @@ pi_pinholes_x_percentage = 50;
 pi_pinholes_y_percentage = 53;
 pi_pinholes_spacer_height = 3.2;
 
+/* [Extra Pinholes] */
+extra_pinholes = true;
+extra_pinholes_anchor = "top-right";
+extra_pinholes_offsets = [
+    [-0.302, 21.208],
+    [-12.302, 21.208],
+];
+
+
 /* [Side buttons] */
  // array of values 0.0 to 1.0
 side_buttons_left = [];

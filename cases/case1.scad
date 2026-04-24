@@ -234,7 +234,8 @@ pi_pinholes_width = 58;
 
 /* [Extra Pinholes] */
 extra_pinholes = false;
-extra_pinholes_anchor_percentage = [50, 15];
+extra_pinholes_anchor = "center"; // [center, percentage, top-left, top, top-right, left, right, bottom-left, bottom, bottom-right]
+extra_pinholes_anchor_percentage = [50, 15]; // Used when anchor is "percentage".
 extra_pinholes_offsets = [
     [0, 0]
 ];
@@ -1508,13 +1509,55 @@ module rearCooling() {
     );
 }
 
+function pi_pinholes_width_in_use() =
+    pi_pinholes_orientation == "vertical" ? pi_pinholes_height : pi_pinholes_width;
+
+function pi_pinholes_height_in_use() =
+    pi_pinholes_orientation == "vertical" ? pi_pinholes_width : pi_pinholes_height;
+
+function pi_pinholes_origin() =
+    let (
+        width = pi_pinholes_width_in_use(),
+        height = pi_pinholes_height_in_use()
+    ) [
+        pi_pinholes_x_percentage / 100 * (frame_full_width - width),
+        pi_pinholes_y_percentage / 100 * (frame_full_height - height)
+    ];
+
+function extra_pinholes_anchor_point() =
+    let (
+        width = pi_pinholes_width_in_use(),
+        height = pi_pinholes_height_in_use(),
+        origin = pi_pinholes_origin(),
+        left = origin[0],
+        right = origin[0] + width,
+        bottom = origin[1],
+        top = origin[1] + height,
+        center_x = origin[0] + width / 2,
+        center_y = origin[1] + height / 2
+    )
+    extra_pinholes_anchor == "percentage" ? [
+        extra_pinholes_anchor_percentage[0] / 100 * frame_full_width,
+        extra_pinholes_anchor_percentage[1] / 100 * frame_full_height
+    ] :
+    extra_pinholes_anchor == "top-left" ? [left, top] :
+    extra_pinholes_anchor == "top" ? [center_x, top] :
+    extra_pinholes_anchor == "top-right" ? [right, top] :
+    extra_pinholes_anchor == "left" ? [left, center_y] :
+    extra_pinholes_anchor == "right" ? [right, center_y] :
+    extra_pinholes_anchor == "bottom-left" ? [left, bottom] :
+    extra_pinholes_anchor == "bottom" ? [center_x, bottom] :
+    extra_pinholes_anchor == "bottom-right" ? [right, bottom] :
+    [center_x, center_y];
+
 module piPinholes() {
     let (
-        width = pi_pinholes_orientation == "vertical" ? pi_pinholes_height : pi_pinholes_width,
-        height = pi_pinholes_orientation == "vertical" ? pi_pinholes_width : pi_pinholes_height
+        width = pi_pinholes_width_in_use(),
+        height = pi_pinholes_height_in_use(),
+        origin = pi_pinholes_origin()
     ) {
-        pin_holes_x = pi_pinholes_x_percentage / 100 * (frame_full_width - width);
-        pin_holes_y = pi_pinholes_y_percentage / 100 * (frame_full_height - height);
+        pin_holes_x = origin[0];
+        pin_holes_y = origin[1];
 
         pin_hole_locations = [
             [pin_holes_x, pin_holes_y],
@@ -1536,14 +1579,11 @@ module pinHole(x, y) {
 }
 
 module extraPinHoles() {
-    let (
-        anchor_x = extra_pinholes_anchor_percentage[0] / 100 * frame_full_width,
-        anchor_y = extra_pinholes_anchor_percentage[1] / 100 * frame_full_height
-    ) {
+    let (anchor = extra_pinholes_anchor_point()) {
         for (offset = extra_pinholes_offsets) {
             pinHole(
-                anchor_x + offset[0],
-                anchor_y + offset[1]
+                anchor[0] + offset[0],
+                anchor[1] + offset[1]
             );
         }
     }
@@ -1551,11 +1591,12 @@ module extraPinHoles() {
 
 module piPinholesCooling() {
     let (
-        width = (pi_pinholes_orientation == "vertical" ? pi_pinholes_height : pi_pinholes_width),
-        height = (pi_pinholes_orientation == "vertical" ? pi_pinholes_width : pi_pinholes_height)
+        width = pi_pinholes_width_in_use(),
+        height = pi_pinholes_height_in_use(),
+        origin = pi_pinholes_origin()
     ) {
-        pin_holes_x = pi_pinholes_x_percentage / 100 * (frame_full_width - width);
-        pin_holes_y = pi_pinholes_y_percentage / 100 * (frame_full_height - height);
+        pin_holes_x = origin[0];
+        pin_holes_y = origin[1];
 
         coolingHoles(
             pin_holes_x, pin_holes_x + width,
@@ -1875,4 +1916,3 @@ difference() {
         cube([frame_full_width * cross_section_percentage / 100 + 0.2, frame_full_height + 500, 500]);
     }
 }
-
