@@ -126,6 +126,7 @@ kickstand_leg_bridge_height = 7;
 kickstand_depth = 7;
 kickstand_bottom_start = 2;
 kickstand_leg_bottom_padding = 0.2;
+kickstand_leg_bottom_angle = 45; // [45:90] Angle of the sloped bottom face of the kickstand feet
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2;
@@ -1031,6 +1032,9 @@ module case() {
 /*                             Kickstand                                     */
 /*****************************************************************************/
 
+function angled_face_run(depth, angle) =
+    depth / tan(max(min(angle, 89.9), 0.1));
+
 module caseWithKickstand() {
     hinge_real_depth = kickstand_depth - kickstand_wall_thickness - kickstand_hinge_wall_padding;
     hinge_top_offset = kickstand_wall_thickness + kickstand_depth / 2 + kickstand_hinge_top_extra_leverage;
@@ -1053,6 +1057,9 @@ module caseWithKickstand() {
     ];
     leg_depth = kickstand_depth - kickstand_gap_thickness - kickstand_wall_thickness;
     leg_bridge_depth = leg_depth * 0.8;
+    leg_bottom_run = angled_face_run(leg_depth, kickstand_leg_bottom_angle);
+    leg_hole_depth = kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness + 0.11;
+    leg_hole_bottom_run = angled_face_run(leg_hole_depth, kickstand_leg_bottom_angle);
     leg_yz = [
         frame_full_height - kickstand_bottom_start - kickstand_height + kickstand_gap_thickness + kickstand_wall_thickness,
         case_depth + back_depth - leg_depth
@@ -1130,11 +1137,12 @@ module caseWithKickstand() {
                 ],
                 size=[
                     kickstand_leg_width + 2 * kickstand_gap_thickness,
-                    kickstand_height - 2 * kickstand_wall_thickness - (kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness),
-                    kickstand_depth - kickstand_wall_thickness + kickstand_gap_thickness + 0.11
+                    max(kickstand_height - 2 * kickstand_wall_thickness - leg_hole_bottom_run, 0.01),
+                    leg_hole_depth
                 ],
                 bottom=true,
-                gap_width=0.4
+                gap_width=0.4,
+                bottom_angle=kickstand_leg_bottom_angle
             );
         }
 
@@ -1204,10 +1212,11 @@ module caseWithKickstand() {
                         ],
                         size=[
                             kickstand_leg_width, 
-                            kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth - kickstand_leg_bottom_padding,
+                            max(kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_bottom_run - kickstand_leg_bottom_padding, 0.01),
                             leg_depth
                         ],
-                        bottom=true
+                        bottom=true,
+                        bottom_angle=kickstand_leg_bottom_angle
                     );
                     if (kickstand_inner_snap) {
                         color(kickstand_color)
@@ -1359,41 +1368,49 @@ module cubeWithAngledTopBottom(
     top=false, topReverse=false, 
     bottom=false, bottomReverse=false, 
     left=false, leftReverse=false, 
-    right=false, rightReverse=false
+    right=false, rightReverse=false,
+    top_angle=45,
+    bottom_angle=45,
+    left_angle=45,
+    right_angle=45
 ) {
+    top_run = angled_face_run(size[2], top_angle);
+    bottom_run = angled_face_run(size[2], bottom_angle);
+    left_run = angled_face_run(size[2], left_angle);
+    right_run = angled_face_run(size[2], right_angle);
+
     translate(loc)
     cube(size);
 
     if (top) {
-        translate([loc[0], loc[1] - (topReverse ? size[2] : 0) + 0.01, loc[2]])
+        translate([loc[0], loc[1] - (topReverse ? top_run : 0) + 0.01, loc[2]])
         rotate(topReverse ? [0,0,0] : [90,0,0])
         polyhedron(//pt 0        1        2        3        4        5
-            points=[[0,0,0], [size[0],0,0], [size[0],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[0],size[2],size[2]]],
+            points=[[0,0,0], [size[0],0,0], [size[0],top_run,0], [0,top_run,0], [0,top_run,size[2]], [size[0],top_run,size[2]]],
             faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
         );
     }
     if (bottom) {
-        translate([loc[0], loc[1] + size[1] + (bottomReverse ? 0 : size[2]) - 0.01, loc[2] + size[2]])
+        translate([loc[0], loc[1] + size[1] + (bottomReverse ? 0 : bottom_run) - 0.01, loc[2] + size[2]])
         rotate(bottomReverse ? [270,0,0] : [180,0,0])
         polyhedron(//pt 0        1        2        3        4        5
-            points=[[0,0,0], [size[0],0,0], [size[0],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[0],size[2],size[2]]],
+            points=[[0,0,0], [size[0],0,0], [size[0],bottom_run,0], [0,bottom_run,0], [0,bottom_run,size[2]], [size[0],bottom_run,size[2]]],
             faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
         );
     }
     if (left) {
-        translate([loc[0] - (leftReverse ? 0 : size[2]) + 0.01, loc[1], loc[2] + size[2]])
+        translate([loc[0] - (leftReverse ? 0 : left_run) + 0.01, loc[1], loc[2] + size[2]])
         rotate(leftReverse ? [270,0,90] : [180,0,90])
         polyhedron(//pt 0        1        2        3        4        5
-            points=[[0,0,0], [size[1],0,0], [size[1],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[1],size[2],size[2]]],
+            points=[[0,0,0], [size[1],0,0], [size[1],left_run,0], [0,left_run,0], [0,left_run,size[2]], [size[1],left_run,size[2]]],
             faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
         );
     }
     if (right) {
-        translate([loc[0] + size[0] + (rightReverse ? 0 : size[2]) - 0.01, loc[1] + size[1], loc[2] + size[2]])
-        // translate([loc[0] + size[0] + (rightReverse ? 0 : size[2]) - 0.01, loc[1], loc[2]])
+        translate([loc[0] + size[0] + (rightReverse ? 0 : right_run) - 0.01, loc[1] + size[1], loc[2] + size[2]])
         rotate(rightReverse ? [270,0,270] : [180,0,270])
         polyhedron(//pt 0        1        2        3        4        5
-            points=[[0,0,0], [size[1],0,0], [size[1],size[2],0], [0,size[2],0], [0,size[2],size[2]], [size[1],size[2],size[2]],
+            points=[[0,0,0], [size[1],0,0], [size[1],right_run,0], [0,right_run,0], [0,right_run,size[2]], [size[1],right_run,size[2]],
             ],
             faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
         );
@@ -1406,7 +1423,11 @@ module cubeWithLeftRightGapBridge(
     bottom=false, bottomReverse=false, 
     left=false, leftReverse=false, 
     right=false, rightReverse=false,
-    gap_width = 0.4
+    gap_width = 0.4,
+    top_angle=45,
+    bottom_angle=45,
+    left_angle=45,
+    right_angle=45
 ) {
     if (size[0] < size[1]) {
         cubeWithAngledTopBottom(
@@ -1430,10 +1451,18 @@ module cubeWithLeftRightGapBridge(
     cubeWithAngledTopBottom(
         [loc[0], loc[1], loc[2] + gap_width],
         [size[0], size[1], size[2] - gap_width], 
-        top, topReverse, 
-        bottom, bottomReverse, 
-        left, leftReverse, 
-        right, rightReverse
+        top=top,
+        topReverse=topReverse,
+        bottom=bottom,
+        bottomReverse=bottomReverse,
+        left=left,
+        leftReverse=leftReverse,
+        right=right,
+        rightReverse=rightReverse,
+        top_angle=top_angle,
+        bottom_angle=bottom_angle,
+        left_angle=left_angle,
+        right_angle=right_angle
     );
 }
 
