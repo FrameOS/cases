@@ -60,7 +60,7 @@ kickstand = true;
 kickstand_width = 95;
 kickstand_leg_bridge_height             = 6.5;
 kickstand_leg_bridge_offset_percentage  = 15;
-kickstand_leg_bottom_angle = 75;
+kickstand_leg_bottom_angle              = 80;
 kickstand_depth                         = 6.7;
 
 /* [USB cutout] */
@@ -110,4 +110,4 @@ side_buttons_bottom = [];
 /* [Debug] */
 cross_section_percentage = 0; // [0:100]
 vertical_print_scale = 1.004; // 0.4mm shrinkage for every 100mm
-kickstand_rotation = 30;
+kickstand_rotation = 0;
