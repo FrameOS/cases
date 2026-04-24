@@ -125,10 +125,10 @@ kickstand_leg_bridge_offset_percentage = 15;
 kickstand_leg_bridge_height = 7;
 kickstand_depth = 7;
 kickstand_bottom_start = 2;
+kickstand_leg_bottom_padding = 0.2;
 kickstand_wall_thickness = 1;
 kickstand_gap_thickness = 0.5;
 kickstand_hinge_diameter = 2.2;
-kickstand_leg_hole_diameter = 5;
 kickstand_hinge_top_extra_leverage = 3; // Height added to the flap above the hinge. Increasing reduces max rotation
 kickstand_hinge_wall_padding = 0.2; // Distance from the back wall
 kickstand_hinge_cylinder_gap = 0.5; // Gap between the hinge and the cylinder
@@ -152,6 +152,7 @@ usb_cutout_left_wall_thickness = 1.4;
 usb_cutout_right_wall_thickness = 1.4;
 usb_cutout_bottom_wall_thickness = 1.4;
 usb_cutout_back_wall_thickness = 0.8;
+usb_cutout_hole_offset = 0;
 usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 // Larger USB-C
 // usb_cutout_hole_width = 14;
@@ -161,6 +162,24 @@ usb_cutout_hole_position = "top"; // [top, bottom, left, right, back]
 usb_cutout_hole_width = 9.1;
 usb_cutout_hole_height = 3.2;
 usb_cutout_top_wall_thickness = 5.0;
+
+/* [SD cutout] */
+
+sd_cutout = false;
+sd_cutout_offset_x_percentage = 80;
+sd_cutout_offset_y_percentage = 20;
+sd_cutout_box_width = 20;
+sd_cutout_box_height = 50;
+sd_cutout_box_depth = 7;
+sd_cutout_left_wall_thickness = 1.4;
+sd_cutout_right_wall_thickness = 1.4;
+sd_cutout_bottom_wall_thickness = 1.4;
+sd_cutout_back_wall_thickness = 0.8;
+sd_cutout_hole_offset = 0;
+sd_cutout_hole_position = "top"; // [top, bottom, left, right, back]
+sd_cutout_hole_width = 9.1;
+sd_cutout_hole_height = 3.2;
+sd_cutout_top_wall_thickness = 5.0;
 
 /* [Hanging hole] */
 // [ [top, bottom, left, right], offset_percentage ]
@@ -180,9 +199,11 @@ hanging_hole_wall_thickness = 1;
 /* [SD card adapter cutout] */
 
 sd_card_in_leg = false;
+sd_card_in_leg_shape = "adapter"; // [adapter, hole]
 sd_card_in_leg_side = "left"; // [left, right]
 sd_card_in_leg_side_side = "left"; // [left, right]
 sd_card_in_leg_y_percentage = 75.5;
+sd_card_in_leg_hole_offset = 1.8; // for shape=hole... mm from base
 
 sd_card_in_usb_cutout = false;
 sd_card_in_usb_cutout_side = "right"; // [left, right]
@@ -211,6 +232,14 @@ pi_pinholes_spacer_height = 3;
 pi_pinholes_height = 23;
 pi_pinholes_width = 58;
 
+/* [Extra Pinholes] */
+extra_pinholes = false;
+extra_pinholes_anchor_percentage = [50, 15];
+extra_pinholes_offsets = [
+    [0, 0]
+];
+
+
 /* [Side buttons] */
 side_buttons_left = [];
 side_buttons_right = [];
@@ -223,7 +252,7 @@ side_button_base = 1; // Height of square rectangle below the button
 side_button_base_border = 1; // Extra around width and height
 side_button_base_inner = 1.0; // How much does the button base go inside the case body
 side_button_hole_gap = 0.3; // How much more to carve out of the hole
-side_button_fillet_radius = 1.0; // Radius of the fillet on the button
+side_button_fillet_radius = 0.0; // Radius of the fillet on the button
 
 /* [Debug] */
 // Gap between STL parts for visual debugging
@@ -271,6 +300,8 @@ usb_cutout_y = (frame_full_height - usb_cutout_box_height - usb_cutout_top_wall_
 usb_sd_card_x_position = sd_card_in_usb_cutout_side == "left" ? usb_cutout_x + usb_cutout_left_wall_thickness + 0.11 : usb_cutout_box_width + usb_cutout_left_wall_thickness + usb_cutout_x - 0.11;
 usb_sd_card_y_position = usb_cutout_y + 12 + sd_card_in_usb_cutout_y_percentage / 100 * (usb_cutout_box_height -24);
 
+sd_cutout_x = (frame_full_width - sd_cutout_box_width - sd_cutout_left_wall_thickness - sd_cutout_right_wall_thickness) * sd_cutout_offset_x_percentage / 100;
+sd_cutout_y = (frame_full_height - sd_cutout_box_height - sd_cutout_top_wall_thickness - sd_cutout_bottom_wall_thickness) * sd_cutout_offset_y_percentage / 100;
 
 /*****************************************************************************/
 /*                 Utility: Corner Screw Hole Positions                      */
@@ -668,6 +699,24 @@ module case() {
                     sdCardAdapterBase();
                 }
             }
+
+            if (sd_cutout) {
+                color(case_color)
+                cubeWithAngledTopBottom(
+                    loc=[
+                        sd_cutout_x, 
+                        sd_cutout_y,
+                        back_depth + case_depth - (sd_cutout_box_depth + sd_cutout_back_wall_thickness),
+                    ], 
+                    size=[
+                        sd_cutout_box_width + sd_cutout_left_wall_thickness + sd_cutout_right_wall_thickness, 
+                        sd_cutout_box_height + sd_cutout_top_wall_thickness + sd_cutout_bottom_wall_thickness,
+                        sd_cutout_box_depth + sd_cutout_back_wall_thickness
+                    ], 
+                    top=(view_mode=="print_vertical" && sd_cutout_hole_position != "top") || sd_cutout_hole_position == "back",
+                    bottom=(view_mode=="print_vertical" && sd_cutout_hole_position != "bottom") || sd_cutout_hole_position == "back"
+                );
+            }
             for (h = hanging_holes) {
                 let (
                     hanging_hole_edge = h[0],
@@ -699,6 +748,10 @@ module case() {
             if (pi_pinholes) {
                 color(case_color)
                 piPinholes();
+            }
+            if (extra_pinholes) {
+                color(case_color)
+                extraPinHoles();
             }
 
             // Cut out a piece of the cube
@@ -780,7 +833,7 @@ module case() {
                 translate([
                     (frame_full_width - usb_cutout_box_width - usb_cutout_left_wall_thickness - usb_cutout_right_wall_thickness) * usb_cutout_offset_x_percentage / 100 - 0.11 + (usb_cutout_hole_position == "right" ? usb_cutout_box_width + usb_cutout_left_wall_thickness : 0), 
                     (frame_full_height - usb_cutout_box_height - usb_cutout_top_wall_thickness - usb_cutout_bottom_wall_thickness) * usb_cutout_offset_y_percentage / 100 + usb_cutout_top_wall_thickness + (usb_cutout_box_height - usb_cutout_hole_width) / 2,
-                    back_depth + case_depth - usb_cutout_box_depth + (usb_cutout_box_depth - usb_cutout_hole_height) / 2,
+                    back_depth + case_depth - usb_cutout_box_depth + (usb_cutout_box_depth - usb_cutout_hole_height) / 2 + usb_cutout_hole_offset,
                 ])
                 cube([
                     (usb_cutout_hole_position == "left" ? usb_cutout_left_wall_thickness : usb_cutout_right_wall_thickness) + 0.22, 
@@ -792,7 +845,7 @@ module case() {
                 translate([
                     (frame_full_width - usb_cutout_box_width - usb_cutout_left_wall_thickness - usb_cutout_right_wall_thickness) * usb_cutout_offset_x_percentage / 100 + usb_cutout_left_wall_thickness + (usb_cutout_box_width - usb_cutout_hole_width) / 2, 
                     (frame_full_height - usb_cutout_box_height - usb_cutout_top_wall_thickness - usb_cutout_bottom_wall_thickness) * usb_cutout_offset_y_percentage / 100 - 0.11  + (usb_cutout_hole_position == "bottom" ? usb_cutout_box_height + usb_cutout_top_wall_thickness : 0),
-                    back_depth + case_depth - usb_cutout_box_depth + (usb_cutout_box_depth - usb_cutout_hole_height) / 2,
+                    back_depth + case_depth - usb_cutout_box_depth + (usb_cutout_box_depth - usb_cutout_hole_height) / 2 + usb_cutout_hole_offset,
                 ])
                 cube([
                     usb_cutout_hole_width, 
@@ -810,6 +863,64 @@ module case() {
                     usb_cutout_hole_width, 
                     usb_cutout_hole_height,
                     usb_cutout_back_wall_thickness + 0.22, 
+                ]);
+            }
+        }
+
+        if (sd_cutout) {
+            // Cutout into box
+            color(case_color)
+            cubeWithLeftRightGapBridge(
+                loc=[
+                    sd_cutout_x + sd_cutout_left_wall_thickness, 
+                    sd_cutout_y + sd_cutout_top_wall_thickness,
+                    back_depth + case_depth - sd_cutout_box_depth,
+                ], 
+                size=[
+                    sd_cutout_box_width, 
+                    sd_cutout_box_height, 
+                    sd_cutout_box_depth + 0.11
+                ], 
+                top=(view_mode=="print_vertical" && sd_cutout_hole_position != "top") || sd_cutout_hole_position == "back",
+                bottom=(view_mode=="print_vertical" && sd_cutout_hole_position != "bottom") || sd_cutout_hole_position == "back"
+            );
+
+            // Hole into what's remaining
+            if (sd_cutout_hole_position == "left" || sd_cutout_hole_position == "right") {
+                color(case_color)
+                translate([
+                    (frame_full_width - sd_cutout_box_width - sd_cutout_left_wall_thickness - sd_cutout_right_wall_thickness) * sd_cutout_offset_x_percentage / 100 - 0.11 + (sd_cutout_hole_position == "right" ? sd_cutout_box_width + sd_cutout_left_wall_thickness : 0), 
+                    (frame_full_height - sd_cutout_box_height - sd_cutout_top_wall_thickness - sd_cutout_bottom_wall_thickness) * sd_cutout_offset_y_percentage / 100 + sd_cutout_top_wall_thickness + (sd_cutout_box_height - sd_cutout_hole_width) / 2,
+                    back_depth + case_depth - sd_cutout_box_depth + (sd_cutout_box_depth - sd_cutout_hole_height) / 2 + sd_cutout_hole_offset,
+                ])
+                cube([
+                    (sd_cutout_hole_position == "left" ? sd_cutout_left_wall_thickness : sd_cutout_right_wall_thickness) + 0.22, 
+                    sd_cutout_hole_width, 
+                    sd_cutout_hole_height
+                ]);
+            } else if (sd_cutout_hole_position == "top" || sd_cutout_hole_position == "bottom") {
+                color(case_color)
+                translate([
+                    (frame_full_width - sd_cutout_box_width - sd_cutout_left_wall_thickness - sd_cutout_right_wall_thickness) * sd_cutout_offset_x_percentage / 100 + sd_cutout_left_wall_thickness + (sd_cutout_box_width - sd_cutout_hole_width) / 2, 
+                    (frame_full_height - sd_cutout_box_height - sd_cutout_top_wall_thickness - sd_cutout_bottom_wall_thickness) * sd_cutout_offset_y_percentage / 100 - 0.11  + (sd_cutout_hole_position == "bottom" ? sd_cutout_box_height + sd_cutout_top_wall_thickness : 0),
+                    back_depth + case_depth - sd_cutout_box_depth + (sd_cutout_box_depth - sd_cutout_hole_height) / 2 + sd_cutout_hole_offset,
+                ])
+                cube([
+                    sd_cutout_hole_width, 
+                    (sd_cutout_hole_position == "top" ? sd_cutout_top_wall_thickness : sd_cutout_bottom_wall_thickness) + 0.22, 
+                    sd_cutout_hole_height
+                ]);
+            } else if (sd_cutout_hole_position == "back") {
+                color(case_color)
+                translate([
+                    (frame_full_width - sd_cutout_box_width - sd_cutout_left_wall_thickness - sd_cutout_right_wall_thickness) * sd_cutout_offset_x_percentage / 100 + sd_cutout_left_wall_thickness + (sd_cutout_box_width - sd_cutout_hole_width) / 2, 
+                    (frame_full_height - sd_cutout_box_height - sd_cutout_top_wall_thickness - sd_cutout_bottom_wall_thickness) * sd_cutout_offset_y_percentage / 100 - 0.11 + (sd_cutout_box_height - sd_cutout_hole_height) / 2 + sd_cutout_top_wall_thickness,
+                    back_depth + case_depth - sd_cutout_box_depth - sd_cutout_back_wall_thickness - 0.11,
+                ])
+                cube([
+                    sd_cutout_hole_width, 
+                    sd_cutout_hole_height,
+                    sd_cutout_back_wall_thickness + 0.22, 
                 ]);
             }
         }
@@ -920,7 +1031,7 @@ module case() {
 /*****************************************************************************/
 
 module caseWithKickstand() {
-    hinge_real_depth = kickstand_depth - kickstand_wall_thickness - kickstand_hinge_wall_padding - kickstand_hinge_diameter / 2;
+    hinge_real_depth = kickstand_depth - kickstand_wall_thickness - kickstand_hinge_wall_padding;
     hinge_top_offset = kickstand_wall_thickness + kickstand_depth / 2 + kickstand_hinge_top_extra_leverage;
     hinge_start = [
         frame_full_width / 2 - kickstand_full_width / 2 + 0.11, 
@@ -1087,12 +1198,12 @@ module caseWithKickstand() {
                     cubeWithAngledTopBottom(
                         loc=[
                             0, 
-                            leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter,
+                            leg_yz[0] - hinge_start[1] + hinge_top_offset - kickstand_hinge_diameter - kickstand_leg_bottom_padding,
                             leg_yz[1] - hinge_start[2]
                         ],
                         size=[
                             kickstand_leg_width, 
-                            kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth,
+                            kickstand_height - kickstand_gap_thickness - kickstand_wall_thickness * 2 - kickstand_gap_thickness - hinge_top_offset + kickstand_hinge_diameter - leg_depth - kickstand_leg_bottom_padding,
                             leg_depth
                         ],
                         bottom=true
@@ -1334,24 +1445,31 @@ sd_adapter_micro_hole_height = 3.3;
 module sdCardAdapterCutout() {
     translate([-sd_adapter_width / 2, 0, case_depth - 2 * sd_adapter_depth])
     difference() {
-        union() {
-            cube([sd_adapter_width, sd_adapter_height, sd_adapter_depth]);
-            translate([(sd_adapter_width - sd_adapter_micro_width) / 2, 0, sd_adapter_depth - 0.01])
+        if (sd_card_in_leg_shape == "adapter") {
+            union() {
+                cube([sd_adapter_width, sd_adapter_height, sd_adapter_depth]);
+                translate([(sd_adapter_width - sd_adapter_micro_width) / 2, 0, sd_adapter_depth - 0.01])
+                cube([sd_adapter_micro_width, sd_adapter_micro_hole_height, sd_adapter_depth]);
+            }
+            translate([sd_adapter_width, sd_adapter_height - 3.49, -0.11])
+            rotate([0, 0, 45])
+            cube([5.5, 5.5, sd_adapter_depth + 0.21]);
+        } else if (sd_card_in_leg_shape == "hole") {
+            translate([(sd_adapter_width - sd_adapter_micro_width) / 2, 0, sd_adapter_depth - 0.01 - sd_card_in_leg_hole_offset])
             cube([sd_adapter_micro_width, sd_adapter_micro_hole_height, sd_adapter_depth]);
         }
-        translate([sd_adapter_width, sd_adapter_height - 3.49, -0.11])
-        rotate([0, 0, 45])
-        cube([5.5, 5.5, sd_adapter_depth + 0.21]);
     }
 }
 
 module sdCardAdapterBase() {
-    sd_adapter_buffer = 0.5;
-    difference() {
-        translate([-sd_adapter_width / 2 - sd_adapter_buffer, 0.01, case_depth - 2 * sd_adapter_depth + 0.01])
-        cube([sd_adapter_width + 2 * sd_adapter_buffer, sd_adapter_height + sd_adapter_buffer, 2 * sd_adapter_depth]);
+    if (sd_card_in_leg_shape == "adapter") {
+        sd_adapter_buffer = 0.5;
+        difference() {
+            translate([-sd_adapter_width / 2 - sd_adapter_buffer, 0.01, case_depth - 2 * sd_adapter_depth + 0.01])
+            cube([sd_adapter_width + 2 * sd_adapter_buffer, sd_adapter_height + sd_adapter_buffer, 2 * sd_adapter_depth]);
 
-        sdCardAdapterCutout();
+            sdCardAdapterCutout();
+        }
     }
 }
 
@@ -1405,10 +1523,28 @@ module piPinholes() {
             [pin_holes_x + width, pin_holes_y + height]
         ];
         for (loc = pin_hole_locations) {
-            translate([loc[0], loc[1], -0.11])
-            cylinder(d = pi_pinholes_diameter, h = case_depth + 0.22);
-            translate([loc[0], loc[1], case_depth - pi_pinholes_spacer_height - 0.11])
-            cylinder(d = pi_pinholes_spacer, h = pi_pinholes_spacer_height + 0.22);
+            pinHole(loc[0], loc[1]);
+        }
+    }
+}
+
+module pinHole(x, y) {
+    translate([x, y, -0.11])
+    cylinder(d = pi_pinholes_diameter, h = case_depth + 0.22);
+    translate([x, y, case_depth - pi_pinholes_spacer_height - 0.11])
+    cylinder(d = pi_pinholes_spacer, h = pi_pinholes_spacer_height + 0.22);
+}
+
+module extraPinHoles() {
+    let (
+        anchor_x = extra_pinholes_anchor_percentage[0] / 100 * frame_full_width,
+        anchor_y = extra_pinholes_anchor_percentage[1] / 100 * frame_full_height
+    ) {
+        for (offset = extra_pinholes_offsets) {
+            pinHole(
+                anchor_x + offset[0],
+                anchor_y + offset[1]
+            );
         }
     }
 }
