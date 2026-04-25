@@ -2,10 +2,10 @@
 include <case1.scad>;
 
 /* [View settings] */
-view_mode="print_horizontal"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
+view_mode="only_panel_cover"; // [print_vertical, print_horizontal, stacked, stacked_case, exploded, only_case, only_thick_border, only_panel_cover]
 
 /* [Case depth] */
-panel_cover_depth = 1.6;
+panel_cover_depth = 1.8;
 panel_depth  = 1.2;
 case_depth = 9.0; // change this for your usecase
 back_depth = 1.2;
@@ -22,10 +22,10 @@ panel_bezel_bottom = 3.2;
 
 /* [Border and inner padding] */
 // Add +12 to get thte largest size you can print on a Prusa XL
-panel_border_left   = 15.5 + 0;
-panel_border_right  =  7.5 + 0;
-panel_border_top    = 16.1 + 0;
-panel_border_bottom = 16.1 + 0;
+panel_border_left   = 15.5 + 12;
+panel_border_right  =  7.5 + 12;
+panel_border_top    = 16.1 + 12;
+panel_border_bottom = 16.1 + 12;
 
 case_inner_padding_left = 4;
 case_inner_padding_right = 6;

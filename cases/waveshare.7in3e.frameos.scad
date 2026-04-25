@@ -98,6 +98,15 @@ extra_pinholes_offsets = [
     [-12.302, 21.208],
 ];
 
+/* [Backplate Access Holes] */
+backplate_access_holes = false;
+backplate_access_holes_diameter = 2;
+backplate_access_holes_anchor = "top-right";
+backplate_access_holes_offsets = [
+    [-0.302 - 6.063, 21.208],
+    [-0.302 - 6.063, 21.208 + 4.318],
+    [-0.302 - 6.063, 21.208 + 4.318 + 4.359],
+];
 
 /* [Side buttons] */
  // array of values 0.0 to 1.0
