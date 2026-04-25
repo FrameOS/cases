@@ -59,7 +59,7 @@ case_center_support_horizontal = false;
 kickstand = true;
 kickstand_width = 95;
 kickstand_leg_bridge_height             = 6.5;
-kickstand_leg_bridge_offset_percentage  = 15;
+kickstand_leg_bridge_offset_percentage  = 12;
 kickstand_leg_bottom_angle              = 80;
 kickstand_depth                         = 6.7;
 
@@ -87,33 +87,34 @@ sd_card_in_leg_y_percentage = 74;
 pi_pinholes = true;
 pi_pinholes_orientation = "horizontal"; // [horizontal, vertical]
 pi_pinholes_x_percentage = 50;
-pi_pinholes_y_percentage = 53;
+pi_pinholes_y_percentage = 52;
 pi_pinholes_spacer_height = 3.2;
 
 /* [Extra Pinholes] */
 extra_pinholes = true;
 extra_pinholes_anchor = "top-right";
 extra_pinholes_offsets = [
-    [-0.302, 21.208],
-    [-12.302, 21.208],
+    [0.302, 21.208],
+    [0.302-12, 21.208],
 ];
 
 /* [Backplate Access Holes] */
-backplate_access_holes = false;
-backplate_access_holes_diameter = 2;
+
+backplate_access_holes = true;
+backplate_access_holes_diameter = 1.5;
 backplate_access_holes_anchor = "top-right";
 backplate_access_holes_offsets = [
-    [-0.302 - 6.063, 21.208],
-    [-0.302 - 6.063, 21.208 + 4.318],
-    [-0.302 - 6.063, 21.208 + 4.318 + 4.359],
+    [0.302 - 6.063, 21.208],
+    [0.302 - 6.063, 21.208 - 4.318],
+    [0.302 - 6.063, 21.208 - 4.318 - 4.359],
 ];
+
 
 /* [Side buttons] */
  // array of values 0.0 to 1.0
 side_buttons_left = [];
-side_buttons_right = [];
-// side_buttons_top = [0.9];
-side_buttons_top = [];
+side_buttons_right = [0.15, 0.25];
+side_buttons_top = [0.9];
 side_buttons_bottom = [];
 
 /* [Debug] */
