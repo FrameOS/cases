@@ -241,6 +241,15 @@ extra_pinholes_offsets = [
     [0, 0]
 ];
 
+/* [Backplate Access Holes] */
+backplate_access_holes = false;
+backplate_access_holes_diameter = 2;
+backplate_access_holes_anchor = "center"; // [center, percentage, top-left, top, top-right, left, right, bottom-left, bottom, bottom-right]
+backplate_access_holes_anchor_percentage = [50, 15]; // Used when anchor is "percentage".
+backplate_access_holes_offsets = [
+    [0, 0]
+];
+
 
 /* [Side buttons] */
 side_buttons_left = [];
@@ -1023,6 +1032,11 @@ module case() {
             piPinholesCooling();
         }
 
+        if (backplate_access_holes) {
+            color(case_color)
+            backplateAccessHoles();
+        }
+
         color(case_color)
         sideButtonHoles();
     }
@@ -1553,7 +1567,7 @@ function pi_pinholes_origin() =
         pi_pinholes_y_percentage / 100 * (frame_full_height - height)
     ];
 
-function extra_pinholes_anchor_point() =
+function pi_relative_anchor_point(anchor, anchor_percentage) =
     let (
         width = pi_pinholes_width_in_use(),
         height = pi_pinholes_height_in_use(),
@@ -1565,19 +1579,25 @@ function extra_pinholes_anchor_point() =
         center_x = origin[0] + width / 2,
         center_y = origin[1] + height / 2
     )
-    extra_pinholes_anchor == "percentage" ? [
-        extra_pinholes_anchor_percentage[0] / 100 * frame_full_width,
-        extra_pinholes_anchor_percentage[1] / 100 * frame_full_height
+    anchor == "percentage" ? [
+        anchor_percentage[0] / 100 * frame_full_width,
+        anchor_percentage[1] / 100 * frame_full_height
     ] :
-    extra_pinholes_anchor == "top-left" ? [left, top] :
-    extra_pinholes_anchor == "top" ? [center_x, top] :
-    extra_pinholes_anchor == "top-right" ? [right, top] :
-    extra_pinholes_anchor == "left" ? [left, center_y] :
-    extra_pinholes_anchor == "right" ? [right, center_y] :
-    extra_pinholes_anchor == "bottom-left" ? [left, bottom] :
-    extra_pinholes_anchor == "bottom" ? [center_x, bottom] :
-    extra_pinholes_anchor == "bottom-right" ? [right, bottom] :
+    anchor == "top-left" ? [left, top] :
+    anchor == "top" ? [center_x, top] :
+    anchor == "top-right" ? [right, top] :
+    anchor == "left" ? [left, center_y] :
+    anchor == "right" ? [right, center_y] :
+    anchor == "bottom-left" ? [left, bottom] :
+    anchor == "bottom" ? [center_x, bottom] :
+    anchor == "bottom-right" ? [right, bottom] :
     [center_x, center_y];
+
+function extra_pinholes_anchor_point() =
+    pi_relative_anchor_point(extra_pinholes_anchor, extra_pinholes_anchor_percentage);
+
+function backplate_access_holes_anchor_point() =
+    pi_relative_anchor_point(backplate_access_holes_anchor, backplate_access_holes_anchor_percentage);
 
 module piPinholes() {
     let (
@@ -1611,6 +1631,22 @@ module extraPinHoles() {
     let (anchor = extra_pinholes_anchor_point()) {
         for (offset = extra_pinholes_offsets) {
             pinHole(
+                anchor[0] + offset[0],
+                anchor[1] + offset[1]
+            );
+        }
+    }
+}
+
+module backplateAccessHole(x, y) {
+    translate([x, y, case_depth - 0.11])
+    cylinder(d = backplate_access_holes_diameter, h = back_depth + 0.22);
+}
+
+module backplateAccessHoles() {
+    let (anchor = backplate_access_holes_anchor_point()) {
+        for (offset = backplate_access_holes_offsets) {
+            backplateAccessHole(
                 anchor[0] + offset[0],
                 anchor[1] + offset[1]
             );
