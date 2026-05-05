@@ -33,7 +33,7 @@ panel_border_bottom = 6.8;
 // panel_border_bottom = 14 - panel_bezel_bottom;
 
 case_inner_padding_left   = 2.0;
-case_inner_padding_right  = 2.0;
+case_inner_padding_right  = 0.5;
 case_inner_padding_top    = 2.0;
 case_inner_padding_bottom = 2.0;
 
@@ -65,11 +65,12 @@ kickstand_depth                         = 6.7;
 
 /* [USB cutout] */
 usb_cutout = true;
-usb_cutout_offset_x_percentage = 92;
-usb_cutout_offset_y_percentage = 70;
+usb_cutout_offset_x_percentage = 93.3;
+usb_cutout_offset_y_percentage = 66.0;
 usb_cutout_box_depth           = 6.4;
-// usb_cutout_hole_height         = 5.8;
-// usb_cutout_hole_width          = 14;
+usb_cutout_hole_height         = 4;
+usb_cutout_hole_width          = 11;
+usb_cutout_top_wall_thickness  = 1.5;
 
 /* [Hanging hole] */
 // [ [top, bottom, left, right], offset_percentage ]
@@ -77,17 +78,19 @@ hanging_holes = [
     ["top", 9],
 ];
 
+hanging_hole_large_diameter = 6;
+hanging_hole_small_diameter = 2.5;
+hanging_hole_box_width = 8;
+hanging_hole_box_height = 16;
+
 /* [SD card adapter cutout] */
-sd_card_in_leg = true;
-sd_card_in_leg_side = "left"; // [left, right]
-sd_card_in_leg_side_side = "left"; // [left, right]
-sd_card_in_leg_y_percentage = 74;
+sd_card_in_leg = false;
 
 /* [Raspberry Pi Zero Pinholes] */
 pi_pinholes = true;
 pi_pinholes_orientation = "horizontal"; // [horizontal, vertical]
 pi_pinholes_x_percentage = 50;
-pi_pinholes_y_percentage = 52;
+pi_pinholes_y_percentage = 52.8;
 pi_pinholes_spacer_height = 3.2;
 
 /* [Extra Pinholes] */
@@ -96,6 +99,9 @@ extra_pinholes_anchor = "top-right";
 extra_pinholes_offsets = [
     [0.302, 21.208],
     [0.302-12, 21.208],
+    [52.802, -65.0],
+    [-17.802, -65.0],
+    [-39, -65.0],
 ];
 
 /* [Backplate Access Holes] */
