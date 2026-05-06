@@ -3,9 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "build": "node build.js",
-        "start": "nodemon -w ./cases build.js"
-    },
-    "devDependencies": {
-        "nodemon": "3.1.9"
+        "start": "nodemon -w ./cases build.js",
+        "render:visual": "node scripts/render-visual-regressions.js",
+        "test:visual": "node scripts/render-visual-regressions.js --check"
     }
 }

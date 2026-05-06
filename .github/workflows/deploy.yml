@@ -12,33 +12,36 @@ jobs:
     steps:
       # 1. Check out the code
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Use Node
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      # 2. Use the project Flox environment
+      - name: Install Flox
+        uses: flox/install-flox-action@v2.4.0
         with:
-          node-version: 18
+          disable-metrics: "true"
 
-      # 3. Install dependencies & run build.js in the main repo (FrameOS/cases)
-      - name: Install dependencies (FrameOS/cases)
-        run: npm install
-
+      # 3. Run build.js in the main repo (FrameOS/cases)
       - name: Run build script (FrameOS/cases)
-        run: node build.js
+        run: flox activate -- npm run build
 
       # 4. Clone the openscad-playground repo
       - name: Clone openscad-playground
         run: git clone https://github.com/FrameOS/openscad-playground.git
 
       # 5. Build openscad-playground
-      - name: Build openscad-playground
-        run: |
-          cp dist/cases.json openscad-playground/src/cases.json
-          cd openscad-playground
-          make public
-          npm install
-          NODE_ENV=production npm run build
+      - name: Copy cases into openscad-playground
+        run: cp dist/cases.json openscad-playground/src/cases.json
+
+      - name: Build openscad-playground public assets
+        run: flox activate -- make -C openscad-playground public
+
+      - name: Install openscad-playground dependencies
+        run: flox activate -- npm --prefix openscad-playground install
+
+      - name: Build openscad-playground app
+        env:
+          NODE_ENV: production
+        run: flox activate -- npm --prefix openscad-playground run build
 
       # 6. Deploy dist to openscad-playground-deploy 
       - name: Deploy dist to openscad-playground-deploy
