@@ -1154,8 +1154,13 @@ module case() {
             backplateAccessHoles();
         }
 
-        color(case_color)
-        sideButtonHoles();
+        if (reverse_border_thickness) {
+            color(case_color)
+            reverse_border_case_side_button_clearance();
+        } else {
+            color(case_color)
+            sideButtonHoles();
+        }
 
         reverse_border_case_cutout();
     }
@@ -1213,6 +1218,65 @@ module reverse_border_case_cutout_cube(x, y, width, height) {
             height,
             case_depth + 0.11
         ]);
+    }
+}
+
+module reverse_border_case_side_button_clearance() {
+    let (
+        clearance_width = side_button_width + side_button_base_border * 2 + side_button_hole_gap * 2,
+        depth = case_depth + 0.11
+    ) {
+        for (side_button = side_buttons_left) {
+            translate([
+                -reverse_border_gap,
+                side_button * frame_full_height - clearance_width / 2,
+                -0.11
+            ])
+            cube([
+                panel_border_left + case_inner_padding_left + reverse_border_gap,
+                clearance_width,
+                depth
+            ]);
+        }
+
+        for (side_button = side_buttons_right) {
+            translate([
+                frame_full_width - panel_border_right - case_inner_padding_right,
+                side_button * frame_full_height - clearance_width / 2,
+                -0.11
+            ])
+            cube([
+                panel_border_right + case_inner_padding_right + reverse_border_gap,
+                clearance_width,
+                depth
+            ]);
+        }
+
+        for (side_button = side_buttons_top) {
+            translate([
+                side_button * frame_full_width - clearance_width / 2,
+                -reverse_border_gap,
+                -0.11
+            ])
+            cube([
+                clearance_width,
+                panel_border_top + case_inner_padding_top + reverse_border_gap,
+                depth
+            ]);
+        }
+
+        for (side_button = side_buttons_bottom) {
+            translate([
+                side_button * frame_full_width - clearance_width / 2,
+                frame_full_height - panel_border_bottom - case_inner_padding_bottom,
+                -0.11
+            ])
+            cube([
+                clearance_width,
+                panel_border_bottom + case_inner_padding_bottom + reverse_border_gap,
+                depth
+            ]);
+        }
     }
 }
 
