@@ -474,13 +474,19 @@ module reverse_border_panel_cover_strips() {
 }
 
 module reverse_border_panel_cover_screw_posts() {
-    for (c = screw_positions) {
-        translate([
-            c[0],
-            c[1],
-            panel_cover_depth + panel_depth - 0.01
-        ])
-        cylinder(d = reverse_border_screw_post_diameter, h = case_depth + 0.01);
+    intersection() {
+        union() {
+            for (c = screw_positions) {
+                translate([
+                    c[0],
+                    c[1],
+                    panel_cover_depth + panel_depth - 0.01
+                ])
+                cylinder(d = reverse_border_screw_post_diameter, h = case_depth + 0.01);
+            }
+        }
+
+        reverse_border_panel_cover_strips();
     }
 }
 
