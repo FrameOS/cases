@@ -107,15 +107,24 @@ pi_pinholes_x_percentage = 50;
 pi_pinholes_y_percentage = 52.8;
 pi_pinholes_spacer_height = 3.2;
 
-/* [Extra Pinholes] */
-extra_pinholes = true;
-extra_pinholes_anchor = "top-right";
-extra_pinholes_offsets = [
-    [0.302, 21.208],
-    [0.302-12, 21.208],
+/* [Extra Pin Mounts] */
+extra_pin_mounts_enabled = true;
+extra_pin_mounts_anchor = "top-right";
+// Each mount is [x_offset, y_offset, pin_diameter, spacer_diameter, spacer_height, pin_enabled].
+// Use [x_offset, y_offset] to keep the Raspberry Pi pin defaults, or undef for any optional value.
+extra_pin_mounts = [
+    // eink pcb
+    [0.302, 21.208, 2.55],
+    [0.302 - 12, 21.208, 2.55],
+    [0.302, 21.208 - 8, undef, undef, undef, false],
+    [0.302 - 29, 21.208 - 12.7, undef, undef, 2, false],
+    [-58.302, 21.208 - 6.3, undef, undef, 2.3, false],
+    // top pcb
     [52.802, -65.0],
     [-17.802, -65.0],
-    [-39, -65.0],
+    [-39, -65.0, undef, undef, undef, false],
+    [-58, -40.0, undef, undef, undef, false],
+    [0, -40.0, undef, undef, undef, false],
 ];
 
 /* [Backplate Access Holes] */

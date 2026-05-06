@@ -246,7 +246,17 @@ pi_pinholes_spacer_height = 3;
 pi_pinholes_height = 23;
 pi_pinholes_width = 58;
 
-/* [Extra Pinholes] */
+/* [Extra Pin Mounts] */
+extra_pin_mounts_enabled = false;
+extra_pin_mounts_anchor = "center"; // [center, percentage, top-left, top, top-right, left, right, bottom-left, bottom, bottom-right]
+extra_pin_mounts_anchor_percentage = [50, 15]; // Used when anchor is "percentage".
+// Each mount is [x_offset, y_offset, pin_diameter, spacer_diameter, spacer_height, pin_enabled].
+// Use [x_offset, y_offset] to keep the Raspberry Pi pin defaults, or undef for any optional value.
+extra_pin_mounts = [
+    [0, 0]
+];
+
+/* [Hidden] */
 extra_pinholes = false;
 extra_pinholes_anchor = "center"; // [center, percentage, top-left, top, top-right, left, right, bottom-left, bottom, bottom-right]
 extra_pinholes_anchor_percentage = [50, 15]; // Used when anchor is "percentage".
@@ -896,9 +906,9 @@ module case() {
                 color(case_color)
                 piPinholes();
             }
-            if (extra_pinholes) {
+            if (extra_pin_mounts_enabled || extra_pinholes) {
                 color(case_color)
-                extraPinHoles();
+                extraPinMounts();
             }
 
             // Cut out a piece of the cube
@@ -1858,8 +1868,20 @@ function pi_relative_anchor_point(anchor, anchor_percentage) =
     anchor == "bottom-right" ? [right, bottom] :
     [center_x, center_y];
 
+function extra_pin_mounts_use_legacy() =
+    !extra_pin_mounts_enabled && extra_pinholes;
+
+function extra_pin_mounts_in_use() =
+    extra_pin_mounts_use_legacy() ? extra_pinholes_offsets : extra_pin_mounts;
+
+function extra_pin_mounts_anchor_point() =
+    pi_relative_anchor_point(
+        extra_pin_mounts_use_legacy() ? extra_pinholes_anchor : extra_pin_mounts_anchor,
+        extra_pin_mounts_use_legacy() ? extra_pinholes_anchor_percentage : extra_pin_mounts_anchor_percentage
+    );
+
 function extra_pinholes_anchor_point() =
-    pi_relative_anchor_point(extra_pinholes_anchor, extra_pinholes_anchor_percentage);
+    extra_pin_mounts_anchor_point();
 
 function backplate_access_holes_anchor_point() =
     pi_relative_anchor_point(backplate_access_holes_anchor, backplate_access_holes_anchor_percentage);
@@ -1885,22 +1907,56 @@ module piPinholes() {
     }
 }
 
-module pinHole(x, y) {
-    translate([x, y, -0.11])
-    cylinder(d = pi_pinholes_diameter, h = case_depth + 0.22);
-    translate([x, y, case_depth - pi_pinholes_spacer_height - 0.11])
-    cylinder(d = pi_pinholes_spacer, h = pi_pinholes_spacer_height + 0.22);
+module pinHole(
+    x,
+    y,
+    pin_diameter = pi_pinholes_diameter,
+    spacer_diameter = pi_pinholes_spacer,
+    spacer_height = pi_pinholes_spacer_height,
+    pin_enabled = true
+) {
+    if (pin_enabled && pin_diameter > 0) {
+        translate([x, y, -0.11])
+        cylinder(d = pin_diameter, h = case_depth + 0.22);
+    }
+    if (spacer_diameter > 0 && spacer_height > 0) {
+        translate([x, y, case_depth - spacer_height - 0.11])
+        cylinder(d = spacer_diameter, h = spacer_height + 0.22);
+    }
 }
 
-module extraPinHoles() {
-    let (anchor = extra_pinholes_anchor_point()) {
-        for (offset = extra_pinholes_offsets) {
+function extra_pin_mount_value(mount, index, default_value) =
+    len(mount) > index ? (mount[index] == undef ? default_value : mount[index]) : default_value;
+
+function extra_pin_mount_pin_diameter(mount) =
+    extra_pin_mount_value(mount, 2, pi_pinholes_diameter);
+
+function extra_pin_mount_spacer_diameter(mount) =
+    extra_pin_mount_value(mount, 3, pi_pinholes_spacer);
+
+function extra_pin_mount_spacer_height(mount) =
+    extra_pin_mount_value(mount, 4, pi_pinholes_spacer_height);
+
+function extra_pin_mount_pin_enabled(mount) =
+    extra_pin_mount_value(mount, 5, true);
+
+module extraPinMounts() {
+    let (anchor = extra_pin_mounts_anchor_point()) {
+        for (mount = extra_pin_mounts_in_use()) {
             pinHole(
-                anchor[0] + offset[0],
-                anchor[1] + offset[1]
+                anchor[0] + mount[0],
+                anchor[1] + mount[1],
+                extra_pin_mount_pin_diameter(mount),
+                extra_pin_mount_spacer_diameter(mount),
+                extra_pin_mount_spacer_height(mount),
+                extra_pin_mount_pin_enabled(mount)
             );
         }
     }
+}
+
+module extraPinHoles() {
+    extraPinMounts();
 }
 
 module backplateAccessHole(x, y) {
