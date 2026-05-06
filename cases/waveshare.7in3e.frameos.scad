@@ -37,6 +37,10 @@ case_inner_padding_right  = 0.5;
 case_inner_padding_top    = 2.0;
 case_inner_padding_bottom = 2.0;
 
+/* [Cover/case thickness reversal] */
+reverse_border_thickness = true;
+reverse_border_gap = 0.3;
+
 /* [Cable gap] */
 panel_cable_gap_bottom = 40;
 

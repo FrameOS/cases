@@ -42,6 +42,16 @@ case_inner_padding_right = 4;
 case_inner_padding_top = 4;
 case_inner_padding_bottom = 4;
 
+/* [Cover/case thickness reversal] */
+
+// Move border case depth from the case body to the cover.
+reverse_border_thickness = false;
+reverse_border_gap = 0.3;
+reverse_border_left_width = panel_border_left;
+reverse_border_right_width = panel_border_right;
+reverse_border_top_width = panel_border_top;
+reverse_border_bottom_width = panel_border_bottom;
+
 /* [Thick border] */
 thick_border = false;
 thick_border_width = 12.0;
@@ -91,6 +101,8 @@ case_screw_hole_diameter        = 4.5;
 case_screw_hole_thread_diameter = 2.0; // Hole for the screw thread that goes all the way through
 case_screw_hole_floor_depth     = 1.0; // Depth of the floor of the screw hole
 case_screw_hole_insert_depth    = 4.0; // Leave this much room at bottom for the heat set insert
+
+reverse_border_screw_post_diameter = max(case_screw_hole_diameter + 1.5, panel_screw_insert_diameter + 2.0);
 
 /* [Case side holes] */
 
@@ -370,8 +382,12 @@ function hanging_hole_position(edge, offset_percentage) =
 
 module panel_cover() {
     difference() {
-        // Top block
-        filletBoxTop(frame_full_width, frame_full_height, panel_cover_depth + panel_depth);
+        union() {
+            // Top block
+            filletBoxTop(frame_full_width, frame_full_height, panel_cover_depth + panel_depth);
+
+            reverse_border_panel_cover_extension();
+        }
         
         // Window for the eInk panel’s visible area
         translate(
@@ -390,7 +406,7 @@ module panel_cover() {
         for (c = screw_positions) {
             translate([c[0], c[1],  panel_cover_depth + panel_depth - panel_screw_insert_depth])
                 cylinder(d = panel_screw_insert_diameter, 
-                         h = panel_screw_insert_depth + 0.11);
+                         h = panel_screw_insert_depth + (reverse_border_thickness ? case_depth : 0) + 0.11);
         }
 
         // Internal rectangular cutout matching the panel
@@ -418,6 +434,98 @@ module panel_cover() {
         if (panel_cable_gap_right > 0) {
             render_panel_cable_gap_right(panel_depth, panel_cover_depth);
         }
+
+        reverse_border_panel_cover_side_button_holes();
+    }
+}
+
+module reverse_border_panel_cover_extension() {
+    if (reverse_border_thickness && case_depth > 0) {
+        difference() {
+            union() {
+                reverse_border_panel_cover_strips();
+                reverse_border_panel_cover_screw_posts();
+            }
+
+            reverse_border_kickstand_keepouts();
+        }
+    }
+}
+
+module reverse_border_panel_cover_strips() {
+    difference() {
+        translate([0, 0, panel_cover_depth + panel_depth - 0.01])
+        filletBoxMiddle(frame_full_width, frame_full_height, case_depth + 0.01);
+
+        translate([
+            reverse_border_left_width,
+            reverse_border_top_width,
+            panel_cover_depth + panel_depth - 0.02
+        ])
+        cube([
+            frame_full_width - reverse_border_left_width - reverse_border_right_width,
+            frame_full_height - reverse_border_top_width - reverse_border_bottom_width,
+            case_depth + 0.04
+        ]);
+    }
+}
+
+module reverse_border_panel_cover_screw_posts() {
+    for (c = screw_positions) {
+        translate([
+            c[0],
+            c[1],
+            panel_cover_depth + panel_depth - 0.01
+        ])
+        cylinder(d = reverse_border_screw_post_diameter, h = case_depth + 0.01);
+    }
+}
+
+module reverse_border_kickstand_keepouts() {
+    if (kickstand) {
+        let (
+            leg_x_starts_full = [
+                (frame_full_width - kickstand_full_width) / 2,
+                (frame_full_width + kickstand_full_width) / 2 - kickstand_leg_full_width,
+            ],
+            leg_y = frame_full_height - kickstand_bottom_start - kickstand_height,
+            leg_bridge_leg_y = frame_full_height - kickstand_bottom_start - kickstand_leg_bridge_offset - kickstand_leg_bridge_height * 2,
+            leg_bridge_full_y = leg_bridge_leg_y - kickstand_wall_thickness,
+            bridge_x = leg_x_starts_full[0] + kickstand_leg_full_width - kickstand_wall_thickness * 2,
+            bridge_y = leg_bridge_full_y + kickstand_depth - kickstand_wall_thickness,
+            bridge_width = kickstand_full_width - kickstand_leg_full_width * 2 + kickstand_wall_thickness * 4,
+            bridge_height = kickstand_leg_bridge_height * 2 + kickstand_wall_thickness * 2 - kickstand_depth * 2
+        ) {
+            for (x = leg_x_starts_full) {
+                reverse_border_keepout_cube(
+                    x - reverse_border_gap,
+                    leg_y - reverse_border_gap,
+                    kickstand_leg_full_width + reverse_border_gap * 2,
+                    kickstand_height + reverse_border_gap * 2
+                );
+            }
+
+            reverse_border_keepout_cube(
+                bridge_x - reverse_border_gap,
+                bridge_y - reverse_border_gap,
+                bridge_width + reverse_border_gap * 2,
+                bridge_height + reverse_border_gap * 2
+            );
+        }
+    }
+}
+
+module reverse_border_keepout_cube(x, y, width, height) {
+    if (width > 0 && height > 0) {
+        translate([x, y, panel_cover_depth + panel_depth - 0.02])
+        cube([width, height, case_depth + 0.04]);
+    }
+}
+
+module reverse_border_panel_cover_side_button_holes() {
+    if (reverse_border_thickness) {
+        translate([0, 0, panel_cover_depth + panel_depth])
+        sideButtonHoles();
     }
 }
 
@@ -1039,6 +1147,63 @@ module case() {
 
         color(case_color)
         sideButtonHoles();
+
+        reverse_border_case_cutout();
+    }
+}
+
+module reverse_border_case_cutout() {
+    if (reverse_border_thickness && case_depth > 0) {
+        reverse_border_case_cutout_strips();
+        reverse_border_case_screw_cutouts();
+    }
+}
+
+module reverse_border_case_cutout_strips() {
+    reverse_border_case_cutout_cube(
+        -reverse_border_gap,
+        -reverse_border_gap,
+        reverse_border_left_width + reverse_border_gap * 2,
+        frame_full_height + reverse_border_gap * 2
+    );
+    reverse_border_case_cutout_cube(
+        frame_full_width - reverse_border_right_width - reverse_border_gap,
+        -reverse_border_gap,
+        reverse_border_right_width + reverse_border_gap * 2,
+        frame_full_height + reverse_border_gap * 2
+    );
+    reverse_border_case_cutout_cube(
+        -reverse_border_gap,
+        -reverse_border_gap,
+        frame_full_width + reverse_border_gap * 2,
+        reverse_border_top_width + reverse_border_gap * 2
+    );
+    reverse_border_case_cutout_cube(
+        -reverse_border_gap,
+        frame_full_height - reverse_border_bottom_width - reverse_border_gap,
+        frame_full_width + reverse_border_gap * 2,
+        reverse_border_bottom_width + reverse_border_gap * 2
+    );
+}
+
+module reverse_border_case_screw_cutouts() {
+    for (c = screw_positions) {
+        translate([c[0], c[1], -0.11])
+        cylinder(
+            d = reverse_border_screw_post_diameter + reverse_border_gap * 2,
+            h = case_depth + 0.11
+        );
+    }
+}
+
+module reverse_border_case_cutout_cube(x, y, width, height) {
+    if (width > 0 && height > 0) {
+        translate([x, y, -0.11])
+        cube([
+            width,
+            height,
+            case_depth + 0.11
+        ]);
     }
 }
 
