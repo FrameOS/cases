@@ -55,6 +55,16 @@ extra_screws_bottom = [0.35, 0.65, 0, 0, 0];
 extra_screws_left   = [0, 0, 0, 0, 0];
 extra_screws_right  = [0, 0, 0, 0, 0];
 
+// Hole made into panel cover
+panel_screw_insert_diameter = 3.45;
+panel_screw_insert_depth = 0.5;
+
+// Cylindrical hole inserted into case
+case_screw_hole_diameter        = 4.5;
+case_screw_hole_thread_diameter = 2.0;
+case_screw_hole_floor_depth     = 2.0;
+case_screw_hole_insert_depth    = 4.0;
+
 /* [Center support] */
 case_center_support_vertical   = false;
 case_center_support_horizontal = false;
