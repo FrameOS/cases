@@ -11,6 +11,8 @@ const outputDirForGit = path.relative(repoRoot, outputDir);
 
 const imageSize = process.env.FRAMEOS_VISUAL_IMG_SIZE || "4000,3000";
 const colorscheme = process.env.FRAMEOS_VISUAL_COLORSCHEME || "Tomorrow";
+const xvfbServerArgs =
+  process.env.FRAMEOS_VISUAL_XVFB_SERVER_ARGS || defaultXvfbServerArgs();
 const openscadCommand =
   process.env.FRAMEOS_OPENSCAD_COMMAND || findOpenSCADCommand();
 const checkMode = process.argv.includes("--check");
@@ -38,8 +40,15 @@ Environment:
   FRAMEOS_VISUAL_COLORSCHEME    OpenSCAD colorscheme, default ${colorscheme}
   FRAMEOS_OPENSCAD_COMMAND      OpenSCAD CLI command, default ${openscadCommand}
   FRAMEOS_VISUAL_XVFB=0         Disable xvfb-run on Linux
+  FRAMEOS_VISUAL_XVFB_SERVER_ARGS
+                                Override xvfb-run server args, default ${xvfbServerArgs}
 `);
   process.exit(0);
+}
+
+function defaultXvfbServerArgs() {
+  const [width, height] = imageSize.split(",");
+  return `-screen 0 ${width}x${height}x24 +extension GLX +render -noreset`;
 }
 
 function sortedEntries(directory) {
@@ -68,11 +77,26 @@ function findScadFiles(directory) {
 }
 
 function commandExists(command) {
-  const result = spawnSync("sh", ["-lc", `command -v "${command}"`], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
+  const result = spawnSync(
+    "sh",
+    ["-c", 'command -v "$1" >/dev/null 2>&1', "sh", command],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+    }
+  );
   return result.status === 0;
+}
+
+function openscadEnvironment() {
+  if (process.platform !== "linux") {
+    return process.env;
+  }
+
+  return {
+    ...process.env,
+    LIBGL_ALWAYS_SOFTWARE: process.env.LIBGL_ALWAYS_SOFTWARE || "1",
+  };
 }
 
 function findOpenSCADCommand() {
@@ -95,16 +119,9 @@ function openscadInvocation(args) {
     return { command: openscadCommand, args };
   }
 
-  const [width, height] = imageSize.split(",");
   return {
     command: "xvfb-run",
-    args: [
-      "-a",
-      "-s",
-      `-screen 0 ${width}x${height}x24`,
-      openscadCommand,
-      ...args,
-    ],
+    args: ["-a", "-s", xvfbServerArgs, openscadCommand, ...args],
   };
 }
 
@@ -138,6 +155,7 @@ function runOpenSCAD(args) {
   return spawnSync(command, finalArgs, {
     cwd: repoRoot,
     encoding: "utf8",
+    env: openscadEnvironment(),
     maxBuffer: 64 * 1024 * 1024,
   });
 }
