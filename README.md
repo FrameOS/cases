@@ -27,4 +27,30 @@ The case depth for electronics is 10mm.
 
 ## Developing locally
 
-Install [OpenSCAD](https://openscad.org/), clone the repo, and open any of the `.scad` files directly.
+Install [Flox](https://flox.dev/), clone the repo, and activate the project environment:
+
+```sh
+flox activate
+```
+
+Open any of the `.scad` files directly from that shell, or run the build:
+
+```sh
+npm run build
+```
+
+## Visual regression snapshots
+
+Render all `.scad` files from `cases/` at the tracked camera angles. The Flox environment uses OpenSCAD unstable/nightly, and the visual regression renderer uses full OpenSCAD rendering instead of preview rendering. By default this writes `4000x3000` PNGs for `iso-front`, `iso-back`, `top`, and `bottom`:
+
+```sh
+flox activate -- npm run render:visual
+```
+
+Check that the generated snapshots match git:
+
+```sh
+flox activate -- npm run test:visual
+```
+
+The snapshots are written to `visual-regressions/`. GitHub Actions runs the same check and fails when rendering changes any tracked PNG, deletes a stale PNG, or creates a new untracked PNG.

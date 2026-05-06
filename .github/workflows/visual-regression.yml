@@ -1,0 +1,23 @@
+name: Visual Regression
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  render-snapshots:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Install Flox
+        uses: flox/install-flox-action@v2.4.0
+        with:
+          disable-metrics: "true"
+
+      - name: Render and check snapshots
+        run: flox activate -- npm run test:visual

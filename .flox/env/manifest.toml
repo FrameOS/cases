@@ -1,0 +1,10 @@
+schema-version = "1.10.0"
+
+[install]
+nodejs_22.pkg-path = "nodejs_22"
+nodemon.pkg-path = "nodemon"
+git.pkg-path = "git"
+xvfb-run.pkg-path = "xvfb-run"
+xvfb-run.systems = ["aarch64-linux", "x86_64-linux"]
+gnumake.pkg-path = "gnumake"
+openscad-unstable.pkg-path = "openscad-unstable"

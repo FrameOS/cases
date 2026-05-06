@@ -1,0 +1,707 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "schema-version": "1.10.0",
+    "install": {
+      "git": {
+        "pkg-path": "git"
+      },
+      "gnumake": {
+        "pkg-path": "gnumake"
+      },
+      "nodejs_22": {
+        "pkg-path": "nodejs_22"
+      },
+      "nodemon": {
+        "pkg-path": "nodemon"
+      },
+      "openscad-unstable": {
+        "pkg-path": "openscad-unstable"
+      },
+      "xvfb-run": {
+        "pkg-path": "xvfb-run",
+        "systems": [
+          "aarch64-linux",
+          "x86_64-linux"
+        ]
+      }
+    },
+    "options": {}
+  },
+  "packages": [
+    {
+      "attr_path": "git",
+      "broken": false,
+      "derivation": "/nix/store/9n758xnd7s67zz9naiivygz24pv7zpr4-git-2.53.0.drv",
+      "description": "Distributed version control system",
+      "install_id": "git",
+      "license": "GPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "git-2.53.0",
+      "pname": "git",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:07:16.514678Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.53.0",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/0kjpgj1grgba239ykdnv1cjc61xqk3aa-git-2.53.0-doc",
+        "out": "/nix/store/5y6cp247hspkqa7pp6cbc4540ygx0249-git-2.53.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "git",
+      "broken": false,
+      "derivation": "/nix/store/y0zdc38hb5flnbzx9a8sia7azv917jvc-git-2.53.0.drv",
+      "description": "Distributed version control system",
+      "install_id": "git",
+      "license": "GPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "git-2.53.0",
+      "pname": "git",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:43:45.985160Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.53.0",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/rc56a3l2wby94gk9gvirpwi9hv9v15gi-git-2.53.0-debug",
+        "doc": "/nix/store/q8j5mwix1g75xyq025d3hmringklm52z-git-2.53.0-doc",
+        "out": "/nix/store/gx9r7g2kyrjhh0zhgxz91f5nbczxh1ac-git-2.53.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "git",
+      "broken": false,
+      "derivation": "/nix/store/mpa3y57ch7a3rz55183a886hq2g4h9wm-git-2.53.0.drv",
+      "description": "Distributed version control system",
+      "install_id": "git",
+      "license": "GPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "git-2.53.0",
+      "pname": "git",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:16:10.426890Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.53.0",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/9jcm7zadfi5wsic3kizs4x71a8dqlj83-git-2.53.0-doc",
+        "out": "/nix/store/zar16r8w28c6qjdh3xqnkjcmvjjqwi77-git-2.53.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "git",
+      "broken": false,
+      "derivation": "/nix/store/gz2q1wq6ckyphg0q08nq9q93g1a6x561-git-2.53.0.drv",
+      "description": "Distributed version control system",
+      "install_id": "git",
+      "license": "GPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "git-2.53.0",
+      "pname": "git",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:52:24.820969Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.53.0",
+      "outputs_to_install": [
+        "out",
+        "out",
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/qyqya20z59d164d6692hlyb9pkq10ykk-git-2.53.0-debug",
+        "doc": "/nix/store/vv1ap6qaxdzpa4jqg71myxh5wcvnlqv8-git-2.53.0-doc",
+        "out": "/nix/store/c0277k5giric1mn9dklllavbzvxl6hzb-git-2.53.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gnumake",
+      "broken": false,
+      "derivation": "/nix/store/5vqw4w1argiy9damyh49mz4ifkdpvy4s-gnumake-4.4.1.drv",
+      "description": "Tool to control the generation of non-source files from sources",
+      "install_id": "gnumake",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "gnumake-4.4.1",
+      "pname": "gnumake",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:07:16.636127Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.4.1",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/c7l1j109rsygzd1lc3pp2rbfm2p3y642-gnumake-4.4.1-doc",
+        "info": "/nix/store/v9ss50cr4hqvm1c5xhhgb9sgn98gvgd6-gnumake-4.4.1-info",
+        "man": "/nix/store/908rmkli4kdr2706pgax47ph86cpfifh-gnumake-4.4.1-man",
+        "out": "/nix/store/zcbp7z3zaagbm7rpk6hz5zb8qwd40v42-gnumake-4.4.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gnumake",
+      "broken": false,
+      "derivation": "/nix/store/sr606kaxyhx2gn82wl01gbqlq452arwd-gnumake-4.4.1.drv",
+      "description": "Tool to control the generation of non-source files from sources",
+      "install_id": "gnumake",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "gnumake-4.4.1",
+      "pname": "gnumake",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:43:46.650013Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.4.1",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/skri4hsrs5ga3mb2y2zabb86h91kg7yf-gnumake-4.4.1-debug",
+        "doc": "/nix/store/83grbbzidh6mspbq3vcwnv5i2w418f64-gnumake-4.4.1-doc",
+        "info": "/nix/store/pi1waffl6zsh3898x8csg9liwljl1v5b-gnumake-4.4.1-info",
+        "man": "/nix/store/a208sdxbrp4737zrv1lynglgzqj7wjxi-gnumake-4.4.1-man",
+        "out": "/nix/store/y92qq7542dy25bs8ijnrs396n5cvbrvm-gnumake-4.4.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gnumake",
+      "broken": false,
+      "derivation": "/nix/store/zchqhprbkh124pd3vlfynvyyb0i5847q-gnumake-4.4.1.drv",
+      "description": "Tool to control the generation of non-source files from sources",
+      "install_id": "gnumake",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "gnumake-4.4.1",
+      "pname": "gnumake",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:16:10.572125Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.4.1",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/8cga3r53093x6yzzayqqjcd2ip2bb6gc-gnumake-4.4.1-doc",
+        "info": "/nix/store/gdg79wm2j8g86d0vilbmwa6sjvdnwysw-gnumake-4.4.1-info",
+        "man": "/nix/store/4jk8w4gsl2d2vgrpi5c8grcyx5h6k1br-gnumake-4.4.1-man",
+        "out": "/nix/store/4sgv9nplhrys2a88lfxw1swlj7kn4v54-gnumake-4.4.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gnumake",
+      "broken": false,
+      "derivation": "/nix/store/kmx0hfjc7yxlmsqy2lqqqy2w9lh5fhgv-gnumake-4.4.1.drv",
+      "description": "Tool to control the generation of non-source files from sources",
+      "install_id": "gnumake",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "gnumake-4.4.1",
+      "pname": "gnumake",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:52:25.542301Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.4.1",
+      "outputs_to_install": [
+        "man",
+        "out",
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/72dxkkiz9jh8icb3h55ryi2c40f5rx8f-gnumake-4.4.1-debug",
+        "doc": "/nix/store/4jrq5glppx1pbf9qvzm33j7igm852pbc-gnumake-4.4.1-doc",
+        "info": "/nix/store/jx8cp7ifpjv63q2rqdwby1qq84fs94lk-gnumake-4.4.1-info",
+        "man": "/nix/store/5xxknr9d7fgm7j2pppvh410nh5jjgq72-gnumake-4.4.1-man",
+        "out": "/nix/store/0rn2xh3zciwdr8sjg79ir79dbr6lnmfb-gnumake-4.4.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs_22",
+      "broken": false,
+      "derivation": "/nix/store/7z888jncalxcpnyphznbh1nhjivfykvr-nodejs-22.22.2.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs_22",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodejs-22.22.2",
+      "pname": "nodejs_22",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:07:39.837666Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.22.2",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/0zb2cr3b9xlancr6s938s73pxfcbzji2-nodejs-22.22.2"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs_22",
+      "broken": false,
+      "derivation": "/nix/store/n0apilkyywlcbigbw22nvjjz3gh92ccs-nodejs-22.22.2.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs_22",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodejs-22.22.2",
+      "pname": "nodejs_22",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:44:22.689758Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.22.2",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/2axvilfkmlz8wfa9zimidv5l1cydi4kc-nodejs-22.22.2"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs_22",
+      "broken": false,
+      "derivation": "/nix/store/0y4ibzz247xhp9qy6fq9nvflganyxfxk-nodejs-22.22.2.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs_22",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodejs-22.22.2",
+      "pname": "nodejs_22",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:16:33.775886Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.22.2",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/5b95ias241mw7bp4bindlc5xxn66phjy-nodejs-22.22.2"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs_22",
+      "broken": false,
+      "derivation": "/nix/store/wghknzpsi55q382zl0x1b4kxi48b791f-nodejs-22.22.2.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs_22",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodejs-22.22.2",
+      "pname": "nodejs_22",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:53:02.383579Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.22.2",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/6x6v11xjf0psckgqmyhfyhw9bdma0rn6-nodejs-22.22.2"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodemon",
+      "broken": false,
+      "derivation": "/nix/store/6jwscv4sllyn38p937dqqh4azm3lxywf-nodemon-3.1.14.drv",
+      "description": "Simple monitor script for use during development of a Node.js app",
+      "install_id": "nodemon",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodemon-3.1.14",
+      "pname": "nodemon",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:07:39.843911Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.1.14",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/9a8wvb50jzchpjg7mk4sa2ncxrnq93hs-nodemon-3.1.14"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodemon",
+      "broken": false,
+      "derivation": "/nix/store/sc6acha0hf6arv1sq3ndg7z6zlfmjm3a-nodemon-3.1.14.drv",
+      "description": "Simple monitor script for use during development of a Node.js app",
+      "install_id": "nodemon",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodemon-3.1.14",
+      "pname": "nodemon",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:44:22.696919Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.1.14",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/gyx7azlqyklgzcicq83pw13a2xm7ym0m-nodemon-3.1.14"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodemon",
+      "broken": false,
+      "derivation": "/nix/store/frr63kcmmr29f18nzq13sfp35fwj27pa-nodemon-3.1.14.drv",
+      "description": "Simple monitor script for use during development of a Node.js app",
+      "install_id": "nodemon",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodemon-3.1.14",
+      "pname": "nodemon",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:16:33.781310Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.1.14",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/aa7c7k4fb001j7cgmgahgbr6d8ifq81k-nodemon-3.1.14"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodemon",
+      "broken": false,
+      "derivation": "/nix/store/rg43ygrvyp93i2jn31hbmlwxvs0ckhr5-nodemon-3.1.14.drv",
+      "description": "Simple monitor script for use during development of a Node.js app",
+      "install_id": "nodemon",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "nodemon-3.1.14",
+      "pname": "nodemon",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:53:02.391017Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.1.14",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/brd8x9bydnvw3m2lbxc3gwskiak8zd5c-nodemon-3.1.14"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openscad-unstable",
+      "broken": false,
+      "derivation": "/nix/store/6m633q3ff7n42gy2ajxwlyn940qs38hs-openscad-unstable-2021.01-unstable-2026-02-25.drv",
+      "description": "3D parametric model compiler (unstable)",
+      "install_id": "openscad-unstable",
+      "license": "GPL-3.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "openscad-unstable-2021.01-unstable-2026-02-25",
+      "pname": "openscad-unstable",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:07:44.830708Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2026-02-25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/4kr4vnfmbm9cj4s44r7f8lmqfhj9jxvy-openscad-unstable-2021.01-unstable-2026-02-25"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openscad-unstable",
+      "broken": false,
+      "derivation": "/nix/store/pp9hd2h3c66z6h3rmallz6v4x4k87l6s-openscad-unstable-2021.01-unstable-2026-02-25.drv",
+      "description": "3D parametric model compiler (unstable)",
+      "install_id": "openscad-unstable",
+      "license": "GPL-3.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "openscad-unstable-2021.01-unstable-2026-02-25",
+      "pname": "openscad-unstable",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:44:29.571907Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2026-02-25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/pc5lfcsgscy03x4qh1b090qxy9pwm22i-openscad-unstable-2021.01-unstable-2026-02-25"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openscad-unstable",
+      "broken": false,
+      "derivation": "/nix/store/ar1dn6vx4xv58xp5d08h68d4amdx9sdq-openscad-unstable-2021.01-unstable-2026-02-25.drv",
+      "description": "3D parametric model compiler (unstable)",
+      "install_id": "openscad-unstable",
+      "license": "GPL-3.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "openscad-unstable-2021.01-unstable-2026-02-25",
+      "pname": "openscad-unstable",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:16:38.842010Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2026-02-25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/pzpxq8hwbbji9cndh18z2bbhl7n331p5-openscad-unstable-2021.01-unstable-2026-02-25"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "openscad-unstable",
+      "broken": false,
+      "derivation": "/nix/store/9p2rwzqjypwlcy5sypv40y05v8764byj-openscad-unstable-2021.01-unstable-2026-02-25.drv",
+      "description": "3D parametric model compiler (unstable)",
+      "install_id": "openscad-unstable",
+      "license": "GPL-3.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "openscad-unstable-2021.01-unstable-2026-02-25",
+      "pname": "openscad-unstable",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:53:09.395986Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2026-02-25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/sh22kipjanfv1mk2vvxngxppxbq4ncz8-openscad-unstable-2021.01-unstable-2026-02-25"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "xvfb-run",
+      "broken": false,
+      "derivation": "/nix/store/1f9vlc8343azilpjb4bzssjr1gv19s8j-xvfb-run-1+g87f6705.drv",
+      "description": "Convenience script to run a virtualized X-Server",
+      "install_id": "xvfb-run",
+      "license": "GPL-2.0-only",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "xvfb-run-1+g87f6705",
+      "pname": "xvfb-run",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T08:47:29.541586Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1+g87f6705",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/wxlijg3l9wn0kq90xwdkaa91l2a3y82i-xvfb-run-1+g87f6705"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "xvfb-run",
+      "broken": false,
+      "derivation": "/nix/store/bq2c25f9whdrlvmgkzl5qingn7z0g3lj-xvfb-run-1+g87f6705.drv",
+      "description": "Convenience script to run a virtualized X-Server",
+      "install_id": "xvfb-run",
+      "license": "GPL-2.0-only",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "name": "xvfb-run-1+g87f6705",
+      "pname": "xvfb-run",
+      "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+      "rev_count": 992384,
+      "rev_date": "2026-05-05T04:14:16Z",
+      "scrape_date": "2026-05-06T09:56:06.915398Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1+g87f6705",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/jg7vjgznv1dsmfpagildlp3p3rmbd01r-xvfb-run-1+g87f6705"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
