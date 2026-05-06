@@ -51,6 +51,7 @@ reverse_border_left_width = panel_border_left;
 reverse_border_right_width = panel_border_right;
 reverse_border_top_width = panel_border_top;
 reverse_border_bottom_width = panel_border_bottom;
+reverse_border_panel_lead_in_depth = max(fillet_radius - back_depth, 0);
 
 /* [Thick border] */
 thick_border = false;
@@ -458,7 +459,7 @@ module reverse_border_panel_cover_extension() {
 module reverse_border_panel_cover_strips() {
     difference() {
         translate([0, 0, panel_cover_depth + panel_depth - 0.01])
-        filletBoxMiddle(frame_full_width, frame_full_height, case_depth + 0.01);
+        reverse_border_panel_cover_outer_shape(case_depth + 0.01);
 
         translate([
             reverse_border_left_width,
@@ -470,6 +471,24 @@ module reverse_border_panel_cover_strips() {
             frame_full_height - reverse_border_top_width - reverse_border_bottom_width,
             case_depth + 0.04
         ]);
+    }
+}
+
+module reverse_border_panel_cover_outer_shape(depth) {
+    lead_in_depth = min(reverse_border_panel_lead_in_depth, depth);
+    if (lead_in_depth > 0) {
+        intersection() {
+            filletBoxBottom(
+                frame_full_width,
+                frame_full_height,
+                depth + lead_in_depth,
+                r=fillet_radius_in_use
+            );
+
+            cube([frame_full_width, frame_full_height, depth]);
+        }
+    } else {
+        filletBoxMiddle(frame_full_width, frame_full_height, depth);
     }
 }
 
@@ -1201,12 +1220,20 @@ module reverse_border_case_cutout_strips() {
 }
 
 module reverse_border_case_screw_cutouts() {
-    for (c = screw_positions) {
-        translate([c[0], c[1], -0.11])
-        cylinder(
-            d = reverse_border_screw_post_diameter + reverse_border_gap * 2,
-            h = case_depth + 0.11
-        );
+    intersection() {
+        union() {
+            for (c = screw_positions) {
+                translate([c[0], c[1], -0.11])
+                cylinder(
+                    d = reverse_border_screw_post_diameter + reverse_border_gap * 2,
+                    h = case_depth + 0.11
+                );
+            }
+        }
+
+        union() {
+            reverse_border_case_cutout_strips();
+        }
     }
 }
 
