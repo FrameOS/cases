@@ -423,21 +423,24 @@ module panel_cover() {
             panel_depth + 0.22
         ]);
         if (panel_cable_gap_bottom > 0) {
-            render_panel_cable_gap_bottom(panel_depth, panel_cover_depth);
+            render_panel_cable_gap_bottom(panel_cover_cable_gap_depth(), panel_cover_depth);
         }
         if (panel_cable_gap_top > 0) {
-            render_panel_cable_gap_top(panel_depth, panel_cover_depth);
+            render_panel_cable_gap_top(panel_cover_cable_gap_depth(), panel_cover_depth);
         }
         if (panel_cable_gap_left > 0) {
-            render_panel_cable_gap_left(panel_depth, panel_cover_depth);
+            render_panel_cable_gap_left(panel_cover_cable_gap_depth(), panel_cover_depth);
         }
         if (panel_cable_gap_right > 0) {
-            render_panel_cable_gap_right(panel_depth, panel_cover_depth);
+            render_panel_cable_gap_right(panel_cover_cable_gap_depth(), panel_cover_depth);
         }
 
         reverse_border_panel_cover_side_button_holes();
     }
 }
+
+function panel_cover_cable_gap_depth() =
+    panel_depth + (reverse_border_thickness ? case_depth : 0);
 
 module reverse_border_panel_cover_extension() {
     if (reverse_border_thickness && case_depth > 0) {
