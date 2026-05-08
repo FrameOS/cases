@@ -86,6 +86,26 @@ usb_cutout_hole_height         = 4;
 usb_cutout_hole_width          = 11;
 usb_cutout_top_wall_thickness  = 1.5;
 
+
+/* [SD cutout] */
+
+sd_cutout = true;
+sd_cutout_offset_x_percentage = 13.1;
+sd_cutout_offset_y_percentage = 9.5;
+sd_cutout_box_width = 30;
+sd_cutout_box_height = 18.2;
+sd_cutout_box_depth = 6;
+sd_cutout_left_wall_thickness = 1.4;
+sd_cutout_right_wall_thickness = 2;
+sd_cutout_bottom_wall_thickness = 1.4;
+sd_cutout_top_wall_thickness = 1.4;
+sd_cutout_back_wall_thickness = 0.8;
+sd_cutout_hole_offset = 0.0;
+sd_cutout_hole_position = "right"; // [top, bottom, left, right, back]
+sd_cutout_hole_width = 18;
+sd_cutout_hole_height = 4.6;
+
+
 /* [Hanging hole] */
 // [ [top, bottom, left, right], offset_percentage ]
 hanging_holes = [
